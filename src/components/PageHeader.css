@@ -1,0 +1,39 @@
+.page-header {
+  background: linear-gradient(135deg, var(--card-bg) 0%, var(--bg-main) 100%);
+  padding: 60px 0 40px;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 40px;
+}
+
+.page-header-icon {
+  font-size: 48px;
+  margin-bottom: 16px;
+}
+
+.page-header h1 {
+  font-size: 36px;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+}
+
+.page-header p {
+  font-size: 18px;
+  color: var(--text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .page-header {
+    padding: 40px 0 30px;
+  }
+
+  .page-header h1 {
+    font-size: 28px;
+  }
+
+  .page-header p {
+    font-size: 16px;
+  }
+}

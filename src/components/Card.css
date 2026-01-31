@@ -1,0 +1,14 @@
+.custom-card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+
+.custom-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(37, 211, 102, 0.1);
+}

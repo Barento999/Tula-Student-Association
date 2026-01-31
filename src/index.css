@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-main: #0b141a;
+  --text-primary: #e9edef;
+  --text-secondary: #8696a0;
+  --text-muted: #667781;
+  --whatsapp-green: #25d366;
+  --unread-badge: #00a884;
+  --icon-default: #aebac1;
+  --card-bg: #1a2730;
+  --border-color: #2a3942;
+}
+
+body {
+  font-family:
+    -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-main);
+  color: var(--text-primary);
+  line-height: 1.6;
+}
+
+a {
+  color: var(--whatsapp-green);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  cursor: pointer;
+  font-family: inherit;
+}
+
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+.btn {
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  display: inline-block;
+}
+
+.btn-primary {
+  background-color: var(--whatsapp-green);
+  color: var(--bg-main);
+}
+
+.btn-primary:hover {
+  background-color: var(--unread-badge);
+  text-decoration: none;
+}
+
+.btn-secondary {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+  background-color: #2a3942;
+  text-decoration: none;
+}
+
+.card {
+  background-color: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 12px;
+  background-color: var(--bg-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 16px;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--whatsapp-green);
+}
+
+.form-input::placeholder {
+  color: var(--text-muted);
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.success-message {
+  color: var(--whatsapp-green);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 0 16px;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
