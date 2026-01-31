@@ -5,12 +5,19 @@
   position: sticky;
   top: 0;
   z-index: 1000;
+  width: 100%;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 40px;
+  gap: 40px;
 }
 
 .navbar-brand {
@@ -21,6 +28,12 @@
   font-weight: 700;
   color: var(--text-primary);
   text-decoration: none;
+  flex-shrink: 0;
+  transition: transform 0.3s ease;
+}
+
+.navbar-brand:hover {
+  transform: scale(1.02);
 }
 
 .brand-logo {
@@ -29,6 +42,12 @@
   flex-shrink: 0;
   border-radius: 50%;
   object-fit: cover;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.navbar-brand:hover .brand-logo {
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.4);
 }
 
 .brand-icon {
@@ -52,6 +71,14 @@
   transition: all 0.3s ease;
 }
 
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  justify-content: center;
+}
+
 .navbar-menu {
   display: flex;
   align-items: center;
@@ -62,19 +89,50 @@
   display: flex;
   align-items: center;
   gap: 16px;
-  margin-left: auto;
+  flex-shrink: 0;
 }
 
+.navbar-links a,
 .navbar-menu a {
   color: var(--text-secondary);
   font-weight: 500;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
   text-decoration: none;
+  white-space: nowrap;
+  font-size: 17px;
+  position: relative;
+  padding: 8px 4px;
 }
 
+.navbar-links a::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 2px;
+  background-color: var(--whatsapp-green);
+  transition: all 0.3s ease;
+  transform: translateX(-50%);
+}
+
+.navbar-links a:hover,
 .navbar-menu a:hover {
   color: var(--whatsapp-green);
   text-decoration: none;
+}
+
+.navbar-links a:hover::after {
+  width: 100%;
+}
+
+.navbar-links a.active {
+  color: var(--whatsapp-green);
+  font-weight: 600;
+}
+
+.navbar-links a.active::after {
+  width: 100%;
 }
 
 .nav-admin {
@@ -82,46 +140,58 @@
 }
 
 .nav-register {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: transparent;
   color: var(--text-secondary) !important;
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
   font-weight: 600;
   transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .nav-register:hover {
   background-color: var(--bg-main);
   color: var(--text-primary) !important;
   border-color: var(--whatsapp-green);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(37, 211, 102, 0.2);
 }
 
 .nav-login {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: var(--whatsapp-green);
   color: var(--bg-main) !important;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
 }
 
 .nav-login:hover {
   background-color: var(--unread-badge);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.4);
 }
 
 .nav-logout {
-  padding: 8px 16px;
+  padding: 10px 20px;
   background-color: transparent;
   color: var(--text-secondary);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
   font-weight: 500;
   transition: all 0.3s ease;
+  font-size: 16px;
 }
 
 .nav-logout:hover {
   background-color: var(--bg-main);
   color: var(--text-primary);
+  border-color: #ff6b6b;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 107, 107, 0.2);
 }
 
 @media (max-width: 768px) {
@@ -133,7 +203,13 @@
     font-size: 16px;
   }
 
-  .navbar-menu {
+  .navbar-content {
+    padding: 0 20px;
+    flex-wrap: wrap;
+  }
+
+  .navbar-links,
+  .navbar-auth {
     position: absolute;
     top: 100%;
     left: 0;
@@ -149,23 +225,29 @@
     border-bottom: 1px solid var(--border-color);
   }
 
-  .navbar-menu.active {
-    max-height: 600px;
+  .navbar-links.active {
+    max-height: 400px;
+    position: relative;
+    border-bottom: none;
   }
 
-  .navbar-auth {
-    flex-direction: column;
-    margin-left: 0;
-    gap: 0;
-    width: 100%;
+  .navbar-auth.active {
+    max-height: 200px;
+    position: relative;
+    border-bottom: none;
   }
 
-  .navbar-menu a,
-  .navbar-menu button {
+  .navbar-links a,
+  .navbar-auth a,
+  .navbar-auth button {
     padding: 16px 20px;
     border-bottom: 1px solid var(--border-color);
     text-align: left;
     width: 100%;
+  }
+
+  .navbar-links a::after {
+    display: none;
   }
 
   .nav-login,
@@ -174,5 +256,12 @@
     border-radius: 0;
     border: none;
     border-bottom: 1px solid var(--border-color);
+    transform: none !important;
+  }
+
+  .nav-login:hover,
+  .nav-register:hover,
+  .nav-logout:hover {
+    transform: none !important;
   }
 }
