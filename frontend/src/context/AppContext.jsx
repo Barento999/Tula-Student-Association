@@ -35,7 +35,19 @@ export const AppProvider = ({ children }) => {
 
     const savedMaterials = localStorage.getItem("tula_materials");
     if (savedMaterials) {
-      setMaterials(JSON.parse(savedMaterials));
+      // Check if we need to update with new subjects
+      const parsed = JSON.parse(savedMaterials);
+      const hasAllSubjects = mockMaterials.every((mock) =>
+        parsed.some((saved) => saved.subject === mock.subject),
+      );
+
+      if (!hasAllSubjects) {
+        // Update with new materials
+        setMaterials(mockMaterials);
+        localStorage.setItem("tula_materials", JSON.stringify(mockMaterials));
+      } else {
+        setMaterials(parsed);
+      }
     } else {
       setMaterials(mockMaterials);
     }
@@ -177,6 +189,18 @@ const mockMaterials = [
   },
   {
     id: 3,
+    title: "Afaan Oromoo - Basic Grammar",
+    subject: "Afaan Oromoo",
+    level: "Elementary",
+    grade: "5",
+    fileType: "PDF",
+    uploadedBy: "Chaltu Bekele",
+    session: "Summer 2024",
+    sessionId: 1,
+    description: "Introduction to Afaan Oromoo grammar and vocabulary",
+  },
+  {
+    id: 4,
     title: "Physics - Motion and Forces",
     subject: "Physics",
     level: "Preparatory",
@@ -188,7 +212,7 @@ const mockMaterials = [
     description: "Understanding Newton's laws and motion",
   },
   {
-    id: 4,
+    id: 5,
     title: "Chemistry - Periodic Table",
     subject: "Chemistry",
     level: "Secondary",
@@ -200,27 +224,87 @@ const mockMaterials = [
     description: "Elements, groups, and periodic trends",
   },
   {
-    id: 5,
+    id: 6,
     title: "Biology - Cell Structure",
     subject: "Biology",
     level: "Secondary",
     grade: "8",
     fileType: "DOC",
     uploadedBy: "Omar Khalil",
-    session: "Summer 2023",
-    sessionId: 2,
+    session: "Summer 2024",
+    sessionId: 1,
     description: "Plant and animal cell structures",
   },
   {
-    id: 6,
-    title: "Arabic Literature - Poetry Analysis",
-    subject: "Arabic",
-    level: "Preparatory",
-    grade: "12",
+    id: 7,
+    title: "History - Ancient Civilizations",
+    subject: "History",
+    level: "Secondary",
+    grade: "7",
     fileType: "PDF",
-    uploadedBy: "Layla Hassan",
+    uploadedBy: "Yusuf Ahmed",
     session: "Summer 2024",
     sessionId: 1,
-    description: "Classical and modern Arabic poetry",
+    description: "Study of ancient civilizations and their contributions",
+  },
+  {
+    id: 8,
+    title: "Geography - Climate and Weather",
+    subject: "Geography",
+    level: "Elementary",
+    grade: "6",
+    fileType: "PPT",
+    uploadedBy: "Amina Hassan",
+    session: "Summer 2024",
+    sessionId: 1,
+    description: "Understanding climate zones and weather patterns",
+  },
+  {
+    id: 9,
+    title: "Economics - Supply and Demand",
+    subject: "Economics",
+    level: "Preparatory",
+    grade: "11",
+    fileType: "PDF",
+    uploadedBy: "Ibrahim Ali",
+    session: "Summer 2024",
+    sessionId: 1,
+    description: "Basic economic principles and market dynamics",
+  },
+  {
+    id: 10,
+    title: "Agriculture - Crop Production",
+    subject: "Agriculture",
+    level: "Secondary",
+    grade: "9",
+    fileType: "PDF",
+    uploadedBy: "Abdi Mohammed",
+    session: "Summer 2024",
+    sessionId: 1,
+    description: "Modern farming techniques and crop management",
+  },
+  {
+    id: 11,
+    title: "Mathematics Grade 10 - Geometry",
+    subject: "Mathematics",
+    level: "Secondary",
+    grade: "10",
+    fileType: "PDF",
+    uploadedBy: "Ahmed Hassan",
+    session: "Summer 2023",
+    sessionId: 2,
+    description: "Triangles, circles, and geometric proofs",
+  },
+  {
+    id: 12,
+    title: "English Literature - Short Stories",
+    subject: "English",
+    level: "Preparatory",
+    grade: "12",
+    fileType: "DOC",
+    uploadedBy: "Fatima Ali",
+    session: "Summer 2023",
+    sessionId: 2,
+    description: "Analysis of classic and contemporary short stories",
   },
 ];

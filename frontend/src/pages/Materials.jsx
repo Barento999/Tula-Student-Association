@@ -8,6 +8,7 @@ import {
   FiUser,
   FiFilter,
 } from "react-icons/fi";
+import CustomSelect from "../components/CustomSelect";
 
 const Materials = () => {
   const { materials, sessions } = useApp();
@@ -101,77 +102,42 @@ const Materials = () => {
         <div className="container relative z-10 px-4">
           <div className="max-w-5xl mx-auto">
             <div className="flex items-center justify-center gap-2 mb-8">
-              <FiFilter className="w-6 h-6 text-whatsapp-green" />
+              <FiFilter className="w-5 h-5 text-whatsapp-green" />
               <h2 className="text-2xl md:text-3xl font-bold text-primary">
                 Filter Materials
               </h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              <div className="group">
-                <label className="block text-sm font-semibold text-secondary mb-2">
-                  Subject
-                </label>
-                <select
-                  value={selectedSubject}
-                  onChange={(e) => setSelectedSubject(e.target.value)}
-                  className="w-full px-4 py-3 bg-gradient-to-br from-[#1a2730] to-card border border-border/50 rounded-xl text-primary focus:border-whatsapp-green focus:outline-none transition-all duration-300 hover:border-whatsapp-green/50">
-                  {subjects.map((subject) => (
-                    <option key={subject} value={subject}>
-                      {subject}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                label="Subject"
+                value={selectedSubject}
+                onChange={(e) => setSelectedSubject(e.target.value)}
+                options={subjects}
+              />
 
-              <div className="group">
-                <label className="block text-sm font-semibold text-secondary mb-2">
-                  Level
-                </label>
-                <select
-                  value={selectedLevel}
-                  onChange={(e) => setSelectedLevel(e.target.value)}
-                  className="w-full px-4 py-3 bg-gradient-to-br from-[#1a2730] to-card border border-border/50 rounded-xl text-primary focus:border-whatsapp-green focus:outline-none transition-all duration-300 hover:border-whatsapp-green/50">
-                  {levels.map((level) => (
-                    <option key={level} value={level}>
-                      {level}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                label="Level"
+                value={selectedLevel}
+                onChange={(e) => setSelectedLevel(e.target.value)}
+                options={levels}
+              />
 
-              <div className="group">
-                <label className="block text-sm font-semibold text-secondary mb-2">
-                  Grade
-                </label>
-                <select
-                  value={selectedGrade}
-                  onChange={(e) => setSelectedGrade(e.target.value)}
-                  className="w-full px-4 py-3 bg-gradient-to-br from-[#1a2730] to-card border border-border/50 rounded-xl text-primary focus:border-whatsapp-green focus:outline-none transition-all duration-300 hover:border-whatsapp-green/50">
-                  {grades.map((grade) => (
-                    <option key={grade} value={grade}>
-                      {grade === "All" ? "All Grades" : `Grade ${grade}`}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                label="Grade"
+                value={selectedGrade}
+                onChange={(e) => setSelectedGrade(e.target.value)}
+                options={grades.map((grade) =>
+                  grade === "All" ? "All Grades" : `Grade ${grade}`,
+                )}
+              />
 
-              <div className="group">
-                <label className="block text-sm font-semibold text-secondary mb-2">
-                  Session
-                </label>
-                <select
-                  value={selectedSession}
-                  onChange={(e) => setSelectedSession(e.target.value)}
-                  className="w-full px-4 py-3 bg-gradient-to-br from-[#1a2730] to-card border border-border/50 rounded-xl text-primary focus:border-whatsapp-green focus:outline-none transition-all duration-300 hover:border-whatsapp-green/50">
-                  <option value="All">All Sessions</option>
-                  {sessions.map((session) => (
-                    <option key={session.id} value={session.name}>
-                      {session.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
+              <CustomSelect
+                label="Session"
+                value={selectedSession}
+                onChange={(e) => setSelectedSession(e.target.value)}
+                options={["All Sessions", ...sessions.map((s) => s.name)]}
+              />
             </div>
 
             <div className="mt-6 text-center">
@@ -195,7 +161,7 @@ const Materials = () => {
         <div className="container px-4">
           {filteredMaterials.length === 0 ? (
             <div className="text-center py-16">
-              <FiBook className="w-16 h-16 text-whatsapp-green/30 mx-auto mb-4" />
+              <FiBook className="w-12 h-12 text-whatsapp-green/30 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-primary mb-2">
                 No materials found
               </h3>
@@ -217,7 +183,7 @@ const Materials = () => {
 
                   <div className="relative z-10">
                     <div
-                      className="w-12 h-12 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                      className="w-10 h-10 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
                       style={{
                         filter:
                           "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",

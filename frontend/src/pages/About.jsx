@@ -159,7 +159,7 @@ const About = () => {
                   animation: `fadeInUp 0.8s ease-out ${index * 0.2}s both`,
                 }}>
                 <div
-                  className="w-16 h-16 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                  className="w-12 h-12 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
                   style={{
                     filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                   }}>
@@ -230,6 +230,135 @@ const About = () => {
                 </div>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Our Leaders Section */}
+      <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-b from-card to-main">
+        <div className="container px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <span className="inline-block px-4 md:px-6 py-2 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-full text-whatsapp-green font-semibold mb-4 md:mb-6 text-sm md:text-base">
+              Leadership Team
+            </span>
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Meet Our <span className="text-whatsapp-green">Leaders</span>
+            </h2>
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
+              Dedicated individuals guiding our mission to transform education
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Leader Name 1",
+                role: "Founder & President",
+                university: "University Name",
+                department: "Department Name",
+                description:
+                  "Leading the organization with vision and dedication to educational excellence.",
+              },
+              {
+                name: "Leader Name 2",
+                role: "Vice President",
+                university: "University Name",
+                department: "Department Name",
+                description:
+                  "Coordinating programs and ensuring quality education delivery.",
+              },
+              {
+                name: "Leader Name 3",
+                role: "Academic Coordinator",
+                university: "University Name",
+                department: "Department Name",
+                description:
+                  "Managing curriculum development and teaching standards.",
+              },
+            ].map((leader, index) => (
+              <div
+                key={index}
+                className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-8 border border-border/50 hover:border-whatsapp-green transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_30px_80px_rgba(37,211,102,0.3)]"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.2}s both`,
+                }}>
+                {/* Avatar Placeholder */}
+                <div className="w-24 h-24 mx-auto mb-6 rounded-full bg-gradient-to-br from-whatsapp-green/20 to-unread-badge/20 border-4 border-whatsapp-green/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-500">
+                  <FiUsers className="w-12 h-12 text-whatsapp-green" />
+                </div>
+
+                <div className="text-center">
+                  <h3 className="text-2xl font-bold text-primary mb-2">
+                    {leader.name}
+                  </h3>
+                  <p className="text-whatsapp-green font-semibold mb-3">
+                    {leader.role}
+                  </p>
+                  <p className="text-secondary text-sm mb-1">
+                    {leader.university}
+                  </p>
+                  <p className="text-secondary text-sm mb-4">
+                    {leader.department}
+                  </p>
+                  <p className="text-secondary leading-relaxed text-sm">
+                    {leader.description}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Developer Section */}
+      <section className="py-12 md:py-20 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
+        <div className="container px-4">
+          <div className="text-center mb-8 md:mb-12">
+            <span className="inline-block px-4 md:px-6 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 font-semibold mb-4 text-sm md:text-base">
+              Developer
+            </span>
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-2 px-4">
+              Built with <span className="text-whatsapp-green">Passion</span>
+            </h2>
+          </div>
+
+          <div className="max-w-2xl mx-auto">
+            <div className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-8 md:p-10 border border-border/50 hover:border-blue-500/50 transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_30px_80px_rgba(59,130,246,0.3)]">
+              {/* Code Pattern Background */}
+              <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
+                <div className="absolute inset-0 text-whatsapp-green text-xs font-mono leading-relaxed p-4">
+                  {`const developer = {
+  name: "Barento Hashum",
+  role: "Full Stack Developer",
+  passion: "Building solutions",
+  mission: "Empowering education"
+};`}
+                </div>
+              </div>
+
+              <div className="relative z-10 text-center">
+                {/* Developer Avatar */}
+                <div className="w-28 h-28 mx-auto mb-6 rounded-full border-4 border-blue-500/30 overflow-hidden group-hover:scale-110 group-hover:border-blue-500/50 transition-all duration-500 shadow-[0_8px_24px_rgba(59,130,246,0.3)]">
+                  <img
+                    src="/Barento.jpg"
+                    alt="Barento Hashum"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+
+                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-2">
+                  Barento Hashum
+                </h3>
+                <p className="text-blue-400 font-semibold text-lg mb-4">
+                  Full Stack Developer
+                </p>
+                <p className="text-secondary leading-relaxed max-w-xl mx-auto">
+                  Crafted this platform to support the Tula Students Association
+                  mission of empowering education through technology and
+                  community engagement.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </section>

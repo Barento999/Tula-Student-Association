@@ -155,7 +155,7 @@ const Programs = () => {
 
                 <div className="relative z-10">
                   <div
-                    className="w-16 h-16 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                    className="w-12 h-12 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
                     style={{
                       filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                     }}>
@@ -210,22 +210,22 @@ const Programs = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
             {[
               {
-                icon: <FiBookOpen className="w-8 h-8" />,
+                icon: <FiBookOpen className="w-6 h-6" />,
                 title: "Duration",
                 desc: "June - August",
               },
               {
-                icon: <FiTrendingUp className="w-8 h-8" />,
+                icon: <FiTrendingUp className="w-6 h-6" />,
                 title: "Sessions",
                 desc: "Morning only",
               },
               {
-                icon: <FiAward className="w-8 h-8" />,
+                icon: <FiAward className="w-6 h-6" />,
                 title: "Class Size",
                 desc: "Small groups",
               },
               {
-                icon: <FiHeart className="w-8 h-8" />,
+                icon: <FiHeart className="w-6 h-6" />,
                 title: "Cost",
                 desc: "Completely FREE",
               },

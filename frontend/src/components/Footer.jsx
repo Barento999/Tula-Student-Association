@@ -168,13 +168,13 @@ const Footer = () => {
               <div className="flex items-center gap-2 text-secondary text-sm group">
                 <FiPhone className="w-4 h-4 text-whatsapp-green group-hover:scale-110 transition-transform duration-300" />
                 <span className="group-hover:text-primary transition-colors duration-300">
-                  +123 456 7890
+                  +251 9XX XXX XXX
                 </span>
               </div>
               <div className="flex items-center gap-2 text-secondary text-sm group">
                 <FiMail className="w-4 h-4 text-whatsapp-green group-hover:scale-110 transition-transform duration-300" />
                 <span className="group-hover:text-primary transition-colors duration-300">
-                  info@tulastudents.org
+                  tulastudents@gmail.com
                 </span>
               </div>
             </div>

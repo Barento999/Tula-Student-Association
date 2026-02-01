@@ -113,15 +113,12 @@ const Contact = () => {
                 {
                   icon: <FiMail className="w-full h-full" />,
                   title: "Email",
-                  lines: [
-                    "info@tulastudents.org",
-                    "volunteer@tulastudents.org",
-                  ],
+                  lines: ["tulastudents@gmail.com", "Contact us anytime"],
                 },
                 {
                   icon: <FiPhone className="w-full h-full" />,
                   title: "Phone",
-                  lines: ["+123 456 7890", "Available during summer"],
+                  lines: ["+251 9XX XXX XXX", "Available during summer"],
                 },
                 {
                   icon: <FiClock className="w-full h-full" />,
@@ -139,7 +136,7 @@ const Contact = () => {
                     animation: `fadeInUp 0.8s ease-out ${index * 0.1}s both`,
                   }}>
                   <div
-                    className="w-12 h-12 mb-3 text-whatsapp-green transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    className="w-10 h-10 mb-3 text-whatsapp-green transform transition-all duration-500 group-hover:scale-110 group-hover:rotate-6"
                     style={{
                       filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                     }}>
@@ -165,19 +162,19 @@ const Contact = () => {
                 <div className="flex flex-col gap-3">
                   {[
                     {
-                      icon: <FiFacebook className="w-5 h-5" />,
+                      icon: <FiFacebook className="w-4 h-4" />,
                       label: "Facebook",
                     },
                     {
-                      icon: <FiTwitter className="w-5 h-5" />,
+                      icon: <FiTwitter className="w-4 h-4" />,
                       label: "Twitter",
                     },
                     {
-                      icon: <FiInstagram className="w-5 h-5" />,
+                      icon: <FiInstagram className="w-4 h-4" />,
                       label: "Instagram",
                     },
                     {
-                      icon: <FiMessageCircle className="w-5 h-5" />,
+                      icon: <FiMessageCircle className="w-4 h-4" />,
                       label: "WhatsApp",
                     },
                   ].map((social, i) => (
@@ -198,7 +195,7 @@ const Contact = () => {
               style={{ animation: "fadeInUp 0.8s ease-out 0.2s both" }}>
               {success && (
                 <div className="bg-gradient-to-r from-whatsapp-green to-unread-badge text-main px-6 py-4 rounded-2xl mb-6 flex items-center gap-3 shadow-[0_10px_40px_rgba(37,211,102,0.3)] animate-fade-in-up">
-                  <FiCheckCircle className="w-6 h-6 flex-shrink-0" />
+                  <FiCheckCircle className="w-5 h-5 flex-shrink-0" />
                   <p className="text-base font-medium">
                     Thank you! We'll get back to you soon.
                   </p>

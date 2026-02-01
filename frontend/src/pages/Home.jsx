@@ -186,7 +186,7 @@ const Home = () => {
                     animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
                   }}>
                   <div
-                    className="w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    className="w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
                     style={{
                       filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                     }}>
@@ -265,7 +265,7 @@ const Home = () => {
 
                 <div className="relative z-10">
                   <div
-                    className="w-16 h-16 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                    className="w-12 h-12 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
                     style={{
                       filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                     }}>

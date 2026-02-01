@@ -2,7 +2,27 @@
 
 ## 🚀 Getting Started
 
-The application is now running at: **http://localhost:5174/**
+### Installation
+
+1. Navigate to the frontend directory:
+
+```bash
+cd frontend
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+```
+
+3. Start the development server:
+
+```bash
+npm run dev
+```
+
+The application will be running at: **http://localhost:5173/**
 
 ## 📋 Test the Application
 
@@ -169,13 +189,19 @@ To reset all data:
 
 To test on mobile devices on the same network:
 
-1. Stop the current server (Ctrl+C)
-2. Run: `npm run dev -- --host`
-3. Access using the Network URL shown in terminal
+1. Navigate to frontend directory: `cd frontend`
+2. Stop the current server (Ctrl+C)
+3. Run: `npm run dev -- --host`
+4. Access using the Network URL shown in terminal
 
 ## 🛠️ Development Commands
 
+All commands should be run from the `frontend` directory:
+
 ```bash
+# Navigate to frontend
+cd frontend
+
 # Start development server
 npm run dev
 

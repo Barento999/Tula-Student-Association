@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import { FiLogIn } from "react-icons/fi";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -43,7 +44,7 @@ const AdminLogin = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center p-5">
-      <div className="w-full max-w-[450px]">
+      <div className="w-full max-w-[520px]">
         <div className="bg-card border border-border rounded-xl p-12 max-md:p-8">
           <div className="text-center mb-8">
             <div className="text-[64px] mb-4">🔐</div>
@@ -80,13 +81,24 @@ const AdminLogin = () => {
                 name="password"
                 value={credentials.password}
                 onChange={handleChange}
-                className="form-input"
+                className="form-input h-12 bg-main/50 border-2 border-border/50 rounded-xl focus:border-whatsapp-green focus:bg-main focus:shadow-[0_0_20px_rgba(37,211,102,0.2)] transition-all duration-300"
                 required
                 placeholder="Enter password"
               />
             </div>
 
-            <button type="submit" className="btn btn-primary btn-full">
+            <div className="text-right mb-6">
+              <Link
+                to="/forgot-password"
+                className="text-sm text-whatsapp-green hover:text-primary transition-colors duration-300">
+                Forgot Password?
+              </Link>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary btn-full flex items-center justify-center gap-2">
+              <FiLogIn className="w-5 h-5" />
               Login
             </button>
 

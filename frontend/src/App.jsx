@@ -1,11 +1,21 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
+import { useEffect } from "react";
 import { AppProvider } from "./context/AppContext";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import ScrollToTopButton from "./components/ScrollToTopButton";
+import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Programs from "./pages/Programs";
 import StudentRegistration from "./pages/StudentRegistration";
+import StudentLogin from "./pages/StudentLogin";
+import ForgotPassword from "./pages/ForgotPassword";
 import Materials from "./pages/Materials";
 import Volunteer from "./pages/Volunteer";
 import Activities from "./pages/Activities";
@@ -15,10 +25,22 @@ import StudentDashboard from "./pages/StudentDashboard";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 
+// Scroll to top component
+function ScrollToTop() {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+}
+
 function App() {
   return (
     <AppProvider>
       <Router>
+        <ScrollToTop />
         <div className="app">
           <Navbar />
           <main>
@@ -30,7 +52,16 @@ function App() {
                 path="/student-registration"
                 element={<StudentRegistration />}
               />
-              <Route path="/materials" element={<Materials />} />
+              <Route path="/student-login" element={<StudentLogin />} />
+              <Route path="/forgot-password" element={<ForgotPassword />} />
+              <Route
+                path="/materials"
+                element={
+                  <ProtectedRoute>
+                    <Materials />
+                  </ProtectedRoute>
+                }
+              />
               <Route path="/volunteer" element={<Volunteer />} />
               <Route path="/activities" element={<Activities />} />
               <Route path="/gallery" element={<Gallery />} />
@@ -41,6 +72,7 @@ function App() {
             </Routes>
           </main>
           <Footer />
+          <ScrollToTopButton />
         </div>
       </Router>
     </AppProvider>

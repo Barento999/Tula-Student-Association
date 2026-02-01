@@ -203,7 +203,7 @@ const Volunteer = () => {
                   animation: `fadeInUp 0.8s ease-out ${index * 0.2}s both`,
                 }}>
                 <div
-                  className="w-16 h-16 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                  className="w-12 h-12 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
                   style={{
                     filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                   }}>
@@ -224,7 +224,7 @@ const Volunteer = () => {
           <div className="max-w-[800px] mx-auto">
             {success && (
               <div className="bg-gradient-to-r from-whatsapp-green to-unread-badge text-main px-6 py-4 rounded-2xl mb-6 flex items-center gap-3 shadow-[0_10px_40px_rgba(37,211,102,0.3)] animate-fade-in-up">
-                <FiCheckCircle className="w-6 h-6 flex-shrink-0" />
+                <FiCheckCircle className="w-5 h-5 flex-shrink-0" />
                 <p className="text-base font-medium">
                   Thank you for registering! We'll contact you soon with more
                   details.

@@ -176,3 +176,59 @@ html {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--whatsapp-green);
 }
+
+/* Custom text selection color */
+::selection {
+  background-color: var(--whatsapp-green);
+  color: var(--bg-main);
+}
+
+::-moz-selection {
+  background-color: var(--whatsapp-green);
+  color: var(--bg-main);
+}
+
+/* Select dropdown styling */
+select {
+  cursor: pointer;
+}
+
+select:focus {
+  outline: none;
+}
+
+/* Style select dropdown options */
+select option {
+  background-color: var(--card-bg);
+  color: var(--text-primary);
+  padding: 10px;
+}
+
+/* Hover state for options */
+select option:hover {
+  background-color: var(--whatsapp-green) !important;
+  background: var(--whatsapp-green) !important;
+  color: var(--bg-main) !important;
+}
+
+/* Focus state for options */
+select option:focus {
+  background-color: var(--whatsapp-green) !important;
+  background: var(--whatsapp-green) !important;
+  color: var(--bg-main) !important;
+}
+
+/* Checked/selected state */
+select option:checked {
+  background-color: var(--whatsapp-green) !important;
+  background: var(--whatsapp-green) !important;
+  color: var(--bg-main) !important;
+  font-weight: bold;
+}
+
+/* Active state */
+select option:active {
+  background-color: var(--whatsapp-green) !important;
+  background: var(--whatsapp-green) !important;
+  color: var(--bg-main) !important;
+}
