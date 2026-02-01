@@ -4,7 +4,6 @@ import { useApp } from "../context/AppContext";
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
 import Modal from "../components/Modal";
-import "./AdminDashboard.css";
 
 const AdminDashboard = () => {
   const {
@@ -95,7 +94,7 @@ const AdminDashboard = () => {
   };
 
   return (
-    <div className="admin-dashboard">
+    <div className="min-h-screen">
       <PageHeader
         title="Admin Dashboard"
         subtitle="Manage students, volunteers, and materials"
@@ -103,72 +102,106 @@ const AdminDashboard = () => {
       />
 
       <div className="container">
-        <div className="admin-tabs">
+        <div className="flex gap-2 mb-8 flex-wrap bg-card p-2 rounded-xl border border-border max-md:flex-col">
           <button
-            className={`tab-btn ${activeTab === "overview" ? "active" : ""}`}
+            className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+              activeTab === "overview"
+                ? "bg-whatsapp-green text-main"
+                : "bg-transparent text-secondary hover:bg-main hover:text-primary"
+            }`}
             onClick={() => setActiveTab("overview")}>
             Overview
           </button>
           <button
-            className={`tab-btn ${activeTab === "students" ? "active" : ""}`}
+            className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+              activeTab === "students"
+                ? "bg-whatsapp-green text-main"
+                : "bg-transparent text-secondary hover:bg-main hover:text-primary"
+            }`}
             onClick={() => setActiveTab("students")}>
             Students ({students.length})
           </button>
           <button
-            className={`tab-btn ${activeTab === "volunteers" ? "active" : ""}`}
+            className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+              activeTab === "volunteers"
+                ? "bg-whatsapp-green text-main"
+                : "bg-transparent text-secondary hover:bg-main hover:text-primary"
+            }`}
             onClick={() => setActiveTab("volunteers")}>
             Volunteers ({volunteers.length})
           </button>
           <button
-            className={`tab-btn ${activeTab === "materials" ? "active" : ""}`}
+            className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+              activeTab === "materials"
+                ? "bg-whatsapp-green text-main"
+                : "bg-transparent text-secondary hover:bg-main hover:text-primary"
+            }`}
             onClick={() => setActiveTab("materials")}>
             Materials ({materials.length})
           </button>
           <button
-            className={`tab-btn ${activeTab === "sessions" ? "active" : ""}`}
+            className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+              activeTab === "sessions"
+                ? "bg-whatsapp-green text-main"
+                : "bg-transparent text-secondary hover:bg-main hover:text-primary"
+            }`}
             onClick={() => setActiveTab("sessions")}>
             Sessions ({sessions.length})
           </button>
         </div>
 
         {activeTab === "overview" && (
-          <div className="overview-section">
-            <div className="stats-grid">
-              <Card className="stat-card">
-                <div className="stat-icon">👨‍🎓</div>
-                <div className="stat-number">{students.length}</div>
-                <div className="stat-label">Registered Students</div>
+          <div className="flex flex-col gap-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <Card className="text-center p-8">
+                <div className="text-[56px] mb-4">👨‍🎓</div>
+                <div className="text-5xl font-bold text-whatsapp-green mb-2">
+                  {students.length}
+                </div>
+                <div className="text-base text-secondary">
+                  Registered Students
+                </div>
               </Card>
-              <Card className="stat-card">
-                <div className="stat-icon">🤝</div>
-                <div className="stat-number">{volunteers.length}</div>
-                <div className="stat-label">Active Volunteers</div>
+              <Card className="text-center p-8">
+                <div className="text-[56px] mb-4">🤝</div>
+                <div className="text-5xl font-bold text-whatsapp-green mb-2">
+                  {volunteers.length}
+                </div>
+                <div className="text-base text-secondary">
+                  Active Volunteers
+                </div>
               </Card>
-              <Card className="stat-card">
-                <div className="stat-icon">📚</div>
-                <div className="stat-number">{materials.length}</div>
-                <div className="stat-label">Learning Materials</div>
+              <Card className="text-center p-8">
+                <div className="text-[56px] mb-4">📚</div>
+                <div className="text-5xl font-bold text-whatsapp-green mb-2">
+                  {materials.length}
+                </div>
+                <div className="text-base text-secondary">
+                  Learning Materials
+                </div>
               </Card>
-              <Card className="stat-card">
-                <div className="stat-icon">☀️</div>
-                <div className="stat-number">{sessions.length}</div>
-                <div className="stat-label">Summer Sessions</div>
+              <Card className="text-center p-8">
+                <div className="text-[56px] mb-4">☀️</div>
+                <div className="text-5xl font-bold text-whatsapp-green mb-2">
+                  {sessions.length}
+                </div>
+                <div className="text-base text-secondary">Summer Sessions</div>
               </Card>
             </div>
 
-            <div className="quick-actions">
-              <h2>Quick Actions</h2>
-              <div className="actions-grid">
+            <div>
+              <h2 className="text-[28px] text-primary mb-6">Quick Actions</h2>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <button
-                  className="action-btn"
+                  className="flex flex-col items-center gap-3 p-8 bg-card border border-border rounded-xl text-primary text-base font-medium transition-all duration-300 hover:bg-main hover:transform hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(37,211,102,0.1)]"
                   onClick={() => setShowMaterialModal(true)}>
-                  <span className="action-icon">📄</span>
+                  <span className="text-5xl">📄</span>
                   Upload Material
                 </button>
                 <button
-                  className="action-btn"
+                  className="flex flex-col items-center gap-3 p-8 bg-card border border-border rounded-xl text-primary text-base font-medium transition-all duration-300 hover:bg-main hover:transform hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(37,211,102,0.1)]"
                   onClick={() => setShowSessionModal(true)}>
-                  <span className="action-icon">➕</span>
+                  <span className="text-5xl">➕</span>
                   Create Session
                 </button>
               </div>
@@ -177,125 +210,201 @@ const AdminDashboard = () => {
         )}
 
         {activeTab === "students" && (
-          <div className="data-section">
-            <h2>Registered Students</h2>
-            <div className="table-container">
-              <table className="data-table">
-                <thead>
+          <div className="mt-6">
+            <h2 className="text-[28px] text-primary mb-6">
+              Registered Students
+            </h2>
+            <div className="bg-card border border-border rounded-xl overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead className="bg-main">
                   <tr>
-                    <th>Name</th>
-                    <th>School</th>
-                    <th>Level</th>
-                    <th>Grade</th>
-                    <th>Subjects</th>
-                    <th>Phone</th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Name
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      School
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Level
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Grade
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Subjects
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Phone
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {students.map((student) => (
-                    <tr key={student.id}>
-                      <td>{student.fullName}</td>
-                      <td>{student.schoolName}</td>
-                      <td>{student.level}</td>
-                      <td>{student.grade}</td>
-                      <td>{student.subjects.join(", ")}</td>
-                      <td>{student.phone || "N/A"}</td>
+                    <tr key={student.id} className="hover:bg-main">
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.fullName}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.schoolName}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.level}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.grade}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.subjects.join(", ")}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {student.phone || "N/A"}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               {students.length === 0 && (
-                <div className="no-data">No students registered yet.</div>
+                <div className="py-[60px] px-5 text-center text-muted text-base">
+                  No students registered yet.
+                </div>
               )}
             </div>
           </div>
         )}
 
         {activeTab === "volunteers" && (
-          <div className="data-section">
-            <h2>Registered Volunteers</h2>
-            <div className="table-container">
-              <table className="data-table">
-                <thead>
+          <div className="mt-6">
+            <h2 className="text-[28px] text-primary mb-6">
+              Registered Volunteers
+            </h2>
+            <div className="bg-card border border-border rounded-xl overflow-x-auto">
+              <table className="w-full border-collapse">
+                <thead className="bg-main">
                   <tr>
-                    <th>Name</th>
-                    <th>University</th>
-                    <th>Department</th>
-                    <th>Subjects</th>
-                    <th>Preferred Level</th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Name
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      University
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Department
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Subjects
+                    </th>
+                    <th className="p-4 text-left font-semibold text-primary border-b border-border">
+                      Preferred Level
+                    </th>
                   </tr>
                 </thead>
                 <tbody>
                   {volunteers.map((volunteer) => (
-                    <tr key={volunteer.id}>
-                      <td>{volunteer.fullName}</td>
-                      <td>{volunteer.university}</td>
-                      <td>{volunteer.department}</td>
-                      <td>{volunteer.subjects.join(", ")}</td>
-                      <td>{volunteer.preferredLevel}</td>
+                    <tr key={volunteer.id} className="hover:bg-main">
+                      <td className="p-4 text-secondary border-b border-border">
+                        {volunteer.fullName}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {volunteer.university}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {volunteer.department}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {volunteer.subjects.join(", ")}
+                      </td>
+                      <td className="p-4 text-secondary border-b border-border">
+                        {volunteer.preferredLevel}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
               {volunteers.length === 0 && (
-                <div className="no-data">No volunteers registered yet.</div>
+                <div className="py-[60px] px-5 text-center text-muted text-base">
+                  No volunteers registered yet.
+                </div>
               )}
             </div>
           </div>
         )}
 
         {activeTab === "materials" && (
-          <div className="data-section">
-            <div className="section-header">
-              <h2>Learning Materials</h2>
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
+              <h2 className="text-[28px] text-primary">Learning Materials</h2>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary max-md:w-full"
                 onClick={() => setShowMaterialModal(true)}>
                 Upload Material
               </button>
             </div>
-            <div className="materials-list">
+            <div className="flex flex-col gap-4">
               {materials.map((material) => (
-                <Card key={material.id} className="material-item">
-                  <div className="material-info">
-                    <h3>{material.title}</h3>
-                    <p>{material.description}</p>
-                    <div className="material-tags">
-                      <span className="tag">{material.subject}</span>
-                      <span className="tag">{material.level}</span>
-                      <span className="tag">Grade {material.grade}</span>
-                      <span className="tag">{material.fileType}</span>
-                      <span className="tag">{material.session}</span>
+                <Card key={material.id} className="p-5">
+                  <div>
+                    <h3 className="text-lg text-primary mb-2">
+                      {material.title}
+                    </h3>
+                    <p className="text-sm text-secondary mb-3">
+                      {material.description}
+                    </p>
+                    <div className="flex gap-2 flex-wrap">
+                      <span className="px-3 py-1 bg-main border border-border rounded-xl text-xs text-secondary">
+                        {material.subject}
+                      </span>
+                      <span className="px-3 py-1 bg-main border border-border rounded-xl text-xs text-secondary">
+                        {material.level}
+                      </span>
+                      <span className="px-3 py-1 bg-main border border-border rounded-xl text-xs text-secondary">
+                        Grade {material.grade}
+                      </span>
+                      <span className="px-3 py-1 bg-main border border-border rounded-xl text-xs text-secondary">
+                        {material.fileType}
+                      </span>
+                      <span className="px-3 py-1 bg-main border border-border rounded-xl text-xs text-secondary">
+                        {material.session}
+                      </span>
                     </div>
                   </div>
                 </Card>
               ))}
               {materials.length === 0 && (
-                <div className="no-data">No materials uploaded yet.</div>
+                <div className="py-[60px] px-5 text-center text-muted text-base">
+                  No materials uploaded yet.
+                </div>
               )}
             </div>
           </div>
         )}
 
         {activeTab === "sessions" && (
-          <div className="data-section">
-            <div className="section-header">
-              <h2>Summer Sessions</h2>
+          <div className="mt-6">
+            <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
+              <h2 className="text-[28px] text-primary">Summer Sessions</h2>
               <button
-                className="btn btn-primary"
+                className="btn btn-primary max-md:w-full"
                 onClick={() => setShowSessionModal(true)}>
                 Create Session
               </button>
             </div>
-            <div className="sessions-grid">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sessions.map((session) => (
-                <Card key={session.id} className="session-card">
-                  <h3>{session.name}</h3>
-                  <p>Year: {session.year}</p>
-                  <p>Start: {session.startDate}</p>
-                  <p>End: {session.endDate}</p>
+                <Card key={session.id} className="relative">
+                  <h3 className="text-xl text-primary mb-3">{session.name}</h3>
+                  <p className="text-sm text-secondary mb-2">
+                    Year: {session.year}
+                  </p>
+                  <p className="text-sm text-secondary mb-2">
+                    Start: {session.startDate}
+                  </p>
+                  <p className="text-sm text-secondary mb-2">
+                    End: {session.endDate}
+                  </p>
                   {session.active && (
-                    <span className="active-badge">Active</span>
+                    <span className="absolute top-6 right-6 px-3 py-1 bg-whatsapp-green text-main rounded-xl text-xs font-semibold">
+                      Active
+                    </span>
                   )}
                 </Card>
               ))}
@@ -321,7 +430,7 @@ const AdminDashboard = () => {
             />
           </div>
 
-          <div className="form-row">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-group">
               <label className="form-label">Subject *</label>
               <input
@@ -349,7 +458,7 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          <div className="form-row">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-group">
               <label className="form-label">Grade *</label>
               <input
@@ -440,7 +549,7 @@ const AdminDashboard = () => {
             />
           </div>
 
-          <div className="form-row">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-group">
               <label className="form-label">Start Date *</label>
               <input

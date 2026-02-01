@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
-import "./Activities.css";
 
 const Activities = () => {
   const activities = [
@@ -99,7 +98,7 @@ const Activities = () => {
       : activities.filter((a) => a.type === selectedType);
 
   return (
-    <div className="activities-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Our Activities"
         subtitle="Explore our teaching sessions and community programs"
@@ -107,27 +106,37 @@ const Activities = () => {
       />
 
       <div className="container">
-        <div className="activity-filters">
+        <div className="flex gap-3 mb-8 flex-wrap justify-center">
           {activityTypes.map((type) => (
             <button
               key={type}
-              className={`filter-btn ${selectedType === type ? "active" : ""}`}
+              className={`px-5 py-2.5 rounded-3xl text-sm font-medium transition-all duration-300 ${
+                selectedType === type
+                  ? "bg-whatsapp-green text-main border-whatsapp-green"
+                  : "bg-card text-secondary border-border hover:bg-main hover:text-primary"
+              } border`}
               onClick={() => setSelectedType(type)}>
               {type}
             </button>
           ))}
         </div>
 
-        <div className="activities-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredActivities.map((activity) => (
-            <Card key={activity.id} className="activity-card">
-              <div className="activity-icon">{activity.icon}</div>
-              <div className="activity-type-badge">{activity.type}</div>
-              <h3>{activity.title}</h3>
-              <p className="activity-date">{activity.date}</p>
-              <p className="activity-description">{activity.description}</p>
-              <div className="activity-participants">
-                <span className="participants-icon">👥</span>
+            <Card key={activity.id} className="relative">
+              <div className="text-5xl mb-4">{activity.icon}</div>
+              <div className="absolute top-6 right-6 bg-whatsapp-green text-main px-3 py-1 rounded-xl text-xs font-semibold">
+                {activity.type}
+              </div>
+              <h3 className="text-xl text-primary mb-2 leading-tight">
+                {activity.title}
+              </h3>
+              <p className="text-sm text-muted mb-3">{activity.date}</p>
+              <p className="text-base text-secondary leading-relaxed mb-4">
+                {activity.description}
+              </p>
+              <div className="flex items-center gap-2 pt-4 border-t border-border text-sm text-secondary font-medium">
+                <span className="text-lg">👥</span>
                 {activity.participants}
               </div>
             </Card>
@@ -135,7 +144,7 @@ const Activities = () => {
         </div>
 
         {filteredActivities.length === 0 && (
-          <div className="no-activities">
+          <div className="text-center py-[60px] text-secondary text-lg">
             <p>No activities found for this category.</p>
           </div>
         )}

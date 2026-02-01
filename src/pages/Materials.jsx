@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
-import "./Materials.css";
 
 const Materials = () => {
   const { materials, sessions } = useApp();
@@ -34,7 +33,7 @@ const Materials = () => {
   };
 
   return (
-    <div className="materials-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Learning Materials"
         subtitle="Download study materials and resources"
@@ -42,10 +41,10 @@ const Materials = () => {
       />
 
       <div className="container">
-        <div className="filters-section">
+        <div className="mb-8">
           <Card>
-            <h3>Filter Materials</h3>
-            <div className="filters-grid">
+            <h3 className="text-xl text-primary mb-5">Filter Materials</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
               <div className="form-group">
                 <label className="form-label">Subject</label>
                 <select
@@ -97,46 +96,52 @@ const Materials = () => {
           </Card>
         </div>
 
-        <div className="materials-count">
+        <div className="mb-6 text-secondary text-base">
           <p>
             Showing {filteredMaterials.length} material
             {filteredMaterials.length !== 1 ? "s" : ""}
           </p>
         </div>
 
-        <div className="materials-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMaterials.length === 0 ? (
-            <div className="no-materials">
+            <div className="col-span-full text-center py-[60px] text-secondary text-lg">
               <p>No materials found matching your filters.</p>
             </div>
           ) : (
             filteredMaterials.map((material) => (
-              <Card key={material.id} className="material-card">
-                <div className="material-header">
-                  <div className="material-icon">
+              <Card key={material.id} className="flex flex-col">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="text-[40px]">
                     {material.fileType === "PDF" && "📄"}
                     {material.fileType === "DOC" && "📝"}
                     {material.fileType === "PPT" && "📊"}
                   </div>
-                  <span className="material-type">{material.fileType}</span>
+                  <span className="bg-whatsapp-green text-main px-3 py-1 rounded-xl text-xs font-semibold">
+                    {material.fileType}
+                  </span>
                 </div>
-                <h3>{material.title}</h3>
-                <p className="material-description">{material.description}</p>
-                <div className="material-meta">
-                  <span className="meta-item">
-                    <span className="meta-icon">📚</span>
+                <h3 className="text-lg text-primary mb-3 leading-snug">
+                  {material.title}
+                </h3>
+                <p className="text-sm text-secondary mb-4 flex-grow">
+                  {material.description}
+                </p>
+                <div className="flex flex-col gap-2 mb-5 pt-4 border-t border-border">
+                  <span className="flex items-center gap-2 text-sm text-secondary">
+                    <span className="text-base">📚</span>
                     {material.subject}
                   </span>
-                  <span className="meta-item">
-                    <span className="meta-icon">🎓</span>
+                  <span className="flex items-center gap-2 text-sm text-secondary">
+                    <span className="text-base">🎓</span>
                     {material.level} - Grade {material.grade}
                   </span>
-                  <span className="meta-item">
-                    <span className="meta-icon">☀️</span>
+                  <span className="flex items-center gap-2 text-sm text-secondary">
+                    <span className="text-base">☀️</span>
                     {material.session}
                   </span>
-                  <span className="meta-item">
-                    <span className="meta-icon">👤</span>
+                  <span className="flex items-center gap-2 text-sm text-secondary">
+                    <span className="text-base">👤</span>
                     {material.uploadedBy}
                   </span>
                 </div>

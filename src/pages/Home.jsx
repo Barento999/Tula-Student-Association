@@ -1,133 +1,335 @@
 import { Link } from "react-router-dom";
-import "./Home.css";
+import { useState, useEffect } from "react";
+import {
+  FiTarget,
+  FiZap,
+  FiStar,
+  FiUsers,
+  FiBookOpen,
+  FiTrendingUp,
+  FiAward,
+  FiHeart,
+  FiBook,
+  FiArrowRight,
+} from "react-icons/fi";
 
 const Home = () => {
+  const [scrollY, setScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => setScrollY(window.scrollY);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <div className="home">
-      <section className="hero">
-        <div className="container">
-          <div className="hero-content">
-            <h1>Empowering Education in Tula Village</h1>
-            <p className="hero-subtitle">
-              University students returning home each summer to teach, support,
-              and inspire the next generation
-            </p>
-            <div className="hero-cta">
-              <Link to="/volunteer" className="btn btn-primary">
+    <div className="min-h-screen overflow-hidden">
+      {/* Hero Section with Parallax */}
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1219] via-main to-[#0d1821]">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+          <div
+            className="absolute bottom-20 right-10 w-96 h-96 bg-unread-badge/10 rounded-full blur-[120px] animate-pulse-slow"
+            style={{ animationDelay: "1s" }}></div>
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-whatsapp-green/5 rounded-full blur-[150px] animate-pulse-slow"
+            style={{ animationDelay: "2s" }}></div>
+        </div>
+
+        {/* Floating Particles */}
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-whatsapp-green/30 rounded-full animate-float"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 5}s`,
+                animationDuration: `${3 + Math.random() * 4}s`,
+              }}></div>
+          ))}
+        </div>
+
+        <div
+          className="container relative z-10 text-center"
+          style={{ transform: `translateY(${scrollY * 0.3}px)` }}>
+          {/* Main Heading with 3D Effect */}
+          <div className="mb-8 perspective-[1000px]">
+            <h1
+              className="text-6xl md:text-7xl lg:text-8xl font-black text-primary mb-4 leading-tight transform-gpu transition-all duration-700 hover:scale-105"
+              style={{
+                textShadow:
+                  "0 10px 30px rgba(37, 211, 102, 0.3), 0 0 60px rgba(37, 211, 102, 0.1)",
+                transform: `rotateX(${scrollY * 0.02}deg)`,
+              }}>
+              <span className="inline-block bg-gradient-to-r from-whatsapp-green via-primary to-whatsapp-green bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+                Tula Students
+              </span>
+              <br />
+              <span className="text-5xl md:text-6xl lg:text-7xl">
+                Association
+              </span>
+            </h1>
+          </div>
+
+          <p
+            className="text-xl md:text-2xl text-secondary max-w-3xl mx-auto mb-12 leading-relaxed opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
+            Empowering the next generation through education. University
+            students returning home each summer to teach, inspire, and transform
+            lives in Tula Village.
+          </p>
+
+          {/* CTA Buttons with 3D Hover */}
+          <div
+            className="flex flex-wrap gap-6 justify-center opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
+            <Link
+              to="/volunteer"
+              className="group relative px-8 py-4 bg-whatsapp-green text-main rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.4)] transform-gpu"
+              style={{ transformStyle: "preserve-3d" }}>
+              <span className="relative z-10 flex items-center gap-2">
+                <FiHeart className="w-5 h-5" />
                 Become a Volunteer
-              </Link>
-              <Link to="/student-registration" className="btn btn-secondary">
-                Student Registration
-              </Link>
-              <Link to="/materials" className="btn btn-secondary">
-                Download Materials
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="stats">
-        <div className="container">
-          <div className="stats-grid">
-            <div className="stat-card">
-              <div className="stat-icon">👨‍🎓</div>
-              <div className="stat-number">150+</div>
-              <div className="stat-label">Volunteers</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">📚</div>
-              <div className="stat-number">500+</div>
-              <div className="stat-label">Students Taught</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">📖</div>
-              <div className="stat-number">200+</div>
-              <div className="stat-label">Learning Materials</div>
-            </div>
-            <div className="stat-card">
-              <div className="stat-icon">☀️</div>
-              <div className="stat-number">5</div>
-              <div className="stat-label">Summer Sessions</div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mission">
-        <div className="container">
-          <h2>Our Mission</h2>
-          <p>
-            The Tula Students Association brings together university students
-            from across the country who share a common goal: giving back to
-            their community. Every summer vacation, our volunteers return to
-            Tula Village to provide free education and support to elementary,
-            secondary, and preparatory students.
-          </p>
-          <p>
-            We believe that education is the key to breaking the cycle of
-            poverty and creating opportunities for future generations. Through
-            our summer programs, we provide quality teaching, learning
-            materials, and financial support to ensure every child in Tula has
-            access to education.
-          </p>
-        </div>
-      </section>
-
-      <section className="programs-preview">
-        <div className="container">
-          <h2>Our Programs</h2>
-          <div className="programs-grid">
-            <div className="program-card">
-              <div className="program-icon">🎒</div>
-              <h3>Elementary Teaching</h3>
-              <p>
-                Foundation building for grades 1-6 with focus on core subjects
-              </p>
-              <Link to="/programs">Learn More →</Link>
-            </div>
-            <div className="program-card">
-              <div className="program-icon">📐</div>
-              <h3>Secondary Support</h3>
-              <p>
-                Advanced learning for grades 7-9 with specialized subject
-                teachers
-              </p>
-              <Link to="/programs">Learn More →</Link>
-            </div>
-            <div className="program-card">
-              <div className="program-icon">🎓</div>
-              <h3>Preparatory Exam Prep</h3>
-              <p>
-                Intensive preparation for grades 10-12 university entrance exams
-              </p>
-              <Link to="/programs">Learn More →</Link>
-            </div>
-            <div className="program-card">
-              <div className="program-icon">🤝</div>
-              <h3>Community Aid</h3>
-              <p>
-                Financial support and educational tools for students in need
-              </p>
-              <Link to="/programs">Learn More →</Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="cta-section">
-        <div className="container">
-          <h2>Join Us This Summer</h2>
-          <p>
-            Whether you're a university student looking to volunteer or a junior
-            student seeking support, we're here for you.
-          </p>
-          <div className="cta-buttons">
-            <Link to="/volunteer" className="btn btn-primary">
-              Volunteer Application
+                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-unread-badge to-whatsapp-green opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>
-            <Link to="/student-registration" className="btn btn-secondary">
-              Student Registration
+            <Link
+              to="/student-registration"
+              className="group relative px-8 py-4 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.3)] hover:border-whatsapp-green transform-gpu"
+              style={{ transformStyle: "preserve-3d" }}>
+              <span className="relative z-10 flex items-center gap-2">
+                <FiBook className="w-5 h-5" />
+                Register as Student
+                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              </span>
+              <div className="absolute inset-0 bg-whatsapp-green/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </Link>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 animate-bounce">
+            <div className="w-6 h-10 border-2 border-whatsapp-green/50 rounded-full flex justify-center pt-2">
+              <div className="w-1 h-3 bg-whatsapp-green rounded-full animate-pulse"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Mission Section with Parallax */}
+      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-card via-main to-card">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(37, 211, 102, 0.3) 1px, transparent 0)",
+              backgroundSize: "40px 40px",
+            }}></div>
+        </div>
+
+        <div className="container relative z-10">
+          <div className="max-w-4xl mx-auto">
+            <div className="text-center mb-16">
+              <span className="inline-block px-6 py-2 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-full text-whatsapp-green font-semibold mb-6">
+                Our Mission
+              </span>
+              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+                Building Futures Through{" "}
+                <span className="text-whatsapp-green">Education</span>
+              </h2>
+            </div>
+
+            <div className="grid md:grid-cols-2 gap-8">
+              {[
+                {
+                  icon: <FiTarget className="w-full h-full" />,
+                  title: "Our Vision",
+                  desc: "To create a sustainable model of community-driven education where every child in Tula Village has access to quality learning, regardless of their economic background.",
+                },
+                {
+                  icon: <FiZap className="w-full h-full" />,
+                  title: "Our Approach",
+                  desc: "University students return home during summer vacation to volunteer as teachers, bringing fresh perspectives and modern teaching methods to local students.",
+                },
+                {
+                  icon: <FiStar className="w-full h-full" />,
+                  title: "Our Impact",
+                  desc: "Beyond teaching, we provide learning materials, financial support for school supplies, and mentorship to help students achieve their academic goals.",
+                },
+                {
+                  icon: <FiUsers className="w-full h-full" />,
+                  title: "Our Community",
+                  desc: "We believe in the power of giving back. Every volunteer was once a student in Tula, creating a cycle of support that strengthens our entire community.",
+                },
+              ].map((item, index) => (
+                <div
+                  key={index}
+                  className="group bg-gradient-to-br from-[#1a2730] to-card rounded-2xl p-8 border border-border/50 hover:border-whatsapp-green/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                  style={{
+                    animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
+                  }}>
+                  <div
+                    className="w-16 h-16 mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    style={{
+                      filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
+                    }}>
+                    {item.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-primary mb-3">
+                    {item.title}
+                  </h3>
+                  <p className="text-secondary leading-relaxed">{item.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Programs Showcase */}
+      <section className="py-24 bg-gradient-to-b from-card to-main relative">
+        <div className="container">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+              Summer Programs 2024
+            </h2>
+            <p className="text-xl text-secondary max-w-2xl mx-auto">
+              Comprehensive educational support tailored for every grade level
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              {
+                icon: <FiBookOpen className="w-full h-full" />,
+                title: "Elementary Program",
+                grade: "Grades 1-8",
+                desc: "Building strong foundations in Mathematics, Science, English, and Arabic through interactive and engaging lessons.",
+                features: [
+                  "Interactive Learning",
+                  "Basic Skills",
+                  "Fun Activities",
+                ],
+                color: "from-blue-500/20 to-cyan-500/20",
+              },
+              {
+                icon: <FiTrendingUp className="w-full h-full" />,
+                title: "Secondary Support",
+                grade: "Grades 9-10",
+                desc: "Advanced subject tutoring with specialized teachers covering the complete secondary curriculum.",
+                features: [
+                  "Subject Experts",
+                  "Advanced Topics",
+                  "Study Skills",
+                ],
+                color: "from-green-500/20 to-emerald-500/20",
+              },
+              {
+                icon: <FiAward className="w-full h-full" />,
+                title: "Exam Preparation",
+                grade: "Grades 11-12",
+                desc: "Intensive preparation for university entrance exams with mock tests and proven strategies.",
+                features: ["Mock Exams", "Time Management", "Career Guidance"],
+                color: "from-purple-500/20 to-pink-500/20",
+              },
+            ].map((program, index) => (
+              <div
+                key={index}
+                className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-8 border border-border/50 hover:border-whatsapp-green transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_30px_80px_rgba(37,211,102,0.3)]"
+                style={{
+                  transformStyle: "preserve-3d",
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.2}s both`,
+                }}>
+                {/* Gradient Overlay */}
+                <div
+                  className={`absolute inset-0 bg-gradient-to-br ${program.color} opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-700`}></div>
+
+                <div className="relative z-10">
+                  <div
+                    className="w-16 h-16 mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                    style={{
+                      filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
+                    }}>
+                    {program.icon}
+                  </div>
+                  <span className="inline-block px-4 py-1 bg-whatsapp-green/20 border border-whatsapp-green/40 rounded-full text-whatsapp-green text-sm font-semibold mb-4">
+                    {program.grade}
+                  </span>
+                  <h3 className="text-2xl font-bold text-primary mb-3">
+                    {program.title}
+                  </h3>
+                  <p className="text-secondary mb-6 leading-relaxed">
+                    {program.desc}
+                  </p>
+
+                  <div className="space-y-2 mb-6">
+                    {program.features.map((feature, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center gap-2 text-sm text-secondary">
+                        <span className="text-whatsapp-green">✓</span>
+                        {feature}
+                      </div>
+                    ))}
+                  </div>
+
+                  <Link
+                    to="/programs"
+                    className="inline-flex items-center gap-2 text-whatsapp-green font-semibold group-hover:gap-4 transition-all duration-300">
+                    Learn More <span>→</span>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA with 3D Effect */}
+      <section className="py-32 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
+        {/* Animated Background */}
+        <div className="absolute inset-0">
+          <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(37,211,102,0.15)_0%,transparent_50%)] animate-pulse-slow"></div>
+          <div
+            className="absolute top-0 right-0 w-full h-full bg-[radial-gradient(circle_at_80%_50%,rgba(0,168,132,0.15)_0%,transparent_50%)] animate-pulse-slow"
+            style={{ animationDelay: "1s" }}></div>
+        </div>
+
+        <div className="container relative z-10 text-center">
+          <h2 className="text-5xl md:text-6xl font-black text-primary mb-6 leading-tight">
+            Ready to Make a{" "}
+            <span className="text-whatsapp-green">Difference?</span>
+          </h2>
+          <p className="text-xl text-secondary max-w-2xl mx-auto mb-12">
+            Join us this summer and be part of a movement that's transforming
+            education in Tula Village
+          </p>
+
+          <div className="flex flex-wrap gap-6 justify-center">
+            <Link
+              to="/volunteer"
+              className="group relative px-10 py-5 bg-whatsapp-green text-main rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.5)] transform-gpu">
+              <span className="relative z-10 flex items-center gap-3">
+                <FiHeart className="w-6 h-6" />
+                Volunteer Application
+                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-unread-badge to-whatsapp-green opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+            </Link>
+            <Link
+              to="/student-registration"
+              className="group relative px-10 py-5 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.4)] hover:border-whatsapp-green transform-gpu">
+              <span className="relative z-10 flex items-center gap-3">
+                <FiBook className="w-6 h-6" />
+                Student Registration
+                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              </span>
+              <div className="absolute inset-0 bg-whatsapp-green/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>
           </div>
         </div>

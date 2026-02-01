@@ -3,7 +3,6 @@ import { Navigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
-import "./StudentDashboard.css";
 
 const StudentDashboard = () => {
   const { user, materials } = useApp();
@@ -37,7 +36,7 @@ const StudentDashboard = () => {
   };
 
   return (
-    <div className="student-dashboard">
+    <div className="min-h-screen">
       <PageHeader
         title={`Welcome, ${user.fullName}!`}
         subtitle={`${user.level} - Grade ${user.grade}`}
@@ -45,57 +44,71 @@ const StudentDashboard = () => {
       />
 
       <div className="container">
-        <div className="dashboard-grid">
-          <Card className="student-info-card">
-            <h3>Your Information</h3>
-            <div className="info-item">
-              <span className="info-label">School:</span>
-              <span className="info-value">{user.schoolName}</span>
+        <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 mb-10">
+          <Card>
+            <h3 className="text-xl text-primary mb-5 pb-3 border-b border-border">
+              Your Information
+            </h3>
+            <div className="flex justify-between py-3 border-b border-border">
+              <span className="text-secondary font-medium">School:</span>
+              <span className="text-primary text-right">{user.schoolName}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Level:</span>
-              <span className="info-value">{user.level}</span>
+            <div className="flex justify-between py-3 border-b border-border">
+              <span className="text-secondary font-medium">Level:</span>
+              <span className="text-primary text-right">{user.level}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Grade:</span>
-              <span className="info-value">{user.grade}</span>
+            <div className="flex justify-between py-3 border-b border-border">
+              <span className="text-secondary font-medium">Grade:</span>
+              <span className="text-primary text-right">{user.grade}</span>
             </div>
-            <div className="info-item">
-              <span className="info-label">Subjects:</span>
-              <span className="info-value">{user.subjects.join(", ")}</span>
+            <div className="flex justify-between py-3 border-b border-border">
+              <span className="text-secondary font-medium">Subjects:</span>
+              <span className="text-primary text-right">
+                {user.subjects.join(", ")}
+              </span>
             </div>
             {user.phone && (
-              <div className="info-item">
-                <span className="info-label">Phone:</span>
-                <span className="info-value">{user.phone}</span>
+              <div className="flex justify-between py-3">
+                <span className="text-secondary font-medium">Phone:</span>
+                <span className="text-primary text-right">{user.phone}</span>
               </div>
             )}
           </Card>
 
-          <Card className="quick-stats">
-            <h3>Quick Stats</h3>
-            <div className="stat-item">
-              <div className="stat-icon">📚</div>
+          <Card>
+            <h3 className="text-xl text-primary mb-5 pb-3 border-b border-border">
+              Quick Stats
+            </h3>
+            <div className="flex items-center gap-4 py-4 border-b border-border">
+              <div className="text-4xl">📚</div>
               <div>
-                <div className="stat-number">{filteredMaterials.length}</div>
-                <div className="stat-label">Available Materials</div>
+                <div className="text-[28px] font-bold text-whatsapp-green">
+                  {filteredMaterials.length}
+                </div>
+                <div className="text-sm text-secondary">
+                  Available Materials
+                </div>
               </div>
             </div>
-            <div className="stat-item">
-              <div className="stat-icon">🎯</div>
+            <div className="flex items-center gap-4 py-4">
+              <div className="text-4xl">🎯</div>
               <div>
-                <div className="stat-number">{user.subjects.length}</div>
-                <div className="stat-label">Enrolled Subjects</div>
+                <div className="text-[28px] font-bold text-whatsapp-green">
+                  {user.subjects.length}
+                </div>
+                <div className="text-sm text-secondary">Enrolled Subjects</div>
               </div>
             </div>
           </Card>
         </div>
 
-        <section className="materials-section">
-          <h2>Your Learning Materials</h2>
+        <section>
+          <h2 className="text-[28px] text-primary mb-6">
+            Your Learning Materials
+          </h2>
 
-          <Card className="filters-card">
-            <div className="filters-grid">
+          <Card className="mb-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="form-group">
                 <label className="form-label">Filter by Subject</label>
                 <select
@@ -130,37 +143,43 @@ const StudentDashboard = () => {
             </div>
           </Card>
 
-          <div className="materials-grid">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {filteredMaterials.length === 0 ? (
-              <div className="no-materials">
+              <div className="col-span-full text-center py-[60px] text-secondary text-lg">
                 <p>
                   No materials available for your level yet. Check back soon!
                 </p>
               </div>
             ) : (
               filteredMaterials.map((material) => (
-                <Card key={material.id} className="material-card">
-                  <div className="material-header">
-                    <div className="material-icon">
+                <Card key={material.id} className="flex flex-col">
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="text-[40px]">
                       {material.fileType === "PDF" && "📄"}
                       {material.fileType === "DOC" && "📝"}
                       {material.fileType === "PPT" && "📊"}
                     </div>
-                    <span className="material-type">{material.fileType}</span>
+                    <span className="bg-whatsapp-green text-main px-3 py-1 rounded-xl text-xs font-semibold">
+                      {material.fileType}
+                    </span>
                   </div>
-                  <h3>{material.title}</h3>
-                  <p className="material-description">{material.description}</p>
-                  <div className="material-meta">
-                    <span className="meta-item">
-                      <span className="meta-icon">📚</span>
+                  <h3 className="text-lg text-primary mb-3 leading-snug">
+                    {material.title}
+                  </h3>
+                  <p className="text-sm text-secondary mb-4 flex-grow">
+                    {material.description}
+                  </p>
+                  <div className="flex flex-col gap-2 mb-5 pt-4 border-t border-border">
+                    <span className="flex items-center gap-2 text-sm text-secondary">
+                      <span className="text-base">📚</span>
                       {material.subject}
                     </span>
-                    <span className="meta-item">
-                      <span className="meta-icon">🎓</span>
+                    <span className="flex items-center gap-2 text-sm text-secondary">
+                      <span className="text-base">🎓</span>
                       Grade {material.grade}
                     </span>
-                    <span className="meta-item">
-                      <span className="meta-icon">👤</span>
+                    <span className="flex items-center gap-2 text-sm text-secondary">
+                      <span className="text-base">👤</span>
                       {material.uploadedBy}
                     </span>
                   </div>

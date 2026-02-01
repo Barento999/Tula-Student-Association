@@ -1,6 +1,5 @@
 import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
-import "./Programs.css";
 
 const Programs = () => {
   const programs = [
@@ -67,7 +66,7 @@ const Programs = () => {
   ];
 
   return (
-    <div className="programs-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Our Programs"
         subtitle="Comprehensive educational support for all grade levels"
@@ -75,8 +74,8 @@ const Programs = () => {
       />
 
       <div className="container">
-        <section className="programs-intro">
-          <p>
+        <section className="text-center mb-12">
+          <p className="text-lg text-secondary leading-relaxed max-w-[800px] mx-auto">
             Our summer programs are designed to provide comprehensive
             educational support to students at all levels. Each program is
             tailored to meet the specific needs of different age groups and
@@ -85,23 +84,33 @@ const Programs = () => {
           </p>
         </section>
 
-        <div className="programs-list">
+        <div className="mb-[60px] space-y-8">
           {programs.map((program) => (
-            <Card key={program.id} className="program-detail-card">
-              <div className="program-header">
-                <div className="program-icon-large">{program.icon}</div>
+            <Card key={program.id}>
+              <div className="flex items-center gap-5 mb-5 max-md:flex-col max-md:text-center">
+                <div className="text-[64px]">{program.icon}</div>
                 <div>
-                  <h2>{program.title}</h2>
-                  <span className="program-grades">{program.grades}</span>
+                  <h2 className="text-[28px] text-primary mb-2">
+                    {program.title}
+                  </h2>
+                  <span className="inline-block bg-whatsapp-green text-main px-3 py-1 rounded-2xl text-sm font-semibold">
+                    {program.grades}
+                  </span>
                 </div>
               </div>
-              <p className="program-description">{program.description}</p>
-              <div className="program-features">
-                <h3>What We Offer:</h3>
-                <ul>
+              <p className="text-lg text-secondary leading-relaxed mb-6">
+                {program.description}
+              </p>
+              <div>
+                <h3 className="text-xl text-primary mb-4">What We Offer:</h3>
+                <ul className="list-none p-0">
                   {program.features.map((feature, index) => (
-                    <li key={index}>
-                      <span className="feature-check">✓</span>
+                    <li
+                      key={index}
+                      className="flex items-center gap-3 py-2 text-base text-secondary">
+                      <span className="text-whatsapp-green text-xl font-bold">
+                        ✓
+                      </span>
                       {feature}
                     </li>
                   ))}
@@ -111,33 +120,45 @@ const Programs = () => {
           ))}
         </div>
 
-        <section className="program-schedule">
-          <h2>Program Schedule</h2>
+        <section className="mb-[60px]">
+          <h2 className="text-[32px] text-primary mb-6 text-center">
+            Program Schedule
+          </h2>
           <Card>
-            <div className="schedule-grid">
-              <div className="schedule-item">
-                <h3>📅 Duration</h3>
-                <p>June - August (Summer Vacation)</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="text-center p-4">
+                <h3 className="text-xl text-primary mb-3">📅 Duration</h3>
+                <p className="text-base text-secondary">
+                  June - August (Summer Vacation)
+                </p>
               </div>
-              <div className="schedule-item">
-                <h3>⏰ Sessions</h3>
-                <p>Morning and afternoon classes available</p>
+              <div className="text-center p-4">
+                <h3 className="text-xl text-primary mb-3">⏰ Sessions</h3>
+                <p className="text-base text-secondary">
+                  Morning and afternoon classes available
+                </p>
               </div>
-              <div className="schedule-item">
-                <h3>👥 Class Size</h3>
-                <p>Small groups for personalized attention</p>
+              <div className="text-center p-4">
+                <h3 className="text-xl text-primary mb-3">👥 Class Size</h3>
+                <p className="text-base text-secondary">
+                  Small groups for personalized attention
+                </p>
               </div>
-              <div className="schedule-item">
-                <h3>💰 Cost</h3>
-                <p>Completely FREE for all students</p>
+              <div className="text-center p-4">
+                <h3 className="text-xl text-primary mb-3">💰 Cost</h3>
+                <p className="text-base text-secondary">
+                  Completely FREE for all students
+                </p>
               </div>
             </div>
           </Card>
         </section>
 
-        <section className="program-cta">
-          <h2>Ready to Join?</h2>
-          <p>Register now to secure your spot in our summer programs</p>
+        <section className="text-center py-[60px] bg-card rounded-xl border border-border">
+          <h2 className="text-[32px] text-primary mb-4">Ready to Join?</h2>
+          <p className="text-lg text-secondary mb-8">
+            Register now to secure your spot in our summer programs
+          </p>
           <a href="/student-registration" className="btn btn-primary">
             Register as Student
           </a>

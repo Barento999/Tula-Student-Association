@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
 import PageHeader from "../components/PageHeader";
-import "./Volunteer.css";
 
 const Volunteer = () => {
   const { registerVolunteer } = useApp();
@@ -89,7 +88,7 @@ const Volunteer = () => {
   };
 
   return (
-    <div className="volunteer-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Become a Volunteer"
         subtitle="Join us in making a difference this summer"
@@ -97,45 +96,59 @@ const Volunteer = () => {
       />
 
       <div className="container">
-        <section className="volunteer-intro">
-          <h2>Why Volunteer?</h2>
-          <div className="benefits-grid">
-            <div className="benefit-card">
-              <div className="benefit-icon">❤️</div>
-              <h3>Give Back</h3>
-              <p>Make a meaningful impact in your community</p>
+        <section className="mb-[60px]">
+          <h2 className="text-[32px] text-primary text-center mb-10">
+            Why Volunteer?
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="bg-card border border-border rounded-xl p-8 text-center transition-transform duration-300 hover:-translate-y-1">
+              <div className="text-5xl mb-4">❤️</div>
+              <h3 className="text-xl text-primary mb-3">Give Back</h3>
+              <p className="text-base text-secondary">
+                Make a meaningful impact in your community
+              </p>
             </div>
-            <div className="benefit-card">
-              <div className="benefit-icon">📚</div>
-              <h3>Share Knowledge</h3>
-              <p>Use your university education to help others</p>
+            <div className="bg-card border border-border rounded-xl p-8 text-center transition-transform duration-300 hover:-translate-y-1">
+              <div className="text-5xl mb-4">📚</div>
+              <h3 className="text-xl text-primary mb-3">Share Knowledge</h3>
+              <p className="text-base text-secondary">
+                Use your university education to help others
+              </p>
             </div>
-            <div className="benefit-card">
-              <div className="benefit-icon">🌟</div>
-              <h3>Gain Experience</h3>
-              <p>Develop teaching and leadership skills</p>
+            <div className="bg-card border border-border rounded-xl p-8 text-center transition-transform duration-300 hover:-translate-y-1">
+              <div className="text-5xl mb-4">🌟</div>
+              <h3 className="text-xl text-primary mb-3">Gain Experience</h3>
+              <p className="text-base text-secondary">
+                Develop teaching and leadership skills
+              </p>
             </div>
-            <div className="benefit-card">
-              <div className="benefit-icon">👥</div>
-              <h3>Build Community</h3>
-              <p>Connect with fellow students and locals</p>
+            <div className="bg-card border border-border rounded-xl p-8 text-center transition-transform duration-300 hover:-translate-y-1">
+              <div className="text-5xl mb-4">👥</div>
+              <h3 className="text-xl text-primary mb-3">Build Community</h3>
+              <p className="text-base text-secondary">
+                Connect with fellow students and locals
+              </p>
             </div>
           </div>
         </section>
 
-        <div className="volunteer-form-container">
+        <div className="max-w-[800px] mx-auto">
           {success && (
-            <div className="success-banner">
-              <span className="success-icon">✓</span>
-              <p>
+            <div className="bg-whatsapp-green text-main px-6 py-4 rounded-lg mb-6 flex items-center gap-3">
+              <span className="text-2xl font-bold">✓</span>
+              <p className="text-base font-medium">
                 Thank you for registering! We'll contact you soon with more
                 details.
               </p>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="volunteer-form">
-            <h2>Volunteer Application</h2>
+          <form
+            onSubmit={handleSubmit}
+            className="bg-card border border-border rounded-xl p-10 max-md:p-6">
+            <h2 className="text-[28px] text-primary mb-8 text-center">
+              Volunteer Application
+            </h2>
 
             <div className="form-group">
               <label className="form-label">Full Name *</label>
@@ -152,7 +165,7 @@ const Volunteer = () => {
               )}
             </div>
 
-            <div className="form-row">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="form-group">
                 <label className="form-label">University *</label>
                 <input
@@ -186,7 +199,7 @@ const Volunteer = () => {
 
             <div className="form-group">
               <label className="form-label">Subjects You Can Teach *</label>
-              <div className="checkbox-grid">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                 {subjectOptions.map((subject) => (
                   <label key={subject} className="checkbox-label">
                     <input

@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import PageHeader from "../components/PageHeader";
-import "./StudentRegistration.css";
 
 const StudentRegistration = () => {
   const navigate = useNavigate();
@@ -81,13 +80,21 @@ const StudentRegistration = () => {
 
   if (success) {
     return (
-      <div className="registration-success">
+      <div className="min-h-[80vh] flex items-center justify-center">
         <div className="container">
-          <div className="success-card">
-            <div className="success-icon">✓</div>
-            <h2>Registration Successful!</h2>
-            <p>Welcome to Tula Students Association, {formData.fullName}!</p>
-            <p>Redirecting to your dashboard...</p>
+          <div className="bg-card border-2 border-whatsapp-green rounded-xl p-[60px_40px] text-center max-w-[500px] mx-auto max-md:p-[40px_24px]">
+            <div className="w-20 h-20 bg-whatsapp-green text-main rounded-full flex items-center justify-center text-5xl font-bold mx-auto mb-6">
+              ✓
+            </div>
+            <h2 className="text-[32px] text-primary mb-4">
+              Registration Successful!
+            </h2>
+            <p className="text-lg text-secondary mb-3">
+              Welcome to Tula Students Association, {formData.fullName}!
+            </p>
+            <p className="text-lg text-secondary mb-3">
+              Redirecting to your dashboard...
+            </p>
           </div>
         </div>
       </div>
@@ -95,7 +102,7 @@ const StudentRegistration = () => {
   }
 
   return (
-    <div className="student-registration-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Student Registration"
         subtitle="Join our summer learning programs"
@@ -103,8 +110,10 @@ const StudentRegistration = () => {
       />
 
       <div className="container">
-        <div className="registration-form-container">
-          <form onSubmit={handleSubmit} className="registration-form">
+        <div className="max-w-[700px] mx-auto">
+          <form
+            onSubmit={handleSubmit}
+            className="bg-card border border-border rounded-xl p-10 max-md:p-6">
             <div className="form-group">
               <label className="form-label">Full Name *</label>
               <input
@@ -135,7 +144,7 @@ const StudentRegistration = () => {
               )}
             </div>
 
-            <div className="form-row">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div className="form-group">
                 <label className="form-label">Education Level *</label>
                 <select
@@ -173,7 +182,7 @@ const StudentRegistration = () => {
 
             <div className="form-group">
               <label className="form-label">Subject Interests *</label>
-              <div className="checkbox-grid">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
                 {subjectOptions.map((subject) => (
                   <label key={subject} className="checkbox-label">
                     <input

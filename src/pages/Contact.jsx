@@ -1,6 +1,5 @@
 import { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import "./Contact.css";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +23,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="contact-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Contact Us"
         subtitle="Get in touch with the Tula Students Association"
@@ -32,65 +31,87 @@ const Contact = () => {
       />
 
       <div className="container">
-        <div className="contact-content">
-          <div className="contact-info">
-            <div className="info-card">
-              <div className="info-icon">📍</div>
-              <h3>Location</h3>
-              <p>Tula Village</p>
-              <p>Community Center</p>
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_1.5fr] gap-10">
+          <div className="flex flex-col gap-5">
+            <div className="bg-card border border-border rounded-xl p-6">
+              <div className="text-4xl mb-3">📍</div>
+              <h3 className="text-lg text-primary mb-3">Location</h3>
+              <p className="text-base text-secondary mb-1">Tula Village</p>
+              <p className="text-base text-secondary mb-1">Community Center</p>
             </div>
 
-            <div className="info-card">
-              <div className="info-icon">📧</div>
-              <h3>Email</h3>
-              <p>info@tulastudents.org</p>
-              <p>volunteer@tulastudents.org</p>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <div className="text-4xl mb-3">📧</div>
+              <h3 className="text-lg text-primary mb-3">Email</h3>
+              <p className="text-base text-secondary mb-1">
+                info@tulastudents.org
+              </p>
+              <p className="text-base text-secondary mb-1">
+                volunteer@tulastudents.org
+              </p>
             </div>
 
-            <div className="info-card">
-              <div className="info-icon">📱</div>
-              <h3>Phone</h3>
-              <p>+123 456 7890</p>
-              <p>Available during summer</p>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <div className="text-4xl mb-3">📱</div>
+              <h3 className="text-lg text-primary mb-3">Phone</h3>
+              <p className="text-base text-secondary mb-1">+123 456 7890</p>
+              <p className="text-base text-secondary mb-1">
+                Available during summer
+              </p>
             </div>
 
-            <div className="info-card">
-              <div className="info-icon">⏰</div>
-              <h3>Operating Hours</h3>
-              <p>Summer Season: June - August</p>
-              <p>Daily: 8:00 AM - 4:00 PM</p>
+            <div className="bg-card border border-border rounded-xl p-6">
+              <div className="text-4xl mb-3">⏰</div>
+              <h3 className="text-lg text-primary mb-3">Operating Hours</h3>
+              <p className="text-base text-secondary mb-1">
+                Summer Season: June - August
+              </p>
+              <p className="text-base text-secondary mb-1">
+                Daily: 8:00 AM - 4:00 PM
+              </p>
             </div>
 
-            <div className="social-section">
-              <h3>Follow Us</h3>
-              <div className="social-links">
-                <a href="#" className="social-link">
+            <div className="bg-card border border-border rounded-xl p-6">
+              <h3 className="text-lg text-primary mb-4">Follow Us</h3>
+              <div className="flex flex-col gap-3">
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-secondary text-base transition-colors duration-300 hover:text-whatsapp-green">
                   📘 Facebook
                 </a>
-                <a href="#" className="social-link">
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-secondary text-base transition-colors duration-300 hover:text-whatsapp-green">
                   🐦 Twitter
                 </a>
-                <a href="#" className="social-link">
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-secondary text-base transition-colors duration-300 hover:text-whatsapp-green">
                   📷 Instagram
                 </a>
-                <a href="#" className="social-link">
+                <a
+                  href="#"
+                  className="flex items-center gap-2 text-secondary text-base transition-colors duration-300 hover:text-whatsapp-green">
                   💬 WhatsApp
                 </a>
               </div>
             </div>
           </div>
 
-          <div className="contact-form-section">
+          <div className="bg-card border border-border rounded-xl p-10 max-md:p-6">
             {success && (
-              <div className="success-banner">
-                <span className="success-icon">✓</span>
-                <p>Thank you! We'll get back to you soon.</p>
+              <div className="bg-whatsapp-green text-main px-6 py-4 rounded-lg mb-6 flex items-center gap-3">
+                <span className="text-2xl font-bold">✓</span>
+                <p className="text-base font-medium">
+                  Thank you! We'll get back to you soon.
+                </p>
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="contact-form">
-              <h2>Send us a Message</h2>
+            <form onSubmit={handleSubmit}>
+              <h2 className="text-[28px] text-primary mb-8">
+                Send us a Message
+              </h2>
 
               <div className="form-group">
                 <label className="form-label">Name</label>

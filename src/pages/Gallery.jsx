@@ -1,6 +1,5 @@
 import { useState } from "react";
 import PageHeader from "../components/PageHeader";
-import "./Gallery.css";
 
 const Gallery = () => {
   const [selectedYear, setSelectedYear] = useState("2024");
@@ -58,7 +57,7 @@ const Gallery = () => {
   const years = Object.keys(galleryData);
 
   return (
-    <div className="gallery-page">
+    <div className="min-h-screen">
       <PageHeader
         title="Photo Gallery"
         subtitle="Memories from our summer programs"
@@ -66,27 +65,33 @@ const Gallery = () => {
       />
 
       <div className="container">
-        <div className="year-filters">
+        <div className="flex gap-3 mb-10 justify-center flex-wrap">
           {years.map((year) => (
             <button
               key={year}
-              className={`year-btn ${selectedYear === year ? "active" : ""}`}
+              className={`px-6 py-3 rounded-lg text-base font-medium transition-all duration-300 ${
+                selectedYear === year
+                  ? "bg-whatsapp-green text-main border-whatsapp-green"
+                  : "bg-card text-secondary border-border hover:bg-main hover:text-primary"
+              } border`}
               onClick={() => setSelectedYear(year)}>
               Summer {year}
             </button>
           ))}
         </div>
 
-        <div className="gallery-grid">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {galleryData[selectedYear].map((photo) => (
-            <div key={photo.id} className="gallery-item">
-              <div className="gallery-placeholder">
-                <span className="placeholder-icon">📸</span>
-                <p className="placeholder-text">Photo {photo.id}</p>
+            <div
+              key={photo.id}
+              className="bg-card border border-border rounded-xl overflow-hidden transition-all duration-300 hover:transform hover:-translate-y-1 hover:shadow-[0_8px_24px_rgba(37,211,102,0.1)]">
+              <div className="aspect-[4/3] bg-gradient-to-br from-main to-[#1a2730] flex flex-col items-center justify-center border-b border-border">
+                <span className="text-[64px] mb-3 opacity-50">📸</span>
+                <p className="text-muted text-sm">Photo {photo.id}</p>
               </div>
-              <div className="gallery-info">
-                <h3>{photo.title}</h3>
-                <p>{photo.description}</p>
+              <div className="p-5">
+                <h3 className="text-lg text-primary mb-2">{photo.title}</h3>
+                <p className="text-sm text-secondary">{photo.description}</p>
               </div>
             </div>
           ))}

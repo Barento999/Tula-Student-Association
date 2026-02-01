@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import "./AdminLogin.css";
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -43,17 +42,23 @@ const AdminLogin = () => {
   };
 
   return (
-    <div className="admin-login-page">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <div className="login-icon">🔐</div>
-            <h1>Admin Login</h1>
-            <p>Tula Students Association</p>
+    <div className="min-h-screen flex items-center justify-center p-5">
+      <div className="w-full max-w-[450px]">
+        <div className="bg-card border border-border rounded-xl p-12 max-md:p-8">
+          <div className="text-center mb-8">
+            <div className="text-[64px] mb-4">🔐</div>
+            <h1 className="text-[28px] text-primary mb-2">Admin Login</h1>
+            <p className="text-base text-secondary">
+              Tula Students Association
+            </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="login-form">
-            {error && <div className="error-banner">{error}</div>}
+          <form onSubmit={handleSubmit}>
+            {error && (
+              <div className="bg-[rgba(255,107,107,0.1)] border border-[#ff6b6b] text-[#ff6b6b] px-4 py-3 rounded-lg mb-5 text-center text-sm">
+                {error}
+              </div>
+            )}
 
             <div className="form-group">
               <label className="form-label">Username</label>
@@ -85,12 +90,12 @@ const AdminLogin = () => {
               Login
             </button>
 
-            <div className="demo-credentials">
-              <p>
-                <strong>Demo Credentials:</strong>
+            <div className="mt-6 p-4 bg-main border border-border rounded-lg text-center">
+              <p className="text-sm text-secondary my-1">
+                <strong className="text-primary">Demo Credentials:</strong>
               </p>
-              <p>Username: admin</p>
-              <p>Password: admin123</p>
+              <p className="text-sm text-secondary my-1">Username: admin</p>
+              <p className="text-sm text-secondary my-1">Password: admin123</p>
             </div>
           </form>
         </div>
