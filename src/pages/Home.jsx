@@ -15,6 +15,14 @@ import {
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [particles] = useState(() =>
+    [...Array(20)].map(() => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 3 + Math.random() * 4,
+    })),
+  );
 
   useEffect(() => {
     const handleScroll = () => setScrollY(window.scrollY);
@@ -25,8 +33,8 @@ const Home = () => {
   return (
     <div className="min-h-screen overflow-hidden">
       {/* Hero Section with Parallax */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1219] via-main to-[#0d1821]">
-        {/* Animated Background Elements */}
+      <section className="relative min-h-[100vh] md:min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-[#0a1219] via-main to-[#0d1821] px-4">
+        {/* Animated Background Elements - Same on all devices */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/10 rounded-full blur-[100px] animate-pulse-slow"></div>
           <div
@@ -37,45 +45,49 @@ const Home = () => {
             style={{ animationDelay: "2s" }}></div>
         </div>
 
-        {/* Floating Particles */}
+        {/* Floating Particles - Same on all devices */}
         <div className="absolute inset-0 pointer-events-none">
-          {[...Array(20)].map((_, i) => (
+          {particles.map((particle, i) => (
             <div
               key={i}
               className="absolute w-2 h-2 bg-whatsapp-green/30 rounded-full animate-float"
               style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${3 + Math.random() * 4}s`,
+                left: `${particle.left}%`,
+                top: `${particle.top}%`,
+                animationDelay: `${particle.delay}s`,
+                animationDuration: `${particle.duration}s`,
               }}></div>
           ))}
         </div>
 
         <div
-          className="container relative z-10 text-center"
-          style={{ transform: `translateY(${scrollY * 0.3}px)` }}>
+          className="container relative z-10 text-center px-4"
+          style={{
+            transform:
+              window.innerWidth > 768
+                ? `translateY(${scrollY * 0.3}px)`
+                : "none",
+          }}>
           {/* Main Heading with 3D Effect */}
-          <div className="mb-8 perspective-[1000px]">
+          <div className="mb-6 md:mb-8 perspective-[1000px]">
             <h1
-              className="text-6xl md:text-7xl lg:text-8xl font-black text-primary mb-4 leading-tight transform-gpu transition-all duration-700 hover:scale-105"
+              className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-primary mb-4 leading-tight transform-gpu transition-all duration-700"
               style={{
                 textShadow:
                   "0 10px 30px rgba(37, 211, 102, 0.3), 0 0 60px rgba(37, 211, 102, 0.1)",
-                transform: `rotateX(${scrollY * 0.02}deg)`,
               }}>
               <span className="inline-block bg-gradient-to-r from-whatsapp-green via-primary to-whatsapp-green bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
-                Tula Students
+                Welcome to Tula Students
               </span>
               <br />
-              <span className="text-5xl md:text-6xl lg:text-7xl">
+              <span className="text-3xl sm:text-4xl md:text-6xl lg:text-7xl">
                 Association
               </span>
             </h1>
           </div>
 
           <p
-            className="text-xl md:text-2xl text-secondary max-w-3xl mx-auto mb-12 leading-relaxed opacity-0 animate-fade-in-up"
+            className="text-base sm:text-lg md:text-2xl text-secondary max-w-3xl mx-auto mb-8 md:mb-12 leading-relaxed opacity-0 animate-fade-in-up px-4"
             style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
             Empowering the next generation through education. University
             students returning home each summer to teach, inspire, and transform
@@ -84,26 +96,26 @@ const Home = () => {
 
           {/* CTA Buttons with 3D Hover */}
           <div
-            className="flex flex-wrap gap-6 justify-center opacity-0 animate-fade-in-up"
+            className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center opacity-0 animate-fade-in-up px-4"
             style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
             <Link
               to="/volunteer"
-              className="group relative px-8 py-4 bg-whatsapp-green text-main rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.4)] transform-gpu"
+              className="group relative px-6 py-3 md:px-8 md:py-4 bg-whatsapp-green text-main rounded-2xl font-bold text-base md:text-lg overflow-hidden transition-all duration-500 hover:scale-105 md:hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.4)] transform-gpu w-full sm:w-auto"
               style={{ transformStyle: "preserve-3d" }}>
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2">
                 <FiHeart className="w-5 h-5" />
-                Become a Volunteer
+                <span className="whitespace-nowrap">Become a Volunteer</span>
                 <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-unread-badge to-whatsapp-green opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>
             <Link
               to="/student-registration"
-              className="group relative px-8 py-4 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.3)] hover:border-whatsapp-green transform-gpu"
+              className="group relative px-6 py-3 md:px-8 md:py-4 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-base md:text-lg overflow-hidden transition-all duration-500 hover:scale-105 md:hover:scale-110 hover:shadow-[0_20px_60px_rgba(37,211,102,0.3)] hover:border-whatsapp-green transform-gpu w-full sm:w-auto"
               style={{ transformStyle: "preserve-3d" }}>
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center justify-center gap-2">
                 <FiBook className="w-5 h-5" />
-                Register as Student
+                <span className="whitespace-nowrap">Register as Student</span>
                 <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </span>
               <div className="absolute inset-0 bg-whatsapp-green/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -120,7 +132,7 @@ const Home = () => {
       </section>
 
       {/* Mission Section with Parallax */}
-      <section className="py-24 relative overflow-hidden bg-gradient-to-br from-card via-main to-card">
+      <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-br from-card via-main to-card">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-5">
           <div
@@ -132,19 +144,19 @@ const Home = () => {
             }}></div>
         </div>
 
-        <div className="container relative z-10">
+        <div className="container relative z-10 px-4">
           <div className="max-w-4xl mx-auto">
-            <div className="text-center mb-16">
-              <span className="inline-block px-6 py-2 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-full text-whatsapp-green font-semibold mb-6">
+            <div className="text-center mb-12 md:mb-16">
+              <span className="inline-block px-4 md:px-6 py-2 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-full text-whatsapp-green font-semibold mb-4 md:mb-6 text-sm md:text-base">
                 Our Mission
               </span>
-              <h2 className="text-4xl md:text-5xl font-bold text-primary mb-6 leading-tight">
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-4 md:mb-6 leading-tight px-4">
                 Building Futures Through{" "}
                 <span className="text-whatsapp-green">Education</span>
               </h2>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               {[
                 {
                   icon: <FiTarget className="w-full h-full" />,
@@ -169,21 +181,23 @@ const Home = () => {
               ].map((item, index) => (
                 <div
                   key={index}
-                  className="group bg-gradient-to-br from-[#1a2730] to-card rounded-2xl p-8 border border-border/50 hover:border-whatsapp-green/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                  className="group bg-gradient-to-br from-[#1a2730] to-card rounded-2xl p-6 md:p-8 border border-border/50 hover:border-whatsapp-green/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
                   style={{
                     animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
                   }}>
                   <div
-                    className="w-16 h-16 mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                    className="w-12 h-12 md:w-16 md:h-16 mb-3 md:mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
                     style={{
                       filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
                     }}>
                     {item.icon}
                   </div>
-                  <h3 className="text-2xl font-bold text-primary mb-3">
+                  <h3 className="text-xl md:text-2xl font-bold text-primary mb-2 md:mb-3">
                     {item.title}
                   </h3>
-                  <p className="text-secondary leading-relaxed">{item.desc}</p>
+                  <p className="text-sm md:text-base text-secondary leading-relaxed">
+                    {item.desc}
+                  </p>
                 </div>
               ))}
             </div>
@@ -192,18 +206,18 @@ const Home = () => {
       </section>
 
       {/* Programs Showcase */}
-      <section className="py-24 bg-gradient-to-b from-card to-main relative">
-        <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-bold text-primary mb-4">
+      <section className="py-12 md:py-24 bg-gradient-to-b from-card to-main relative">
+        <div className="container px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
               Summer Programs 2024
             </h2>
-            <p className="text-xl text-secondary max-w-2xl mx-auto">
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
               Comprehensive educational support tailored for every grade level
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
             {[
               {
                 icon: <FiBookOpen className="w-full h-full" />,
@@ -291,7 +305,7 @@ const Home = () => {
       </section>
 
       {/* Final CTA with 3D Effect */}
-      <section className="py-32 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
+      <section className="py-16 md:py-32 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
         {/* Animated Background */}
         <div className="absolute inset-0">
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(37,211,102,0.15)_0%,transparent_50%)] animate-pulse-slow"></div>
@@ -300,34 +314,34 @@ const Home = () => {
             style={{ animationDelay: "1s" }}></div>
         </div>
 
-        <div className="container relative z-10 text-center">
-          <h2 className="text-5xl md:text-6xl font-black text-primary mb-6 leading-tight">
+        <div className="container relative z-10 text-center px-4">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-primary mb-4 md:mb-6 leading-tight">
             Ready to Make a{" "}
             <span className="text-whatsapp-green">Difference?</span>
           </h2>
-          <p className="text-xl text-secondary max-w-2xl mx-auto mb-12">
+          <p className="text-base sm:text-lg md:text-xl text-secondary max-w-2xl mx-auto mb-8 md:mb-12 px-4">
             Join us this summer and be part of a movement that's transforming
             education in Tula Village
           </p>
 
-          <div className="flex flex-wrap gap-6 justify-center">
+          <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6 justify-center">
             <Link
               to="/volunteer"
-              className="group relative px-10 py-5 bg-whatsapp-green text-main rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.5)] transform-gpu">
-              <span className="relative z-10 flex items-center gap-3">
-                <FiHeart className="w-6 h-6" />
-                Volunteer Application
-                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              className="group relative px-6 py-4 md:px-10 md:py-5 bg-whatsapp-green text-main rounded-2xl font-bold text-base md:text-lg overflow-hidden transition-all duration-500 hover:scale-105 md:hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.5)] transform-gpu w-full sm:w-auto">
+              <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+                <FiHeart className="w-5 h-5 md:w-6 md:h-6" />
+                <span className="whitespace-nowrap">Volunteer Application</span>
+                <FiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </span>
               <div className="absolute inset-0 bg-gradient-to-r from-unread-badge to-whatsapp-green opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>
             <Link
               to="/student-registration"
-              className="group relative px-10 py-5 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-lg overflow-hidden transition-all duration-500 hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.4)] hover:border-whatsapp-green transform-gpu">
-              <span className="relative z-10 flex items-center gap-3">
-                <FiBook className="w-6 h-6" />
-                Student Registration
-                <FiArrowRight className="w-5 h-5 transition-transform duration-300 group-hover:translate-x-2" />
+              className="group relative px-6 py-4 md:px-10 md:py-5 bg-card border-2 border-whatsapp-green/30 text-primary rounded-2xl font-bold text-base md:text-lg overflow-hidden transition-all duration-500 hover:scale-105 md:hover:scale-110 hover:shadow-[0_25px_70px_rgba(37,211,102,0.4)] hover:border-whatsapp-green transform-gpu w-full sm:w-auto">
+              <span className="relative z-10 flex items-center justify-center gap-2 md:gap-3">
+                <FiBook className="w-5 h-5 md:w-6 md:h-6" />
+                <span className="whitespace-nowrap">Student Registration</span>
+                <FiArrowRight className="w-4 h-4 md:w-5 md:h-5 transition-transform duration-300 group-hover:translate-x-2" />
               </span>
               <div className="absolute inset-0 bg-whatsapp-green/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             </Link>

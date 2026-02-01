@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import {
   FiMail,
   FiPhone,
@@ -9,11 +10,44 @@ import {
 } from "react-icons/fi";
 
 const Footer = () => {
+  const [particles] = useState(() =>
+    [...Array(10)].map(() => ({
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      delay: Math.random() * 5,
+      duration: 3 + Math.random() * 4,
+    })),
+  );
+
   return (
-    <footer className="bg-gradient-to-b from-card to-main border-t border-border py-12 relative overflow-hidden">
-      {/* Animated Background */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_20%_50%,rgba(37,211,102,0.2)_0%,transparent_50%)] animate-pulse-slow"></div>
+    <footer className="bg-gradient-to-br from-card via-main to-[#0d1821] border-t border-border py-12 relative overflow-hidden">
+      {/* Animated Background Gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-whatsapp-green/5 via-transparent to-unread-badge/5 animate-gradient bg-[length:200%_200%]"></div>
+
+      {/* Animated Blobs */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-20 -left-20 w-72 h-72 bg-whatsapp-green/10 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div
+          className="absolute -bottom-20 -right-20 w-96 h-96 bg-unread-badge/10 rounded-full blur-[120px] animate-pulse-slow"
+          style={{ animationDelay: "1s" }}></div>
+        <div
+          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-whatsapp-green/5 rounded-full blur-[150px] animate-pulse-slow"
+          style={{ animationDelay: "2s" }}></div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0 pointer-events-none">
+        {particles.map((particle, i) => (
+          <div
+            key={i}
+            className="absolute w-1 h-1 bg-whatsapp-green/20 rounded-full animate-float"
+            style={{
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+              animationDelay: `${particle.delay}s`,
+              animationDuration: `${particle.duration}s`,
+            }}></div>
+        ))}
       </div>
 
       <div className="container relative z-10">
@@ -31,60 +65,63 @@ const Footer = () => {
             </p>
           </div>
 
-          {/* Quick Links */}
-          <div
-            className="opacity-0 animate-fade-in-up"
-            style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
-            <h4 className="text-primary mb-4 text-base font-semibold">
-              Quick Links
-            </h4>
-            <div className="space-y-2">
-              <Link
-                to="/about"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                About Us
-              </Link>
-              <Link
-                to="/programs"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Programs
-              </Link>
-              <Link
-                to="/volunteer"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Become a Volunteer
-              </Link>
-              <Link
-                to="/contact"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Contact
-              </Link>
+          {/* Quick Links and For Students - Side by side on mobile */}
+          <div className="grid grid-cols-2 gap-6 md:contents">
+            {/* Quick Links */}
+            <div
+              className="opacity-0 animate-fade-in-up"
+              style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
+              <h4 className="text-primary mb-4 text-base font-semibold">
+                Quick Links
+              </h4>
+              <div className="space-y-2">
+                <Link
+                  to="/about"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  About Us
+                </Link>
+                <Link
+                  to="/programs"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Programs
+                </Link>
+                <Link
+                  to="/volunteer"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Become a Volunteer
+                </Link>
+                <Link
+                  to="/contact"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Contact
+                </Link>
+              </div>
             </div>
-          </div>
 
-          {/* For Students */}
-          <div
-            className="opacity-0 animate-fade-in-up"
-            style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
-            <h4 className="text-primary mb-4 text-base font-semibold">
-              For Students
-            </h4>
-            <div className="space-y-2">
-              <Link
-                to="/student-registration"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Register
-              </Link>
-              <Link
-                to="/materials"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Learning Materials
-              </Link>
-              <Link
-                to="/student-dashboard"
-                className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                Student Dashboard
-              </Link>
+            {/* For Students */}
+            <div
+              className="opacity-0 animate-fade-in-up"
+              style={{ animationDelay: "0.3s", animationFillMode: "forwards" }}>
+              <h4 className="text-primary mb-4 text-base font-semibold">
+                For Students
+              </h4>
+              <div className="space-y-2">
+                <Link
+                  to="/student-registration"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Register
+                </Link>
+                <Link
+                  to="/materials"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Learning Materials
+                </Link>
+                <Link
+                  to="/student-dashboard"
+                  className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
+                  Student Dashboard
+                </Link>
+              </div>
             </div>
           </div>
 
