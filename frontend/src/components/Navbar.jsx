@@ -105,10 +105,24 @@ const Navbar = () => {
                   </Link>
                 )}
                 {user.role === "student" && (
+                  <>
+                    <Link
+                      to="/student-dashboard"
+                      className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
+                      Dashboard
+                    </Link>
+                    <Link
+                      to="/student-profile"
+                      className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
+                      Profile
+                    </Link>
+                  </>
+                )}
+                {user.role === "volunteer" && (
                   <Link
-                    to="/student-dashboard"
+                    to="/volunteer-profile"
                     className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
-                    Dashboard
+                    Profile
                   </Link>
                 )}
                 <button

@@ -79,7 +79,7 @@ const StudentRegistration = () => {
     setSuccess(true);
 
     setTimeout(() => {
-      navigate("/student-dashboard");
+      navigate("/student-profile");
     }, 2000);
   };
 

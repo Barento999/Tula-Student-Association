@@ -21,7 +21,10 @@ import Volunteer from "./pages/Volunteer";
 import Activities from "./pages/Activities";
 import Gallery from "./pages/Gallery";
 import Contact from "./pages/Contact";
+import Donation from "./pages/Donation";
 import StudentDashboard from "./pages/StudentDashboard";
+import StudentProfile from "./pages/StudentProfile";
+import VolunteerProfile from "./pages/VolunteerProfile";
 import AdminLogin from "./pages/AdminLogin";
 import AdminDashboard from "./pages/AdminDashboard";
 
@@ -66,7 +69,10 @@ function App() {
               <Route path="/activities" element={<Activities />} />
               <Route path="/gallery" element={<Gallery />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/donation" element={<Donation />} />
               <Route path="/student-dashboard" element={<StudentDashboard />} />
+              <Route path="/student-profile" element={<StudentProfile />} />
+              <Route path="/volunteer-profile" element={<VolunteerProfile />} />
               <Route path="/admin/login" element={<AdminLogin />} />
               <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
