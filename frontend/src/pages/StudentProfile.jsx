@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
-import PageHeader from "../components/PageHeader";
+import {
+  FiEdit2,
+  FiSave,
+  FiX,
+  FiBook,
+  FiUser,
+  FiPhone,
+  FiAward,
+  FiUsers,
+} from "react-icons/fi";
 
 function StudentProfile() {
   const { user, students, updateStudent } = useApp();
@@ -9,12 +18,15 @@ function StudentProfile() {
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(null);
   const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
     school: "",
     gradeLevel: "",
     grade: "",
     subjectInterests: [],
     guardianName: "",
     phone: "",
+    gender: "",
   });
   const [showSuccess, setShowSuccess] = useState(false);
 
@@ -24,17 +36,19 @@ function StudentProfile() {
       return;
     }
 
-    // Find student profile
     const studentProfile = students.find((s) => s.userId === user._id);
     if (studentProfile) {
       setProfile(studentProfile);
       setFormData({
+        firstName: studentProfile.firstName || "",
+        middleName: studentProfile.middleName || "",
         school: studentProfile.school || "",
         gradeLevel: studentProfile.gradeLevel || "",
         grade: studentProfile.grade || "",
         subjectInterests: studentProfile.subjectInterests || [],
         guardianName: studentProfile.guardianName || "",
         phone: studentProfile.phone || "",
+        gender: studentProfile.gender || "",
       });
     }
   }, [user, students, navigate]);
@@ -71,9 +85,11 @@ function StudentProfile() {
 
   if (!profile || !user) {
     return (
-      <div
-        style={{ minHeight: "100vh", paddingTop: "80px", textAlign: "center" }}>
-        <p style={{ color: "#E9EDEF" }}>Loading profile...</p>
+      <div className="min-h-screen pt-20 flex items-center justify-center bg-[#0a1419]">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-whatsapp-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-primary text-lg">Loading profile...</p>
+        </div>
       </div>
     );
   }
@@ -92,521 +108,415 @@ function StudentProfile() {
   ];
 
   return (
-    <div
-      style={{ minHeight: "100vh", paddingTop: "80px", paddingBottom: "40px" }}>
-      <PageHeader
-        title="My Profile"
-        subtitle="View and manage your student profile"
-        icon="👤"
-      />
+    <div className="min-h-screen bg-[#0a1419] pt-20 pb-12">
+      <div className="container max-w-6xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-black text-whatsapp-green mb-2">
+            Welcome Back
+          </h1>
+          <p className="text-secondary text-lg">Your Profile Dashboard</p>
+        </div>
 
-      <div style={{ maxWidth: "800px", margin: "0 auto", padding: "0 20px" }}>
+        {/* Success Message */}
         {showSuccess && (
-          <div
-            style={{
-              backgroundColor: "#00A884",
-              color: "#fff",
-              padding: "15px 20px",
-              borderRadius: "8px",
-              marginBottom: "20px",
-              textAlign: "center",
-            }}>
+          <div className="mb-6 p-4 bg-whatsapp-green/20 border border-whatsapp-green rounded-xl text-whatsapp-green text-center font-semibold animate-fade-in">
             ✓ Profile updated successfully!
           </div>
         )}
 
-        <div
-          style={{
-            backgroundColor: "#1E2A32",
-            borderRadius: "12px",
-            padding: "40px",
-            boxShadow: "0 4px 6px rgba(0, 0, 0, 0.3)",
-          }}>
-          {/* User Info */}
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              gap: "20px",
-              marginBottom: "30px",
-              paddingBottom: "30px",
-              borderBottom: "1px solid #2A3942",
-            }}>
-            <div
-              style={{
-                width: "80px",
-                height: "80px",
-                borderRadius: "50%",
-                backgroundColor: "#25D366",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "36px",
-                color: "#fff",
-              }}>
-              {user.name.charAt(0).toUpperCase()}
+        {/* Main Profile Card */}
+        <div className="bg-[#1a2730] rounded-2xl p-8 mb-6 shadow-2xl">
+          {/* User Header */}
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700">
+            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-6xl text-white font-bold shadow-xl ring-4 ring-whatsapp-green/30">
+              {user?.name?.charAt(0).toUpperCase() || "?"}
             </div>
-            <div>
-              <h2
-                style={{
-                  fontSize: "24px",
-                  color: "#E9EDEF",
-                  marginBottom: "5px",
-                }}>
-                {user.name}
+            <div className="flex-1 text-center md:text-left">
+              <h2 className="text-3xl font-bold text-white mb-2">
+                {user?.name || "Student"}
               </h2>
-              <p style={{ color: "#8696A0", fontSize: "14px" }}>{user.email}</p>
-              <span
-                style={{
-                  display: "inline-block",
-                  padding: "4px 12px",
-                  backgroundColor: "rgba(37, 211, 102, 0.1)",
-                  color: "#25D366",
-                  borderRadius: "12px",
-                  fontSize: "12px",
-                  marginTop: "8px",
-                }}>
-                Student
+              <p className="text-whatsapp-green text-lg mb-3">
+                {user?.email || ""}
+              </p>
+              <span className="inline-block px-4 py-2 bg-whatsapp-green/20 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50">
+                👨‍🎓 Student
               </span>
             </div>
+            {!isEditing && (
+              <button
+                onClick={() => setIsEditing(true)}
+                className="flex items-center gap-2 px-6 py-3 bg-whatsapp-green hover:bg-[#00A884] text-white rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-whatsapp-green/50">
+                <FiEdit2 />
+                Edit Profile
+              </button>
+            )}
           </div>
 
-          {/* Edit Button */}
-          {!isEditing && (
-            <button
-              onClick={() => setIsEditing(true)}
-              style={{
-                padding: "12px 24px",
-                backgroundColor: "#25D366",
-                color: "#fff",
-                border: "none",
-                borderRadius: "8px",
-                fontSize: "16px",
-                fontWeight: "bold",
-                cursor: "pointer",
-                marginBottom: "30px",
-                transition: "all 0.3s ease",
-              }}
-              onMouseOver={(e) => (e.target.style.backgroundColor = "#00A884")}
-              onMouseOut={(e) => (e.target.style.backgroundColor = "#25D366")}>
-              Edit Profile
-            </button>
-          )}
-
           {isEditing ? (
-            <form onSubmit={handleSubmit}>
-              {/* School */}
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                  School Name *
-                </label>
-                <input
-                  type="text"
-                  name="school"
-                  value={formData.school}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px solid #2A3942",
-                    backgroundColor: "#0B141A",
-                    color: "#E9EDEF",
-                    fontSize: "16px",
-                  }}
-                />
-              </div>
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* First Name */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    First Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="Enter your first name"
+                  />
+                </div>
 
-              {/* Grade Level */}
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                  Grade Level *
-                </label>
-                <select
-                  name="gradeLevel"
-                  value={formData.gradeLevel}
-                  onChange={handleChange}
-                  required
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px solid #2A3942",
-                    backgroundColor: "#0B141A",
-                    color: "#E9EDEF",
-                    fontSize: "16px",
-                  }}>
-                  <option value="">Select Level</option>
-                  <option value="Elementary">Elementary (Grades 1-6)</option>
-                  <option value="Secondary">Secondary (Grades 7-9)</option>
-                  <option value="Preparatory">
-                    Preparatory (Grades 10-12)
-                  </option>
-                </select>
-              </div>
+                {/* Middle Name */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Middle Name
+                  </label>
+                  <input
+                    type="text"
+                    name="middleName"
+                    value={formData.middleName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="Enter your middle name"
+                  />
+                </div>
 
-              {/* Grade */}
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                  Current Grade
-                </label>
-                <input
-                  type="text"
-                  name="grade"
-                  value={formData.grade}
-                  onChange={handleChange}
-                  placeholder="e.g., Grade 8"
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px solid #2A3942",
-                    backgroundColor: "#0B141A",
-                    color: "#E9EDEF",
-                    fontSize: "16px",
-                  }}
-                />
+                {/* School */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    School Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="school"
+                    value={formData.school}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="Enter your school name"
+                  />
+                </div>
+
+                {/* Grade Level */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Grade Level *
+                  </label>
+                  <select
+                    name="gradeLevel"
+                    value={formData.gradeLevel}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors">
+                    <option value="">Select Level</option>
+                    <option value="Elementary">Elementary (Grades 1-6)</option>
+                    <option value="Secondary">Secondary (Grades 7-9)</option>
+                    <option value="Preparatory">
+                      Preparatory (Grades 10-12)
+                    </option>
+                  </select>
+                </div>
+
+                {/* Grade */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Current Grade
+                  </label>
+                  <input
+                    type="text"
+                    name="grade"
+                    value={formData.grade}
+                    onChange={handleChange}
+                    placeholder="e.g., Grade 8"
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Guardian Name */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Parent/Guardian Name
+                  </label>
+                  <input
+                    type="text"
+                    name="guardianName"
+                    value={formData.guardianName}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="Enter guardian name"
+                  />
+                </div>
+
+                {/* Phone */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Phone Number
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    placeholder="+251 9XX XXX XXX"
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                  />
+                </div>
+
+                {/* Gender */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Gender
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
               </div>
 
               {/* Subject Interests */}
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "12px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
+              <div>
+                <label className="block text-gray-400 text-sm uppercase tracking-wide mb-3">
                   Subject Interests *
                 </label>
-                <div
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(2, 1fr)",
-                    gap: "10px",
-                  }}>
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {subjects.map((subject) => (
                     <label
                       key={subject}
-                      style={{
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "8px",
-                        color: "#E9EDEF",
-                        cursor: "pointer",
-                      }}>
+                      className="flex items-center gap-2 px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg cursor-pointer hover:border-whatsapp-green transition-colors">
                       <input
                         type="checkbox"
                         value={subject}
                         checked={formData.subjectInterests.includes(subject)}
                         onChange={handleSubjectChange}
-                        style={{
-                          width: "18px",
-                          height: "18px",
-                          cursor: "pointer",
-                        }}
+                        className="w-4 h-4 accent-whatsapp-green"
                       />
-                      <span>{subject}</span>
+                      <span className="text-white text-sm">{subject}</span>
                     </label>
                   ))}
                 </div>
               </div>
 
-              {/* Guardian Name */}
-              <div style={{ marginBottom: "20px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                  Parent/Guardian Name
-                </label>
-                <input
-                  type="text"
-                  name="guardianName"
-                  value={formData.guardianName}
-                  onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px solid #2A3942",
-                    backgroundColor: "#0B141A",
-                    color: "#E9EDEF",
-                    fontSize: "16px",
-                  }}
-                />
-              </div>
-
-              {/* Phone */}
-              <div style={{ marginBottom: "30px" }}>
-                <label
-                  style={{
-                    display: "block",
-                    marginBottom: "8px",
-                    color: "#E9EDEF",
-                    fontSize: "14px",
-                    fontWeight: "500",
-                  }}>
-                  Phone Number
-                </label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  placeholder="+251 9XX XXX XXX"
-                  style={{
-                    width: "100%",
-                    padding: "12px",
-                    borderRadius: "8px",
-                    border: "2px solid #2A3942",
-                    backgroundColor: "#0B141A",
-                    color: "#E9EDEF",
-                    fontSize: "16px",
-                  }}
-                />
-              </div>
-
               {/* Buttons */}
-              <div style={{ display: "flex", gap: "15px" }}>
+              <div className="flex gap-4 pt-6">
                 <button
                   type="submit"
-                  style={{
-                    flex: 1,
-                    padding: "14px",
-                    backgroundColor: "#25D366",
-                    color: "#fff",
-                    border: "none",
-                    borderRadius: "8px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                  }}>
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-whatsapp-green hover:bg-[#00A884] text-white rounded-lg font-bold transition-all duration-300 shadow-lg">
+                  <FiSave />
                   Save Changes
                 </button>
                 <button
                   type="button"
                   onClick={() => setIsEditing(false)}
-                  style={{
-                    flex: 1,
-                    padding: "14px",
-                    backgroundColor: "transparent",
-                    color: "#8696A0",
-                    border: "2px solid #2A3942",
-                    borderRadius: "8px",
-                    fontSize: "16px",
-                    fontWeight: "bold",
-                    cursor: "pointer",
-                  }}>
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all duration-300">
+                  <FiX />
                   Cancel
                 </button>
               </div>
             </form>
           ) : (
-            <div>
-              {/* View Mode */}
-              <div style={{ display: "grid", gap: "20px" }}>
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      color: "#8696A0",
-                      fontSize: "12px",
-                      marginBottom: "5px",
-                    }}>
-                    School
-                  </label>
-                  <p style={{ color: "#E9EDEF", fontSize: "16px" }}>
-                    {profile.school}
-                  </p>
-                </div>
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      color: "#8696A0",
-                      fontSize: "12px",
-                      marginBottom: "5px",
-                    }}>
-                    Grade Level
-                  </label>
-                  <p style={{ color: "#E9EDEF", fontSize: "16px" }}>
-                    {profile.gradeLevel}
-                  </p>
-                </div>
-
-                {profile.grade && (
-                  <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#8696A0",
-                        fontSize: "12px",
-                        marginBottom: "5px",
-                      }}>
-                      Current Grade
-                    </label>
-                    <p style={{ color: "#E9EDEF", fontSize: "16px" }}>
-                      {profile.grade}
-                    </p>
-                  </div>
-                )}
-
-                <div>
-                  <label
-                    style={{
-                      display: "block",
-                      color: "#8696A0",
-                      fontSize: "12px",
-                      marginBottom: "5px",
-                    }}>
-                    Subject Interests
-                  </label>
-                  <div
-                    style={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: "8px",
-                      marginTop: "8px",
-                    }}>
-                    {profile.subjectInterests.map((subject) => (
-                      <span
-                        key={subject}
-                        style={{
-                          padding: "6px 12px",
-                          backgroundColor: "rgba(37, 211, 102, 0.1)",
-                          color: "#25D366",
-                          borderRadius: "12px",
-                          fontSize: "14px",
-                        }}>
-                        {subject}
-                      </span>
-                    ))}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {/* First Name */}
+              {profile.firstName && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiUser className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        First Name
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.firstName}
+                      </p>
+                    </div>
                   </div>
                 </div>
+              )}
 
-                {profile.guardianName && (
+              {/* Middle Name */}
+              {profile.middleName && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiUser className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        Middle Name
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.middleName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* School */}
+              <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                    <FiBook className="text-whatsapp-green text-xl" />
+                  </div>
                   <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#8696A0",
-                        fontSize: "12px",
-                        marginBottom: "5px",
-                      }}>
-                      Parent/Guardian
-                    </label>
-                    <p style={{ color: "#E9EDEF", fontSize: "16px" }}>
-                      {profile.guardianName}
+                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                      School
+                    </p>
+                    <p className="text-white text-lg font-bold">
+                      {profile.school}
                     </p>
                   </div>
-                )}
+                </div>
+              </div>
 
-                {profile.phone && (
+              {/* Grade Level */}
+              <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                <div className="flex items-center gap-4 mb-3">
+                  <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                    <FiAward className="text-whatsapp-green text-xl" />
+                  </div>
                   <div>
-                    <label
-                      style={{
-                        display: "block",
-                        color: "#8696A0",
-                        fontSize: "12px",
-                        marginBottom: "5px",
-                      }}>
-                      Phone Number
-                    </label>
-                    <p style={{ color: "#E9EDEF", fontSize: "16px" }}>
-                      {profile.phone}
+                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                      Grade Level
+                    </p>
+                    <p className="text-white text-lg font-bold">
+                      {profile.gradeLevel}
                     </p>
                   </div>
-                )}
+                </div>
+              </div>
+
+              {/* Grade */}
+              {profile.grade && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiAward className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        Current Grade
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.grade}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Guardian */}
+              {profile.guardianName && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiUser className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        Guardian
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.guardianName}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Phone */}
+              {profile.phone && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiPhone className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        Phone
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.phone}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Gender */}
+              {profile.gender && (
+                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
+                  <div className="flex items-center gap-4 mb-3">
+                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
+                      <FiUsers className="text-whatsapp-green text-xl" />
+                    </div>
+                    <div>
+                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                        Gender
+                      </p>
+                      <p className="text-white text-lg font-bold">
+                        {profile.gender}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* Subject Interests Display */}
+          {!isEditing && (
+            <div className="mt-8 pt-8 border-t border-gray-700">
+              <p className="text-gray-400 text-sm uppercase tracking-wide mb-4">
+                Subject Interests
+              </p>
+              <div className="flex flex-wrap gap-3">
+                {(profile.subjectInterests || []).map((subject) => (
+                  <span
+                    key={subject}
+                    className="px-4 py-2 bg-whatsapp-green/20 text-whatsapp-green rounded-lg text-sm font-semibold border border-whatsapp-green/50 hover:bg-whatsapp-green/30 transition-colors">
+                    {subject}
+                  </span>
+                ))}
               </div>
             </div>
           )}
         </div>
 
-        {/* Quick Actions */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-            gap: "20px",
-            marginTop: "30px",
-          }}>
-          <button
-            onClick={() => navigate("/student-dashboard")}
-            style={{
-              padding: "20px",
-              backgroundColor: "#1E2A32",
-              border: "2px solid #2A3942",
-              borderRadius: "12px",
-              color: "#E9EDEF",
-              fontSize: "16px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.borderColor = "#25D366";
-              e.target.style.backgroundColor = "rgba(37, 211, 102, 0.1)";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.borderColor = "#2A3942";
-              e.target.style.backgroundColor = "#1E2A32";
-            }}>
-            📊 Dashboard
-          </button>
-
-          <button
-            onClick={() => navigate("/materials")}
-            style={{
-              padding: "20px",
-              backgroundColor: "#1E2A32",
-              border: "2px solid #2A3942",
-              borderRadius: "12px",
-              color: "#E9EDEF",
-              fontSize: "16px",
-              fontWeight: "bold",
-              cursor: "pointer",
-              transition: "all 0.3s ease",
-            }}
-            onMouseOver={(e) => {
-              e.target.style.borderColor = "#25D366";
-              e.target.style.backgroundColor = "rgba(37, 211, 102, 0.1)";
-            }}
-            onMouseOut={(e) => {
-              e.target.style.borderColor = "#2A3942";
-              e.target.style.backgroundColor = "#1E2A32";
-            }}>
-            📚 Materials
-          </button>
-        </div>
+        {/* Quick Action - Minimized */}
+        <button
+          onClick={() => navigate("/materials")}
+          className="w-full bg-[#1a2730] hover:bg-[#1f2f3a] rounded-xl p-4 shadow-xl transition-all duration-300 border border-gray-700 hover:border-whatsapp-green group">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                <FiBook className="text-whatsapp-green text-2xl" />
+              </div>
+              <div className="text-left">
+                <h3 className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                  Learning Materials
+                </h3>
+              </div>
+            </div>
+            <div className="text-whatsapp-green text-2xl group-hover:translate-x-2 transition-transform">
+              →
+            </div>
+          </div>
+        </button>
       </div>
     </div>
   );

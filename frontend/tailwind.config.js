@@ -18,8 +18,10 @@ export default {
         float: "float 3s ease-in-out infinite",
         "pulse-slow": "pulse 8s ease-in-out infinite",
         "fade-in-up": "fadeInUp 0.8s ease-out forwards",
+        "fade-in": "fadeIn 0.5s ease-out forwards",
         gradient: "gradient 3s ease infinite",
         bounce: "bounce 2s infinite",
+        "scale-in": "scaleIn 0.5s ease-out forwards",
       },
       keyframes: {
         float: {
@@ -34,6 +36,20 @@ export default {
           "100%": {
             opacity: "1",
             transform: "translateY(0)",
+          },
+        },
+        fadeIn: {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        scaleIn: {
+          "0%": {
+            opacity: "0",
+            transform: "scale(0.9)",
+          },
+          "100%": {
+            opacity: "1",
+            transform: "scale(1)",
           },
         },
         gradient: {

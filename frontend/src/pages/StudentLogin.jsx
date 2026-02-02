@@ -48,7 +48,7 @@ const StudentLogin = () => {
     }
 
     login({ email: formData.email, role: "student" });
-    navigate("/student-dashboard");
+    navigate("/student-profile");
   };
 
   return (

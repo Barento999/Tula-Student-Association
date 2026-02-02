@@ -107,9 +107,9 @@ const Navbar = () => {
                 {user.role === "student" && (
                   <>
                     <Link
-                      to="/student-dashboard"
+                      to="/student-profile"
                       className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
-                      Dashboard
+                      Profile
                     </Link>
                     <Link
                       to="/student-profile"
@@ -222,10 +222,10 @@ const Navbar = () => {
               )}
               {user.role === "student" && (
                 <Link
-                  to="/student-dashboard"
+                  to="/student-profile"
                   onClick={closeMenu}
                   className="text-lg text-center font-bold py-3 bg-whatsapp-green text-main rounded-lg hover:bg-unread-badge transition-all duration-300">
-                  My Dashboard
+                  My Profile
                 </Link>
               )}
               <button

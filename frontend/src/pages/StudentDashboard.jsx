@@ -21,7 +21,7 @@ const StudentDashboard = () => {
   };
 
   const filteredMaterials = materials.filter((material) => {
-    if (material.level !== user.level) return false;
+    if (material.level !== user?.level) return false;
     if (filters.subject && material.subject !== filters.subject) return false;
     if (filters.grade && material.grade !== filters.grade) return false;
     return true;
@@ -38,8 +38,8 @@ const StudentDashboard = () => {
   return (
     <div className="min-h-screen">
       <PageHeader
-        title={`Welcome, ${user.fullName}!`}
-        subtitle={`${user.level} - Grade ${user.grade}`}
+        title={`Welcome, ${user?.fullName || "Student"}!`}
+        subtitle={`${user?.level || ""} - Grade ${user?.grade || ""}`}
         icon="👋"
       />
 
@@ -51,15 +51,21 @@ const StudentDashboard = () => {
             </h3>
             <div className="flex justify-between py-3 border-b border-border">
               <span className="text-secondary font-medium">School:</span>
-              <span className="text-primary text-right">{user.schoolName}</span>
+              <span className="text-primary text-right">
+                {user?.schoolName || "N/A"}
+              </span>
             </div>
             <div className="flex justify-between py-3 border-b border-border">
               <span className="text-secondary font-medium">Level:</span>
-              <span className="text-primary text-right">{user.level}</span>
+              <span className="text-primary text-right">
+                {user?.level || "N/A"}
+              </span>
             </div>
             <div className="flex justify-between py-3 border-b border-border">
               <span className="text-secondary font-medium">Grade:</span>
-              <span className="text-primary text-right">{user.grade}</span>
+              <span className="text-primary text-right">
+                {user?.grade || "N/A"}
+              </span>
             </div>
             <div className="flex justify-between py-3 border-b border-border">
               <span className="text-secondary font-medium">Subjects:</span>
@@ -67,7 +73,7 @@ const StudentDashboard = () => {
                 {user.subjects?.join(", ") || "N/A"}
               </span>
             </div>
-            {user.phone && (
+            {user?.phone && (
               <div className="flex justify-between py-3">
                 <span className="text-secondary font-medium">Phone:</span>
                 <span className="text-primary text-right">{user.phone}</span>

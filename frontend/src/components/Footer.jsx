@@ -117,9 +117,9 @@ const Footer = () => {
                   Learning Materials
                 </Link>
                 <Link
-                  to="/student-dashboard"
+                  to="/materials"
                   className="block text-secondary transition-all duration-300 hover:text-whatsapp-green hover:translate-x-2">
-                  Student Dashboard
+                  Learning Materials
                 </Link>
               </div>
             </div>

@@ -118,14 +118,36 @@ export const AppProvider = ({ children }) => {
     return newSession;
   };
 
+  const updateStudent = (studentId, updatedData) => {
+    const updatedStudents = students.map((student) =>
+      student._id === studentId || student.id === studentId
+        ? { ...student, ...updatedData }
+        : student,
+    );
+    setStudents(updatedStudents);
+    localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
+  };
+
+  const updateVolunteer = (volunteerId, updatedData) => {
+    const updatedVolunteers = volunteers.map((volunteer) =>
+      volunteer._id === volunteerId || volunteer.id === volunteerId
+        ? { ...volunteer, ...updatedData }
+        : volunteer,
+    );
+    setVolunteers(updatedVolunteers);
+    localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
+  };
+
   const value = {
     user,
     login,
     logout,
     students,
     registerStudent,
+    updateStudent,
     volunteers,
     registerVolunteer,
+    updateVolunteer,
     materials,
     addMaterial,
     sessions,
