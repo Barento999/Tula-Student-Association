@@ -10,6 +10,13 @@ import {
   FiMail,
   FiShield,
   FiCalendar,
+  FiTrash2,
+  FiEye,
+  FiUsers,
+  FiBook,
+  FiSun,
+  FiFileText,
+  FiPlus,
 } from "react-icons/fi";
 
 const AdminDashboard = () => {
@@ -21,12 +28,21 @@ const AdminDashboard = () => {
     sessions,
     addMaterial,
     addSession,
+    deleteStudent,
+    deleteVolunteer,
+    deleteMaterial,
+    deleteSession,
+    updateMaterial,
+    updateSession,
   } = useApp();
   const [activeTab, setActiveTab] = useState("overview");
   const [showMaterialModal, setShowMaterialModal] = useState(false);
   const [showSessionModal, setShowSessionModal] = useState(false);
   const [isEditingProfile, setIsEditingProfile] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [selectedItem, setSelectedItem] = useState(null);
+  const [showViewModal, setShowViewModal] = useState(false);
+  const [editingItem, setEditingItem] = useState(null);
 
   const [adminProfile, setAdminProfile] = useState({
     fullName: user?.fullName || "Administrator",
@@ -80,11 +96,23 @@ const AdminDashboard = () => {
     const selectedSession = sessions.find(
       (s) => s.id === parseInt(materialForm.sessionId),
     );
-    addMaterial({
-      ...materialForm,
-      session: selectedSession?.name || "",
-      sessionId: parseInt(materialForm.sessionId),
-    });
+
+    if (editingItem) {
+      // Update existing material
+      updateMaterial(editingItem.id, {
+        ...materialForm,
+        session: selectedSession?.name || "",
+        sessionId: parseInt(materialForm.sessionId),
+      });
+    } else {
+      // Add new material
+      addMaterial({
+        ...materialForm,
+        session: selectedSession?.name || "",
+        sessionId: parseInt(materialForm.sessionId),
+      });
+    }
+
     setMaterialForm({
       title: "",
       subject: "",
@@ -96,12 +124,21 @@ const AdminDashboard = () => {
       session: "",
       sessionId: "",
     });
+    setEditingItem(null);
     setShowMaterialModal(false);
   };
 
   const handleSessionSubmit = (e) => {
     e.preventDefault();
-    addSession(sessionForm);
+
+    if (editingItem) {
+      // Update existing session
+      updateSession(editingItem.id, sessionForm);
+    } else {
+      // Add new session
+      addSession(sessionForm);
+    }
+
     setSessionForm({
       name: "",
       year: new Date().getFullYear(),
@@ -109,6 +146,7 @@ const AdminDashboard = () => {
       endDate: "",
       active: false,
     });
+    setEditingItem(null);
     setShowSessionModal(false);
   };
 
@@ -123,6 +161,60 @@ const AdminDashboard = () => {
     setShowSuccess(true);
     setIsEditingProfile(false);
     setTimeout(() => setShowSuccess(false), 3000);
+  };
+
+  const handleDelete = (type, id) => {
+    if (window.confirm(`Are you sure you want to delete this ${type}?`)) {
+      switch (type) {
+        case "student":
+          deleteStudent(id);
+          break;
+        case "volunteer":
+          deleteVolunteer(id);
+          break;
+        case "material":
+          deleteMaterial(id);
+          break;
+        case "session":
+          deleteSession(id);
+          break;
+        default:
+          break;
+      }
+    }
+  };
+
+  const handleView = (item, type) => {
+    setSelectedItem({ ...item, type });
+    setShowViewModal(true);
+  };
+
+  const handleEditMaterial = (material) => {
+    setEditingItem(material);
+    setMaterialForm({
+      title: material.title,
+      subject: material.subject,
+      level: material.level,
+      grade: material.grade,
+      fileType: material.fileType,
+      description: material.description,
+      uploadedBy: material.uploadedBy,
+      session: material.session,
+      sessionId: material.sessionId,
+    });
+    setShowMaterialModal(true);
+  };
+
+  const handleEditSession = (session) => {
+    setEditingItem(session);
+    setSessionForm({
+      name: session.name,
+      year: session.year,
+      startDate: session.startDate,
+      endDate: session.endDate,
+      active: session.active,
+    });
+    setShowSessionModal(true);
   };
 
   return (
@@ -210,8 +302,10 @@ const AdminDashboard = () => {
           <div className="flex flex-col gap-10">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="text-[56px] mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  👨‍🎓
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiUser className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                 </div>
                 <div className="text-5xl font-bold text-whatsapp-green mb-2">
                   {students.length}
@@ -221,8 +315,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
               <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="text-[56px] mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  🤝
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiUsers className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                 </div>
                 <div className="text-5xl font-bold text-whatsapp-green mb-2">
                   {volunteers.length}
@@ -230,8 +326,10 @@ const AdminDashboard = () => {
                 <div className="text-base text-gray-400">Active Volunteers</div>
               </div>
               <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="text-[56px] mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  📚
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiBook className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                 </div>
                 <div className="text-5xl font-bold text-whatsapp-green mb-2">
                   {materials.length}
@@ -241,8 +339,10 @@ const AdminDashboard = () => {
                 </div>
               </div>
               <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="text-[56px] mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                  ☀️
+                <div className="flex items-center justify-center mb-4">
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiSun className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                 </div>
                 <div className="text-5xl font-bold text-whatsapp-green mb-2">
                   {sessions.length}
@@ -259,17 +359,17 @@ const AdminDashboard = () => {
                 <button
                   className="group flex flex-col items-center gap-3 p-8 bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl text-white text-base font-bold transition-all duration-300 hover:border-whatsapp-green/50 hover:transform hover:-translate-y-2 hover:shadow-lg hover:shadow-whatsapp-green/20"
                   onClick={() => setShowMaterialModal(true)}>
-                  <span className="text-5xl transform group-hover:scale-110 transition-transform duration-300">
-                    📄
-                  </span>
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiFileText className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                   Upload Material
                 </button>
                 <button
                   className="group flex flex-col items-center gap-3 p-8 bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl text-white text-base font-bold transition-all duration-300 hover:border-whatsapp-green/50 hover:transform hover:-translate-y-2 hover:shadow-lg hover:shadow-whatsapp-green/20"
                   onClick={() => setShowSessionModal(true)}>
-                  <span className="text-5xl transform group-hover:scale-110 transition-transform duration-300">
-                    ➕
-                  </span>
+                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
+                    <FiPlus className="w-8 h-8 text-whatsapp-green" />
+                  </div>
                   Create Session
                 </button>
               </div>
@@ -478,62 +578,141 @@ const AdminDashboard = () => {
             <h2 className="text-3xl font-bold text-white mb-6">
               Registered Students
             </h2>
-            <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead className="bg-[#0f1b24]">
-                    <tr>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Name
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        School
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Level
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Grade
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Subjects
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Phone
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {students.map((student) => (
-                      <tr
-                        key={student.id}
-                        className="hover:bg-[#0f1b24] transition-colors">
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {student.fullName}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {student.schoolName}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {student.level}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {student.grade}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {student.subjects.join(", ")}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
+            <div className="grid grid-cols-1 gap-4">
+              {students.map((student, index) => (
+                <div
+                  key={student.id}
+                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Avatar & Name Section */}
+                    <div className="flex items-center gap-4 lg:w-1/4">
+                      <div className="relative flex-shrink-0">
+                        <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
+                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
+                          {(student.firstName || student.fullName || "?")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-white truncate">
+                          {student.fullName ||
+                            `${student.firstName} ${student.middleName || ""} ${student.lastName || ""}`.trim()}
+                        </h3>
+                        <p className="text-sm text-whatsapp-green truncate">
+                          {student.email || "No email"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Info Grid */}
+                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Phone
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
                           {student.phone || "N/A"}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Gender
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium">
+                          {student.gender || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          School
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {student.schoolName || student.school || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Level
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium">
+                          {student.level || student.gradeLevel || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Grade
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium">
+                          {student.grade || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Guardian
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {student.guardianName || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
+                          Subjects
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {(student.subjects || student.subjectInterests || [])
+                            .slice(0, 3)
+                            .map((subject, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
+                                {subject}
+                              </span>
+                            ))}
+                          {(student.subjects || student.subjectInterests || [])
+                            .length > 3 && (
+                            <span className="px-2 py-0.5 text-gray-400 text-xs">
+                              +
+                              {(
+                                student.subjects ||
+                                student.subjectInterests ||
+                                []
+                              ).length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex lg:flex-col gap-2 lg:w-auto">
+                      <button
+                        onClick={() => handleView(student, "student")}
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                        title="View Details">
+                        <FiEye className="w-4 h-4" />
+                        <span className="lg:hidden">View</span>
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDelete("student", student._id || student.id)
+                        }
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                        title="Delete">
+                        <FiTrash2 className="w-4 h-4" />
+                        <span className="lg:hidden">Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
               {students.length === 0 && (
-                <div className="py-16 px-5 text-center text-gray-400 text-base">
-                  No students registered yet.
+                <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                  <div className="text-6xl mb-4 opacity-20">📚</div>
+                  <p className="text-gray-400 text-lg">
+                    No students registered yet.
+                  </p>
                 </div>
               )}
             </div>
@@ -545,56 +724,138 @@ const AdminDashboard = () => {
             <h2 className="text-3xl font-bold text-white mb-6">
               Registered Volunteers
             </h2>
-            <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="overflow-x-auto">
-                <table className="w-full border-collapse">
-                  <thead className="bg-[#0f1b24]">
-                    <tr>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Name
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        University
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Department
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Subjects
-                      </th>
-                      <th className="p-4 text-left font-semibold text-whatsapp-green border-b border-gray-700">
-                        Preferred Level
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {volunteers.map((volunteer) => (
-                      <tr
-                        key={volunteer.id}
-                        className="hover:bg-[#0f1b24] transition-colors">
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {volunteer.fullName}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {volunteer.university}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {volunteer.department}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {volunteer.subjects.join(", ")}
-                        </td>
-                        <td className="p-4 text-gray-300 border-b border-gray-700/50">
-                          {volunteer.preferredLevel}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+            <div className="grid grid-cols-1 gap-4">
+              {volunteers.map((volunteer, index) => (
+                <div
+                  key={volunteer.id}
+                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}>
+                  <div className="flex flex-col lg:flex-row gap-6">
+                    {/* Avatar & Name Section */}
+                    <div className="flex items-center gap-4 lg:w-1/4">
+                      <div className="relative flex-shrink-0">
+                        <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
+                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
+                          {(volunteer.firstName || volunteer.fullName || "?")
+                            .charAt(0)
+                            .toUpperCase()}
+                        </div>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-lg font-bold text-white truncate">
+                          {volunteer.fullName ||
+                            `${volunteer.firstName} ${volunteer.middleName || ""} ${volunteer.lastName || ""}`.trim()}
+                        </h3>
+                        <p className="text-sm text-whatsapp-green truncate">
+                          {volunteer.email || "No email"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Info Grid */}
+                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Phone
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {volunteer.phone || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Gender
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium">
+                          {volunteer.gender || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          University
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {volunteer.university || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Department
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {volunteer.department || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Level
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium">
+                          {volunteer.preferredLevel || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2 md:col-span-1">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                          Availability
+                        </p>
+                        <p className="text-sm text-gray-300 font-medium truncate">
+                          {volunteer.availability || "N/A"}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
+                          Teaching Subjects
+                        </p>
+                        <div className="flex flex-wrap gap-1">
+                          {(volunteer.subjects || [])
+                            .slice(0, 3)
+                            .map((subject, idx) => (
+                              <span
+                                key={idx}
+                                className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
+                                {subject}
+                              </span>
+                            ))}
+                          {(volunteer.subjects || []).length > 3 && (
+                            <span className="px-2 py-0.5 text-gray-400 text-xs">
+                              +{(volunteer.subjects || []).length - 3}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex lg:flex-col gap-2 lg:w-auto">
+                      <button
+                        onClick={() => handleView(volunteer, "volunteer")}
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                        title="View Details">
+                        <FiEye className="w-4 h-4" />
+                        <span className="lg:hidden">View</span>
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDelete(
+                            "volunteer",
+                            volunteer._id || volunteer.id,
+                          )
+                        }
+                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                        title="Delete">
+                        <FiTrash2 className="w-4 h-4" />
+                        <span className="lg:hidden">Delete</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
               {volunteers.length === 0 && (
-                <div className="py-16 px-5 text-center text-gray-400 text-base">
-                  No volunteers registered yet.
+                <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                  <div className="text-6xl mb-4 opacity-20">🤝</div>
+                  <p className="text-gray-400 text-lg">
+                    No volunteers registered yet.
+                  </p>
                 </div>
               )}
             </div>
@@ -608,46 +869,123 @@ const AdminDashboard = () => {
                 Learning Materials
               </h2>
               <button
-                className="px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
-                onClick={() => setShowMaterialModal(true)}>
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
+                onClick={() => {
+                  setEditingItem(null);
+                  setMaterialForm({
+                    title: "",
+                    subject: "",
+                    level: "",
+                    grade: "",
+                    fileType: "PDF",
+                    description: "",
+                    uploadedBy: "Admin",
+                    session: "",
+                    sessionId: "",
+                  });
+                  setShowMaterialModal(true);
+                }}>
+                <FiPlus className="w-5 h-5" />
                 Upload Material
               </button>
             </div>
-            <div className="flex flex-col gap-4">
-              {materials.map((material) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {materials.map((material, index) => (
                 <div
                   key={material.id}
-                  className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10">
-                  <div>
-                    <h3 className="text-xl text-white font-bold mb-2">
-                      {material.title}
-                    </h3>
-                    <p className="text-sm text-gray-400 mb-3">
-                      {material.description}
-                    </p>
-                    <div className="flex gap-2 flex-wrap">
-                      <span className="px-3 py-1 bg-[#0f1b24] border border-gray-700 rounded-xl text-xs text-whatsapp-green font-semibold">
-                        {material.subject}
-                      </span>
-                      <span className="px-3 py-1 bg-[#0f1b24] border border-gray-700 rounded-xl text-xs text-gray-300">
-                        {material.level}
-                      </span>
-                      <span className="px-3 py-1 bg-[#0f1b24] border border-gray-700 rounded-xl text-xs text-gray-300">
-                        Grade {material.grade}
-                      </span>
-                      <span className="px-3 py-1 bg-[#0f1b24] border border-gray-700 rounded-xl text-xs text-gray-300">
-                        {material.fileType}
-                      </span>
-                      <span className="px-3 py-1 bg-[#0f1b24] border border-gray-700 rounded-xl text-xs text-gray-300">
-                        {material.session}
-                      </span>
+                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-1 animate-fade-in-up"
+                  style={{ animationDelay: `${index * 0.05}s` }}>
+                  {/* Icon & File Type */}
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-whatsapp-green/20 rounded-lg blur-md"></div>
+                      <div className="relative w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center border border-whatsapp-green/30">
+                        <FiFileText className="w-6 h-6 text-whatsapp-green" />
+                      </div>
                     </div>
+                    <span className="px-3 py-1 bg-[#0f1b24] border border-whatsapp-green/30 rounded-lg text-xs text-whatsapp-green font-bold">
+                      {material.fileType}
+                    </span>
+                  </div>
+
+                  {/* Title */}
+                  <h3 className="text-lg text-white font-bold mb-2 line-clamp-2 min-h-[3.5rem]">
+                    {material.title}
+                  </h3>
+
+                  {/* Description */}
+                  <p className="text-sm text-gray-400 mb-4 line-clamp-2 min-h-[2.5rem]">
+                    {material.description || "No description available"}
+                  </p>
+
+                  {/* Info Grid */}
+                  <div className="grid grid-cols-2 gap-2 mb-4">
+                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                        Subject
+                      </p>
+                      <p className="text-xs text-gray-300 font-medium truncate">
+                        {material.subject}
+                      </p>
+                    </div>
+                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                        Level
+                      </p>
+                      <p className="text-xs text-gray-300 font-medium truncate">
+                        {material.level}
+                      </p>
+                    </div>
+                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                        Grade
+                      </p>
+                      <p className="text-xs text-gray-300 font-medium">
+                        {material.grade}
+                      </p>
+                    </div>
+                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                        Session
+                      </p>
+                      <p className="text-xs text-gray-300 font-medium truncate">
+                        {material.session}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <div className="flex gap-2 pt-4 border-t border-gray-700/30">
+                    <button
+                      onClick={() => handleEditMaterial(material)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                      title="Edit">
+                      <FiEdit2 className="w-4 h-4" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete("material", material.id)}
+                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                      title="Delete">
+                      <FiTrash2 className="w-4 h-4" />
+                      Delete
+                    </button>
                   </div>
                 </div>
               ))}
               {materials.length === 0 && (
-                <div className="py-16 px-5 text-center text-gray-400 text-base bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl">
-                  No materials uploaded yet.
+                <div className="col-span-full bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                  <div className="flex items-center justify-center mb-4">
+                    <div className="w-20 h-20 bg-whatsapp-green/10 rounded-full flex items-center justify-center">
+                      <FiBook className="w-10 h-10 text-whatsapp-green/50" />
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-lg">
+                    No materials uploaded yet.
+                  </p>
+                  <p className="text-gray-500 text-sm mt-2">
+                    Click "Upload Material" to add your first learning resource.
+                  </p>
                 </div>
               )}
             </div>
@@ -660,7 +998,17 @@ const AdminDashboard = () => {
               <h2 className="text-3xl font-bold text-white">Summer Sessions</h2>
               <button
                 className="px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
-                onClick={() => setShowSessionModal(true)}>
+                onClick={() => {
+                  setEditingItem(null);
+                  setSessionForm({
+                    name: "",
+                    year: new Date().getFullYear(),
+                    startDate: "",
+                    endDate: "",
+                    active: false,
+                  });
+                  setShowSessionModal(true);
+                }}>
                 Create Session
               </button>
             </div>
@@ -668,7 +1016,7 @@ const AdminDashboard = () => {
               {sessions.map((session) => (
                 <div
                   key={session.id}
-                  className="relative bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10">
+                  className="relative bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300">
                   <h3 className="text-xl text-white font-bold mb-3">
                     {session.name}
                   </h3>
@@ -678,7 +1026,7 @@ const AdminDashboard = () => {
                   <p className="text-sm text-gray-400 mb-2">
                     Start: {session.startDate}
                   </p>
-                  <p className="text-sm text-gray-400 mb-2">
+                  <p className="text-sm text-gray-400 mb-4">
                     End: {session.endDate}
                   </p>
                   {session.active && (
@@ -686,6 +1034,22 @@ const AdminDashboard = () => {
                       Active
                     </span>
                   )}
+                  <div className="flex gap-2 mt-4">
+                    <button
+                      onClick={() => handleEditSession(session)}
+                      className="flex-1 p-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors font-semibold text-sm"
+                      title="Edit">
+                      <FiEdit2 className="w-4 h-4 inline mr-1" />
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete("session", session.id)}
+                      className="flex-1 p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors font-semibold text-sm"
+                      title="Delete">
+                      <FiTrash2 className="w-4 h-4 inline mr-1" />
+                      Delete
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -695,8 +1059,13 @@ const AdminDashboard = () => {
 
       <Modal
         isOpen={showMaterialModal}
-        onClose={() => setShowMaterialModal(false)}
-        title="Upload Learning Material">
+        onClose={() => {
+          setShowMaterialModal(false);
+          setEditingItem(null);
+        }}
+        title={
+          editingItem ? "Edit Learning Material" : "Upload Learning Material"
+        }>
         <form onSubmit={handleMaterialSubmit}>
           <div className="form-group">
             <label className="form-label">Title *</label>
@@ -801,8 +1170,11 @@ const AdminDashboard = () => {
 
       <Modal
         isOpen={showSessionModal}
-        onClose={() => setShowSessionModal(false)}
-        title="Create Summer Session">
+        onClose={() => {
+          setShowSessionModal(false);
+          setEditingItem(null);
+        }}
+        title={editingItem ? "Edit Summer Session" : "Create Summer Session"}>
         <form onSubmit={handleSessionSubmit}>
           <div className="form-group">
             <label className="form-label">Session Name *</label>
@@ -870,6 +1242,131 @@ const AdminDashboard = () => {
             Create Session
           </button>
         </form>
+      </Modal>
+
+      {/* View Details Modal */}
+      <Modal
+        isOpen={showViewModal}
+        onClose={() => setShowViewModal(false)}
+        title={`${selectedItem?.type === "student" ? "Student" : "Volunteer"} Details`}>
+        {selectedItem && (
+          <div className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Name</p>
+                <p className="text-white font-semibold">
+                  {selectedItem.fullName ||
+                    `${selectedItem.firstName} ${selectedItem.middleName || ""} ${selectedItem.lastName || ""}`.trim()}
+                </p>
+              </div>
+              {selectedItem.type === "student" && (
+                <>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">School</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.schoolName || selectedItem.school}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Level</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.level || selectedItem.gradeLevel}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Grade</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.grade}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Guardian</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.guardianName || "N/A"}
+                    </p>
+                  </div>
+                </>
+              )}
+              {selectedItem.type === "volunteer" && (
+                <>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">University</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.university}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Department</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.department}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">
+                      Preferred Level
+                    </p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.preferredLevel || "N/A"}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-400 text-sm mb-1">Availability</p>
+                    <p className="text-white font-semibold">
+                      {selectedItem.availability || "N/A"}
+                    </p>
+                  </div>
+                </>
+              )}
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Phone</p>
+                <p className="text-white font-semibold">
+                  {selectedItem.phone || "N/A"}
+                </p>
+              </div>
+              <div>
+                <p className="text-gray-400 text-sm mb-1">Gender</p>
+                <p className="text-white font-semibold">
+                  {selectedItem.gender || "N/A"}
+                </p>
+              </div>
+            </div>
+            {selectedItem.subjects && selectedItem.subjects.length > 0 && (
+              <div>
+                <p className="text-gray-400 text-sm mb-2">
+                  {selectedItem.type === "student"
+                    ? "Subject Interests"
+                    : "Teaching Subjects"}
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {selectedItem.subjects.map((subject, index) => (
+                    <span
+                      key={index}
+                      className="px-3 py-1 bg-whatsapp-green/20 text-whatsapp-green rounded-lg text-sm font-semibold border border-whatsapp-green/50">
+                      {subject}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+            {selectedItem.subjectInterests &&
+              selectedItem.subjectInterests.length > 0 && (
+                <div>
+                  <p className="text-gray-400 text-sm mb-2">
+                    Subject Interests
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {selectedItem.subjectInterests.map((subject, index) => (
+                      <span
+                        key={index}
+                        className="px-3 py-1 bg-whatsapp-green/20 text-whatsapp-green rounded-lg text-sm font-semibold border border-whatsapp-green/50">
+                        {subject}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+          </div>
+        )}
       </Modal>
     </div>
   );

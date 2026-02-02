@@ -162,6 +162,14 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
   };
 
+  const deleteStudent = (studentId) => {
+    const updatedStudents = students.filter(
+      (student) => student._id !== studentId && student.id !== studentId,
+    );
+    setStudents(updatedStudents);
+    localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
+  };
+
   const updateVolunteer = (volunteerId, updatedData) => {
     const updatedVolunteers = volunteers.map((volunteer) =>
       volunteer._id === volunteerId || volunteer.id === volunteerId
@@ -172,6 +180,47 @@ export const AppProvider = ({ children }) => {
     localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
   };
 
+  const deleteVolunteer = (volunteerId) => {
+    const updatedVolunteers = volunteers.filter(
+      (volunteer) =>
+        volunteer._id !== volunteerId && volunteer.id !== volunteerId,
+    );
+    setVolunteers(updatedVolunteers);
+    localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
+  };
+
+  const updateMaterial = (materialId, updatedData) => {
+    const updatedMaterials = materials.map((material) =>
+      material.id === materialId ? { ...material, ...updatedData } : material,
+    );
+    setMaterials(updatedMaterials);
+    localStorage.setItem("tula_materials", JSON.stringify(updatedMaterials));
+  };
+
+  const deleteMaterial = (materialId) => {
+    const updatedMaterials = materials.filter(
+      (material) => material.id !== materialId,
+    );
+    setMaterials(updatedMaterials);
+    localStorage.setItem("tula_materials", JSON.stringify(updatedMaterials));
+  };
+
+  const updateSession = (sessionId, updatedData) => {
+    const updatedSessions = sessions.map((session) =>
+      session.id === sessionId ? { ...session, ...updatedData } : session,
+    );
+    setSessions(updatedSessions);
+    localStorage.setItem("tula_sessions", JSON.stringify(updatedSessions));
+  };
+
+  const deleteSession = (sessionId) => {
+    const updatedSessions = sessions.filter(
+      (session) => session.id !== sessionId,
+    );
+    setSessions(updatedSessions);
+    localStorage.setItem("tula_sessions", JSON.stringify(updatedSessions));
+  };
+
   const value = {
     user,
     login,
@@ -179,13 +228,19 @@ export const AppProvider = ({ children }) => {
     students,
     registerStudent,
     updateStudent,
+    deleteStudent,
     volunteers,
     registerVolunteer,
     updateVolunteer,
+    deleteVolunteer,
     materials,
     addMaterial,
+    updateMaterial,
+    deleteMaterial,
     sessions,
     addSession,
+    updateSession,
+    deleteSession,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;

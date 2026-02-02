@@ -18,6 +18,8 @@ const StudentRegistration = () => {
     schoolName: "",
     level: "",
     grade: "",
+    guardianName: "",
+    subjectInterests: [],
   });
   const [errors, setErrors] = useState({});
   const [success, setSuccess] = useState(false);
@@ -32,6 +34,18 @@ const StudentRegistration = () => {
   );
 
   const levels = ["Elementary", "Secondary", "Preparatory"];
+  const subjectOptions = [
+    "Mathematics",
+    "English",
+    "Afaan Oromoo",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "History",
+    "Geography",
+    "Economics",
+    "Agriculture",
+  ];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -39,6 +53,15 @@ const StudentRegistration = () => {
     if (errors[name]) {
       setErrors((prev) => ({ ...prev, [name]: "" }));
     }
+  };
+
+  const handleSubjectChange = (subject) => {
+    setFormData((prev) => ({
+      ...prev,
+      subjectInterests: prev.subjectInterests.includes(subject)
+        ? prev.subjectInterests.filter((s) => s !== subject)
+        : [...prev.subjectInterests, subject],
+    }));
   };
 
   const validate = () => {
@@ -62,6 +85,10 @@ const StudentRegistration = () => {
       newErrors.schoolName = "School name is required";
     if (!formData.level) newErrors.level = "Please select your level";
     if (!formData.grade.trim()) newErrors.grade = "Grade is required";
+    if (!formData.guardianName.trim())
+      newErrors.guardianName = "Guardian name is required";
+    if (formData.subjectInterests.length === 0)
+      newErrors.subjectInterests = "Please select at least one subject";
     return newErrors;
   };
 
@@ -324,6 +351,40 @@ const StudentRegistration = () => {
                     <div className="error-message">{errors.grade}</div>
                   )}
                 </div>
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Guardian Name *</label>
+                <input
+                  type="text"
+                  name="guardianName"
+                  value={formData.guardianName}
+                  onChange={handleChange}
+                  className="form-input"
+                  placeholder="Enter guardian's full name"
+                />
+                {errors.guardianName && (
+                  <div className="error-message">{errors.guardianName}</div>
+                )}
+              </div>
+
+              <div className="form-group">
+                <label className="form-label">Subject Interests *</label>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-3">
+                  {subjectOptions.map((subject) => (
+                    <label key={subject} className="checkbox-label">
+                      <input
+                        type="checkbox"
+                        checked={formData.subjectInterests.includes(subject)}
+                        onChange={() => handleSubjectChange(subject)}
+                      />
+                      <span>{subject}</span>
+                    </label>
+                  ))}
+                </div>
+                {errors.subjectInterests && (
+                  <div className="error-message">{errors.subjectInterests}</div>
+                )}
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
