@@ -66,7 +66,7 @@ function VolunteerProfile() {
     }
   };
 
-  if (!profile) {
+  if (!profile || !user) {
     return (
       <div
         style={{ minHeight: "100vh", paddingTop: "80px", textAlign: "center" }}>

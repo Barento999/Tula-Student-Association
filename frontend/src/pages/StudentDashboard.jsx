@@ -64,7 +64,7 @@ const StudentDashboard = () => {
             <div className="flex justify-between py-3 border-b border-border">
               <span className="text-secondary font-medium">Subjects:</span>
               <span className="text-primary text-right">
-                {user.subjects.join(", ")}
+                {user.subjects?.join(", ") || "N/A"}
               </span>
             </div>
             {user.phone && (
@@ -94,7 +94,7 @@ const StudentDashboard = () => {
               <div className="text-4xl">🎯</div>
               <div>
                 <div className="text-[28px] font-bold text-whatsapp-green">
-                  {user.subjects.length}
+                  {user.subjects?.length || 0}
                 </div>
                 <div className="text-sm text-secondary">Enrolled Subjects</div>
               </div>
