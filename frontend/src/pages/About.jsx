@@ -252,15 +252,15 @@ const About = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
             {[
               {
-                name: "Leader Name 1",
-                role: "Founder & President",
-                university: "University Name",
+                name: "Aneso Yusuf",
+                role: "President",
+                university: "Rift Valley University",
                 department: "Department Name",
                 description:
                   "Leading the organization with vision and dedication to educational excellence.",
               },
               {
-                name: "Leader Name 2",
+                name: "Leader Name",
                 role: "Vice President",
                 university: "University Name",
                 department: "Department Name",
@@ -268,7 +268,7 @@ const About = () => {
                   "Coordinating programs and ensuring quality education delivery.",
               },
               {
-                name: "Leader Name 3",
+                name: "Leader Name",
                 role: "Academic Coordinator",
                 university: "University Name",
                 department: "Department Name",
@@ -311,52 +311,116 @@ const About = () => {
       </section>
 
       {/* Developer Section */}
-      <section className="py-12 md:py-20 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
-        <div className="container px-4">
-          <div className="text-center mb-8 md:mb-12">
-            <span className="inline-block px-4 md:px-6 py-2 bg-blue-500/10 border border-blue-500/30 rounded-full text-blue-400 font-semibold mb-4 text-sm md:text-base">
-              Developer
-            </span>
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-primary mb-2 px-4">
-              Built with <span className="text-whatsapp-green">Passion</span>
+      <section className="py-16 md:py-24 relative overflow-hidden bg-gradient-to-br from-[#0a1219] via-main to-[#0d1821]">
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-20 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-[120px] animate-pulse-slow"></div>
+          <div
+            className="absolute bottom-20 left-10 w-80 h-80 bg-purple-500/10 rounded-full blur-[100px] animate-pulse-slow"
+            style={{ animationDelay: "1.5s" }}></div>
+          <div
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-blue-500/5 rounded-full blur-[150px] animate-pulse-slow"
+            style={{ animationDelay: "2.5s" }}></div>
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-10 md:mb-14">
+            <div className="inline-block mb-5 animate-fade-in-up">
+              <span className="inline-flex items-center gap-2 px-5 md:px-7 py-2.5 bg-gradient-to-r from-blue-500/20 to-purple-500/20 border-2 border-blue-500/40 rounded-full text-blue-300 font-bold text-sm md:text-base shadow-[0_4px_20px_rgba(59,130,246,0.3)] hover:shadow-[0_6px_30px_rgba(59,130,246,0.5)] hover:scale-105 transition-all duration-300">
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+                  />
+                </svg>
+                Developer of Tula Students Association
+              </span>
+            </div>
+            <h2
+              className="text-3xl md:text-4xl lg:text-5xl font-black text-primary mb-3 px-4 opacity-0 animate-fade-in-up"
+              style={{ animationDelay: "0.2s", animationFillMode: "forwards" }}>
+              Built with{" "}
+              <span className="bg-gradient-to-r from-blue-400 via-purple-400 to-blue-400 bg-clip-text text-transparent animate-gradient bg-[length:200%_auto]">
+                Passion
+              </span>{" "}
+              & Dedication
             </h2>
+            <p
+              className="text-secondary text-base md:text-lg max-w-2xl mx-auto opacity-0 animate-fade-in-up"
+              style={{ animationDelay: "0.4s", animationFillMode: "forwards" }}>
+              Transforming ideas into digital reality
+            </p>
           </div>
 
-          <div className="max-w-2xl mx-auto">
-            <div className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-8 md:p-10 border border-border/50 hover:border-blue-500/50 transition-all duration-700 hover:-translate-y-2 hover:shadow-[0_30px_80px_rgba(59,130,246,0.3)]">
-              {/* Code Pattern Background */}
-              <div className="absolute inset-0 opacity-5 rounded-3xl overflow-hidden">
-                <div className="absolute inset-0 text-whatsapp-green text-xs font-mono leading-relaxed p-4">
-                  {`const developer = {
-  name: "Barento Hashum",
-  role: "Full Stack Developer",
-  passion: "Building solutions",
-  mission: "Empowering education"
-};`}
-                </div>
+          <div
+            className="max-w-3xl mx-auto opacity-0 animate-fade-in-up"
+            style={{ animationDelay: "0.6s", animationFillMode: "forwards" }}>
+            <div className="group relative bg-gradient-to-br from-[#1a2730] via-card to-[#1a2730] rounded-3xl p-10 md:p-12 border-2 border-blue-500/30 hover:border-blue-400/60 transition-all duration-700 hover:-translate-y-3 hover:shadow-[0_40px_100px_rgba(59,130,246,0.4)] overflow-hidden">
+              {/* Animated Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 via-purple-500/5 to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-700"></div>
+
+              {/* Shine Effect on Hover */}
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
               </div>
 
               <div className="relative z-10 text-center">
-                {/* Developer Avatar */}
-                <div className="w-28 h-28 mx-auto mb-6 rounded-full border-4 border-blue-500/30 overflow-hidden group-hover:scale-110 group-hover:border-blue-500/50 transition-all duration-500 shadow-[0_8px_24px_rgba(59,130,246,0.3)]">
-                  <img
-                    src="/Barento.jpg"
-                    alt="Barento Hashum"
-                    className="w-full h-full object-cover"
-                  />
+                {/* Developer Photo with Enhanced Styling */}
+                <div className="relative inline-block mb-8">
+                  {/* Rotating Ring */}
+                  <div className="absolute inset-0 rounded-full border-2 border-dashed border-blue-400/30 animate-spin-slow"></div>
+
+                  <div className="w-36 h-36 md:w-40 md:h-40 mx-auto rounded-full border-4 border-blue-500/40 overflow-hidden group-hover:scale-110 group-hover:border-blue-400/70 transition-all duration-500 shadow-[0_12px_40px_rgba(59,130,246,0.4)] group-hover:shadow-[0_20px_60px_rgba(59,130,246,0.6)] ring-4 ring-blue-500/10 group-hover:ring-blue-400/20 relative">
+                    <img
+                      src="/barento.jpg"
+                      alt="Barento Hashum"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    {/* Gradient Overlay on Hover */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-blue-500/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  </div>
+
+                  {/* Decorative Elements */}
+                  <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-sm font-bold shadow-lg animate-pulse">
+                    ✓
+                  </div>
+                  <div
+                    className="absolute -bottom-1 -left-1 w-6 h-6 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full shadow-lg animate-pulse"
+                    style={{ animationDelay: "0.5s" }}></div>
                 </div>
 
-                <h3 className="text-2xl md:text-3xl font-bold text-primary mb-2">
+                <h3 className="text-3xl md:text-4xl font-black text-primary mb-3 group-hover:text-blue-300 transition-colors duration-500">
                   Barento Hashum
                 </h3>
-                <p className="text-blue-400 font-semibold text-lg mb-4">
+                <p className="text-blue-400 font-bold text-xl mb-2 tracking-wide">
                   Full Stack Developer
                 </p>
-                <p className="text-secondary leading-relaxed max-w-xl mx-auto">
-                  Crafted this platform to support the Tula Students Association
+                <div className="flex items-center justify-center gap-2 mb-6">
+                  <div className="h-px w-12 bg-gradient-to-r from-transparent to-blue-500/50"></div>
+                  <span className="text-blue-500/50 text-sm">●</span>
+                  <div className="h-px w-12 bg-gradient-to-l from-transparent to-blue-500/50"></div>
+                </div>
+                <p className="text-secondary leading-relaxed text-base md:text-lg max-w-2xl mx-auto mb-6">
+                  Crafted this platform with dedication to support the{" "}
+                  <span className="text-whatsapp-green font-semibold">
+                    Tula Students Association's
+                  </span>{" "}
                   mission of empowering education through technology and
-                  community engagement.
+                  community engagement. Committed to creating meaningful digital
+                  solutions that make a difference.
                 </p>
+                <div className="flex items-center justify-center gap-3 text-sm">
+                  <span className="flex items-center gap-2 px-4 py-2 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-full text-whatsapp-green font-semibold hover:bg-whatsapp-green/20 transition-all duration-300">
+                    <span className="animate-pulse">●</span> Available for
+                    collaboration
+                  </span>
+                </div>
               </div>
             </div>
           </div>
