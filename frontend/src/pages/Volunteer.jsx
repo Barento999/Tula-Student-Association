@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import {
   FiHeart,
@@ -10,8 +11,16 @@ import {
 
 const Volunteer = () => {
   const { registerVolunteer } = useApp();
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: "",
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    phone: "",
+    gender: "",
     university: "",
     department: "",
     subjects: [],
@@ -63,7 +72,30 @@ const Volunteer = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = "Full name is required";
+    if (!formData.firstName.trim())
+      newErrors.firstName = "First name is required";
+    if (!formData.lastName.trim()) newErrors.lastName = "Last name is required";
+    if (!formData.email.trim()) {
+      newErrors.email = "Email is required";
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = "Email is invalid";
+    }
+    if (!formData.password) {
+      newErrors.password = "Password is required";
+    } else if (formData.password.length < 6) {
+      newErrors.password = "Password must be at least 6 characters";
+    }
+    if (!formData.confirmPassword) {
+      newErrors.confirmPassword = "Please confirm your password";
+    } else if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = "Passwords do not match";
+    }
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required";
+    } else if (!/^[0-9+\-\s()]+$/.test(formData.phone)) {
+      newErrors.phone = "Please enter a valid phone number";
+    }
+    if (!formData.gender) newErrors.gender = "Please select your gender";
     if (!formData.university.trim())
       newErrors.university = "University name is required";
     if (!formData.department.trim())
@@ -88,18 +120,11 @@ const Volunteer = () => {
 
     registerVolunteer(formData);
     setSuccess(true);
-    setFormData({
-      fullName: "",
-      university: "",
-      department: "",
-      subjects: [],
-      availability: "",
-      preferredLevel: "",
-    });
 
+    // Redirect to volunteer profile after 2 seconds
     setTimeout(() => {
-      setSuccess(false);
-    }, 5000);
+      navigate("/volunteer-profile");
+    }, 2000);
   };
 
   return (
@@ -226,8 +251,7 @@ const Volunteer = () => {
               <div className="bg-gradient-to-r from-whatsapp-green to-unread-badge text-main px-6 py-4 rounded-2xl mb-6 flex items-center gap-3 shadow-[0_10px_40px_rgba(37,211,102,0.3)] animate-fade-in-up">
                 <FiCheckCircle className="w-5 h-5 flex-shrink-0" />
                 <p className="text-base font-medium">
-                  Thank you for registering! We'll contact you soon with more
-                  details.
+                  Registration successful! Redirecting to your profile...
                 </p>
               </div>
             )}
@@ -239,19 +263,97 @@ const Volunteer = () => {
                 Volunteer Application
               </h2>
 
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                <div className="form-group">
+                  <label className="form-label">First Name *</label>
+                  <input
+                    type="text"
+                    name="firstName"
+                    value={formData.firstName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Enter your first name"
+                  />
+                  {errors.firstName && (
+                    <div className="error-message">{errors.firstName}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Middle Name</label>
+                  <input
+                    type="text"
+                    name="middleName"
+                    value={formData.middleName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Enter your middle name"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Last Name *</label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Enter your last name"
+                  />
+                  {errors.lastName && (
+                    <div className="error-message">{errors.lastName}</div>
+                  )}
+                </div>
+              </div>
+
               <div className="form-group">
-                <label className="form-label">Full Name *</label>
+                <label className="form-label">Email *</label>
                 <input
-                  type="text"
-                  name="fullName"
-                  value={formData.fullName}
+                  type="email"
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
                   className="form-input"
-                  placeholder="Enter your full name"
+                  placeholder="your.email@example.com"
                 />
-                {errors.fullName && (
-                  <div className="error-message">{errors.fullName}</div>
+                {errors.email && (
+                  <div className="error-message">{errors.email}</div>
                 )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="form-group">
+                  <label className="form-label">Phone Number *</label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="+251 912 345 678"
+                  />
+                  {errors.phone && (
+                    <div className="error-message">{errors.phone}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Gender *</label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    className="form-input">
+                    <option value="">Select gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                  {errors.gender && (
+                    <div className="error-message">{errors.gender}</div>
+                  )}
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
@@ -339,6 +441,40 @@ const Volunteer = () => {
                 {errors.availability && (
                   <div className="error-message">{errors.availability}</div>
                 )}
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div className="form-group">
+                  <label className="form-label">Password *</label>
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="At least 6 characters"
+                  />
+                  {errors.password && (
+                    <div className="error-message">{errors.password}</div>
+                  )}
+                </div>
+
+                <div className="form-group">
+                  <label className="form-label">Confirm Password *</label>
+                  <input
+                    type="password"
+                    name="confirmPassword"
+                    value={formData.confirmPassword}
+                    onChange={handleChange}
+                    className="form-input"
+                    placeholder="Re-enter your password"
+                  />
+                  {errors.confirmPassword && (
+                    <div className="error-message">
+                      {errors.confirmPassword}
+                    </div>
+                  )}
+                </div>
               </div>
 
               <button

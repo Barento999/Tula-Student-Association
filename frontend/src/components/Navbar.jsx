@@ -98,32 +98,43 @@ const Navbar = () => {
             {user ? (
               <>
                 {user.role === "admin" && (
-                  <Link
+                  <NavLink
                     to="/admin"
-                    className="text-whatsapp-green font-medium transition-colors duration-300">
+                    className={({ isActive }) =>
+                      `font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-whatsapp-green"
+                          : "text-text-secondary hover:text-whatsapp-green"
+                      }`
+                    }>
                     Admin
-                  </Link>
+                  </NavLink>
                 )}
                 {user.role === "student" && (
-                  <>
-                    <Link
-                      to="/student-profile"
-                      className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
-                      Profile
-                    </Link>
-                    <Link
-                      to="/student-profile"
-                      className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
-                      Profile
-                    </Link>
-                  </>
+                  <NavLink
+                    to="/student-profile"
+                    className={({ isActive }) =>
+                      `font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-whatsapp-green font-semibold"
+                          : "text-text-secondary hover:text-whatsapp-green"
+                      }`
+                    }>
+                    Profile
+                  </NavLink>
                 )}
                 {user.role === "volunteer" && (
-                  <Link
+                  <NavLink
                     to="/volunteer-profile"
-                    className="text-text-secondary font-medium transition-colors duration-300 hover:text-whatsapp-green">
+                    className={({ isActive }) =>
+                      `font-medium transition-colors duration-300 ${
+                        isActive
+                          ? "text-whatsapp-green font-semibold"
+                          : "text-text-secondary hover:text-whatsapp-green"
+                      }`
+                    }>
                     Profile
-                  </Link>
+                  </NavLink>
                 )}
                 <button
                   onClick={handleLogout}

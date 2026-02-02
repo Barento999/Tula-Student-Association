@@ -109,7 +109,7 @@ function StudentProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0d1b24] pt-20 pb-12">
+    <div className="min-h-screen bg-[#0d1b24] pt-20 pb-20">
       <div className="container max-w-6xl mx-auto px-4">
         {/* Welcome Header */}
         <div className="text-center mb-8">
@@ -355,79 +355,9 @@ function StudentProfile() {
               </form>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {/* Info Cards */}
-                {profile.school && (
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiMapPin className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          ZONE
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {profile.school}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
+                {/* Info Cards - Best Order */}
 
-                {profile.gradeLevel && (
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiAward className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          WOREDA
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {profile.gradeLevel}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {profile.grade && (
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiBook className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          COLLEGE
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {profile.grade}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {profile.guardianName && (
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiUser className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          Guardian
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {profile.guardianName}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
+                {/* Phone */}
                 {profile.phone && (
                   <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -446,6 +376,7 @@ function StudentProfile() {
                   </div>
                 )}
 
+                {/* Gender */}
                 {profile.gender && (
                   <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
                     <div className="flex items-center gap-4">
@@ -458,6 +389,82 @@ function StudentProfile() {
                         </p>
                         <p className="text-white text-lg font-bold truncate">
                           {profile.gender}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Guardian */}
+                {profile.guardianName && (
+                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <FiUser className="text-whatsapp-green text-xl" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                          Guardian
+                        </p>
+                        <p className="text-white text-lg font-bold truncate">
+                          {profile.guardianName}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* School (ZONE) */}
+                {profile.school && (
+                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <FiMapPin className="text-whatsapp-green text-xl" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                          ZONE
+                        </p>
+                        <p className="text-white text-lg font-bold truncate">
+                          {profile.school}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Grade Level (WOREDA) */}
+                {profile.gradeLevel && (
+                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <FiAward className="text-whatsapp-green text-xl" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                          WOREDA
+                        </p>
+                        <p className="text-white text-lg font-bold truncate">
+                          {profile.gradeLevel}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Current Grade (COLLEGE) */}
+                {profile.grade && (
+                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                    <div className="flex items-center gap-4">
+                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <FiBook className="text-whatsapp-green text-xl" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                          COLLEGE
+                        </p>
+                        <p className="text-white text-lg font-bold truncate">
+                          {profile.grade}
                         </p>
                       </div>
                     </div>

@@ -83,15 +83,49 @@ export const AppProvider = ({ children }) => {
   };
 
   const registerVolunteer = (volunteerData) => {
+    // Create user account with volunteer role
+    const newUser = {
+      _id: Date.now().toString(),
+      name: `${volunteerData.firstName} ${volunteerData.middleName || ""} ${volunteerData.lastName}`.trim(),
+      email: volunteerData.email,
+      password: volunteerData.password, // In production, this should be hashed
+      role: "volunteer",
+      createdAt: new Date().toISOString(),
+    };
+
+    // Create volunteer profile linked to user
     const newVolunteer = {
       id: Date.now(),
-      ...volunteerData,
+      userId: newUser._id,
+      firstName: volunteerData.firstName,
+      middleName: volunteerData.middleName,
+      lastName: volunteerData.lastName,
+      phone: volunteerData.phone,
+      gender: volunteerData.gender,
+      university: volunteerData.university,
+      department: volunteerData.department,
+      subjects: volunteerData.subjects,
+      availability: volunteerData.availability,
+      preferredLevel: volunteerData.preferredLevel,
       registeredAt: new Date().toISOString(),
     };
+
+    // Save volunteer profile
     const updatedVolunteers = [...volunteers, newVolunteer];
     setVolunteers(updatedVolunteers);
     localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
-    return newVolunteer;
+
+    // Save user account (in production, this would be handled by backend)
+    const existingUsers = JSON.parse(
+      localStorage.getItem("tula_users") || "[]",
+    );
+    const updatedUsers = [...existingUsers, newUser];
+    localStorage.setItem("tula_users", JSON.stringify(updatedUsers));
+
+    // Auto-login the new volunteer
+    login(newUser);
+
+    return { user: newUser, volunteer: newVolunteer };
   };
 
   const addMaterial = (materialData) => {

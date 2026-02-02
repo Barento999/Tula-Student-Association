@@ -9,8 +9,8 @@ import {
   FiCalendar,
   FiAward,
   FiTarget,
-  FiUser,
   FiUsers,
+  FiPhone,
 } from "react-icons/fi";
 
 function VolunteerProfile() {
@@ -34,12 +34,14 @@ function VolunteerProfile() {
     () => ({
       firstName: profile?.firstName || "",
       middleName: profile?.middleName || "",
+      lastName: profile?.lastName || "",
+      phone: profile?.phone || "",
+      gender: profile?.gender || "",
       university: profile?.university || "",
       department: profile?.department || "",
       subjects: profile?.subjects || [],
       availability: profile?.availability || "",
       preferredLevel: profile?.preferredLevel || "",
-      gender: profile?.gender || "",
     }),
     [profile],
   );
@@ -101,7 +103,7 @@ function VolunteerProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1419] via-[#0d1b24] to-[#0a1419] pt-20 pb-12 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1419] via-[#0d1b24] to-[#0a1419] pt-20 pb-20 relative overflow-hidden">
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
         <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -169,7 +171,7 @@ function VolunteerProfile() {
 
           {isEditing ? (
             <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {/* First Name */}
                 <div>
                   <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
@@ -201,6 +203,60 @@ function VolunteerProfile() {
                   />
                 </div>
 
+                {/* Last Name */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Last Name *
+                  </label>
+                  <input
+                    type="text"
+                    name="lastName"
+                    value={formData.lastName}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="Enter your last name"
+                  />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Phone */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    name="phone"
+                    value={formData.phone}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                    placeholder="+251 912 345 678"
+                  />
+                </div>
+
+                {/* Gender */}
+                <div>
+                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                    Gender *
+                  </label>
+                  <select
+                    name="gender"
+                    value={formData.gender}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors">
+                    <option value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                  </select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* University */}
                 <div>
                   <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
@@ -232,7 +288,9 @@ function VolunteerProfile() {
                     placeholder="Enter your department"
                   />
                 </div>
+              </div>
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Availability */}
                 <div>
                   <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
@@ -263,23 +321,6 @@ function VolunteerProfile() {
                     <option value="Secondary">Secondary</option>
                     <option value="Preparatory">Preparatory</option>
                     <option value="Any">Any Level</option>
-                  </select>
-                </div>
-
-                {/* Gender */}
-                <div>
-                  <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
-                    Gender
-                  </label>
-                  <select
-                    name="gender"
-                    value={formData.gender}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors">
-                    <option value="">Select Gender</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
                   </select>
                 </div>
               </div>
@@ -326,6 +367,44 @@ function VolunteerProfile() {
             </form>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+              {/* Phone */}
+              {profile.phone && (
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                      <FiPhone className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
+                        Phone Number
+                      </p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
+                        {profile.phone}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Gender */}
+              {profile.gender && (
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                      <FiUsers className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
+                        Gender
+                      </p>
+                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
+                        {profile.gender}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* University */}
               <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
                 <div className="flex items-center gap-3 sm:gap-4">
@@ -360,25 +439,6 @@ function VolunteerProfile() {
                 </div>
               </div>
 
-              {/* Availability */}
-              {profile.availability && (
-                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                  <div className="flex items-center gap-3 sm:gap-4">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
-                      <FiCalendar className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
-                        Availability
-                      </p>
-                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
-                        {profile.availability}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* Preferred Level */}
               {profile.preferredLevel && (
                 <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
@@ -398,19 +458,19 @@ function VolunteerProfile() {
                 </div>
               )}
 
-              {/* Gender */}
-              {profile.gender && (
+              {/* Availability */}
+              {profile.availability && (
                 <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
                   <div className="flex items-center gap-3 sm:gap-4">
                     <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
-                      <FiUsers className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
+                      <FiCalendar className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
-                        Gender
+                        Availability
                       </p>
                       <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
-                        {profile.gender}
+                        {profile.availability}
                       </p>
                     </div>
                   </div>
