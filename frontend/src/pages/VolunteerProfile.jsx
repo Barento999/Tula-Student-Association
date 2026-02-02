@@ -113,53 +113,56 @@ function VolunteerProfile() {
           style={{ animationDelay: "2s" }}></div>
       </div>
 
-      <div className="container max-w-6xl mx-auto px-4 relative z-10">
+      <div className="container max-w-6xl mx-auto px-3 sm:px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-whatsapp-green via-[#00E676] to-whatsapp-green bg-clip-text text-transparent mb-2 animate-gradient">
+        <div className="text-center mb-4 sm:mb-6 md:mb-8 animate-fade-in">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black bg-gradient-to-r from-whatsapp-green via-[#00E676] to-whatsapp-green bg-clip-text text-transparent mb-1 sm:mb-2 animate-gradient">
             Welcome Back
           </h1>
-          <p className="text-gray-400 text-lg">Your Profile Dashboard</p>
+          <p className="text-gray-400 text-sm sm:text-base md:text-lg">
+            Your Profile Dashboard
+          </p>
         </div>
 
         {/* Success Message */}
         {showSuccess && (
-          <div className="mb-6 p-4 bg-whatsapp-green/20 border border-whatsapp-green rounded-xl text-whatsapp-green text-center font-semibold animate-fade-in">
+          <div className="mb-4 sm:mb-6 p-3 sm:p-4 bg-whatsapp-green/20 border border-whatsapp-green rounded-xl text-whatsapp-green text-center font-semibold animate-fade-in text-sm sm:text-base">
             ✓ Profile updated successfully!
           </div>
         )}
 
         {/* Main Profile Card */}
-        <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 mb-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm animate-scale-in hover:shadow-whatsapp-green/10 transition-all duration-500">
+        <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-xl sm:rounded-2xl p-4 sm:p-6 md:p-8 mb-4 sm:mb-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm animate-scale-in hover:shadow-whatsapp-green/10 transition-all duration-500">
           {/* User Header */}
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700/50">
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-4 sm:gap-6 mb-6 sm:mb-8 pb-6 sm:pb-8 border-b border-gray-700/50">
             <div className="relative group">
               <div className="absolute inset-0 bg-gradient-to-br from-whatsapp-green to-[#00A884] rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-slow"></div>
-              <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-whatsapp-green via-[#00E676] to-[#00A884] flex items-center justify-center text-6xl text-white font-bold shadow-2xl ring-4 ring-whatsapp-green/30 group-hover:ring-whatsapp-green/50 transition-all duration-300 group-hover:scale-105">
+              <div className="relative w-20 h-20 sm:w-28 sm:h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-whatsapp-green via-[#00E676] to-[#00A884] flex items-center justify-center text-4xl sm:text-5xl md:text-6xl text-white font-bold shadow-2xl ring-2 sm:ring-4 ring-whatsapp-green/30 group-hover:ring-whatsapp-green/50 transition-all duration-300 group-hover:scale-105">
                 {profile?.firstName?.charAt(0).toUpperCase() ||
                   user?.name?.charAt(0).toUpperCase() ||
                   "?"}
               </div>
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
+              <h2 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-1 sm:mb-2">
                 {profile?.firstName && profile?.middleName
                   ? `${profile.firstName} ${profile.middleName}`
                   : profile?.firstName || user?.name || "Volunteer"}
               </h2>
-              <p className="text-whatsapp-green text-lg mb-3 font-medium">
+              <p className="text-whatsapp-green text-sm sm:text-base md:text-lg mb-2 sm:mb-3 font-medium">
                 {user?.email || ""}
               </p>
-              <span className="inline-block px-5 py-2 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50 shadow-lg shadow-whatsapp-green/20">
+              <span className="inline-block px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-full text-xs sm:text-sm font-bold border border-whatsapp-green/50 shadow-lg shadow-whatsapp-green/20">
                 🎓 Volunteer
               </span>
             </div>
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 transform">
-                <FiEdit2 className="text-lg" />
-                Edit Profile
+                className="flex items-center gap-1.5 sm:gap-2 px-4 sm:px-5 md:px-6 py-2 sm:py-2.5 md:py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-lg sm:rounded-xl text-sm sm:text-base font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 transform">
+                <FiEdit2 className="text-base sm:text-lg" />
+                <span className="hidden sm:inline">Edit Profile</span>
+                <span className="sm:hidden">Edit</span>
               </button>
             )}
           </div>
@@ -322,18 +325,18 @@ function VolunteerProfile() {
               </div>
             </form>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
               {/* University */}
-              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
-                    <FiBook className="text-whatsapp-green text-2xl" />
+              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                    <FiBook className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
                       University
                     </p>
-                    <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                    <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
                       {profile.university}
                     </p>
                   </div>
@@ -341,16 +344,16 @@ function VolunteerProfile() {
               </div>
 
               {/* Department */}
-              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
-                    <FiAward className="text-whatsapp-green text-2xl" />
+              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                <div className="flex items-center gap-3 sm:gap-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                    <FiAward className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                   </div>
-                  <div className="flex-1">
-                    <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
                       Department
                     </p>
-                    <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                    <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
                       {profile.department}
                     </p>
                   </div>
@@ -359,16 +362,16 @@ function VolunteerProfile() {
 
               {/* Availability */}
               {profile.availability && (
-                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
-                      <FiCalendar className="text-whatsapp-green text-2xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                      <FiCalendar className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
                         Availability
                       </p>
-                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
                         {profile.availability}
                       </p>
                     </div>
@@ -378,16 +381,16 @@ function VolunteerProfile() {
 
               {/* Preferred Level */}
               {profile.preferredLevel && (
-                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
-                      <FiTarget className="text-whatsapp-green text-2xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                      <FiTarget className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
                         Preferred Level
                       </p>
-                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
                         {profile.preferredLevel}
                       </p>
                     </div>
@@ -397,16 +400,16 @@ function VolunteerProfile() {
 
               {/* Gender */}
               {profile.gender && (
-                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
-                  <div className="flex items-center gap-4">
-                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
-                      <FiUsers className="text-whatsapp-green text-2xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-lg sm:rounded-xl p-4 sm:p-5 md:p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-3 sm:gap-4">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10 flex-shrink-0">
+                      <FiUsers className="text-whatsapp-green text-lg sm:text-xl md:text-2xl" />
                     </div>
-                    <div className="flex-1">
-                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                    <div className="flex-1 min-w-0">
+                      <p className="text-whatsapp-green text-[10px] sm:text-xs uppercase tracking-wider font-semibold mb-0.5 sm:mb-1">
                         Gender
                       </p>
-                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                      <p className="text-white text-sm sm:text-base md:text-lg font-bold group-hover:text-whatsapp-green transition-colors truncate">
                         {profile.gender}
                       </p>
                     </div>
@@ -418,16 +421,16 @@ function VolunteerProfile() {
 
           {/* Teaching Subjects Display */}
           {!isEditing && (
-            <div className="mt-8 pt-8 border-t border-gray-700/50">
-              <p className="text-whatsapp-green text-sm uppercase tracking-wider font-bold mb-4 flex items-center gap-2">
-                <span className="w-2 h-2 bg-whatsapp-green rounded-full animate-pulse"></span>
+            <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-gray-700/50">
+              <p className="text-whatsapp-green text-xs sm:text-sm uppercase tracking-wider font-bold mb-3 sm:mb-4 flex items-center gap-2">
+                <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-whatsapp-green rounded-full animate-pulse"></span>
                 Teaching Subjects
               </p>
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 {(profile.subjects || []).map((subject, index) => (
                   <span
                     key={subject}
-                    className="px-5 py-2.5 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-xl text-sm font-bold border border-whatsapp-green/50 hover:bg-whatsapp-green/30 hover:scale-105 transition-all duration-300 shadow-lg shadow-whatsapp-green/10 cursor-pointer animate-fade-in"
+                    className="px-3 sm:px-4 md:px-5 py-1.5 sm:py-2 md:py-2.5 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-lg sm:rounded-xl text-xs sm:text-sm font-bold border border-whatsapp-green/50 hover:bg-whatsapp-green/30 hover:scale-105 transition-all duration-300 shadow-lg shadow-whatsapp-green/10 cursor-pointer animate-fade-in"
                     style={{ animationDelay: `${index * 0.1}s` }}>
                     {subject}
                   </span>
@@ -440,22 +443,22 @@ function VolunteerProfile() {
         {/* Quick Action - Enhanced */}
         <button
           onClick={() => navigate("/materials")}
-          className="w-full bg-gradient-to-br from-[#1a2730] to-[#15202b] hover:from-[#1f2f3a] hover:to-[#1a2730] rounded-2xl p-6 shadow-2xl transition-all duration-300 border border-gray-700/50 hover:border-whatsapp-green/50 group hover:shadow-whatsapp-green/20 hover:-translate-y-1 transform">
+          className="w-full bg-gradient-to-br from-[#1a2730] to-[#15202b] hover:from-[#1f2f3a] hover:to-[#1a2730] rounded-xl sm:rounded-2xl p-4 sm:p-5 md:p-6 shadow-2xl transition-all duration-300 border border-gray-700/50 hover:border-whatsapp-green/50 group hover:shadow-whatsapp-green/20 hover:-translate-y-1 transform">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/20">
-                <FiBook className="text-whatsapp-green text-3xl" />
+            <div className="flex items-center gap-3 sm:gap-4">
+              <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-lg sm:rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/20 flex-shrink-0">
+                <FiBook className="text-whatsapp-green text-xl sm:text-2xl md:text-3xl" />
               </div>
               <div className="text-left">
-                <h3 className="text-white text-xl font-black group-hover:text-whatsapp-green transition-colors">
+                <h3 className="text-white text-base sm:text-lg md:text-xl font-black group-hover:text-whatsapp-green transition-colors">
                   Learning Materials
                 </h3>
-                <p className="text-gray-400 text-sm mt-1">
+                <p className="text-gray-400 text-xs sm:text-sm mt-0.5 sm:mt-1 hidden sm:block">
                   Access your study resources
                 </p>
               </div>
             </div>
-            <div className="text-whatsapp-green text-3xl group-hover:translate-x-2 transition-transform duration-300 font-bold">
+            <div className="text-whatsapp-green text-2xl sm:text-3xl group-hover:translate-x-2 transition-transform duration-300 font-bold">
               →
             </div>
           </div>
