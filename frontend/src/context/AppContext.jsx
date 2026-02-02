@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import api from "../services/api";
 
 const AppContext = createContext();
 
@@ -16,209 +17,322 @@ export const AppProvider = ({ children }) => {
   const [volunteers, setVolunteers] = useState([]);
   const [materials, setMaterials] = useState([]);
   const [sessions, setSessions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
+  // Initialize - Load user from localStorage and fetch data
   useEffect(() => {
-    const savedUser = localStorage.getItem("tula_user");
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    const initializeApp = async () => {
+      try {
+        // Check for saved user
+        const savedUser = localStorage.getItem("tula_user");
+        if (savedUser) {
+          const userData = JSON.parse(savedUser);
+          setUser(userData);
 
-    const savedStudents = localStorage.getItem("tula_students");
-    if (savedStudents) {
-      setStudents(JSON.parse(savedStudents));
-    }
-
-    const savedVolunteers = localStorage.getItem("tula_volunteers");
-    if (savedVolunteers) {
-      setVolunteers(JSON.parse(savedVolunteers));
-    }
-
-    const savedMaterials = localStorage.getItem("tula_materials");
-    if (savedMaterials) {
-      // Check if we need to update with new subjects
-      const parsed = JSON.parse(savedMaterials);
-      const hasAllSubjects = mockMaterials.every((mock) =>
-        parsed.some((saved) => saved.subject === mock.subject),
-      );
-
-      if (!hasAllSubjects) {
-        // Update with new materials
-        setMaterials(mockMaterials);
-        localStorage.setItem("tula_materials", JSON.stringify(mockMaterials));
-      } else {
-        setMaterials(parsed);
+          // Fetch all data if user is logged in
+          await Promise.all([
+            fetchStudents(),
+            fetchVolunteers(),
+            fetchMaterials(),
+            fetchSessions(),
+          ]);
+        }
+      } catch (error) {
+        console.error("Initialization error:", error);
+        setError(error.message);
+      } finally {
+        setLoading(false);
       }
-    } else {
-      setMaterials(mockMaterials);
-    }
+    };
 
-    const savedSessions = localStorage.getItem("tula_sessions");
-    if (savedSessions) {
-      setSessions(JSON.parse(savedSessions));
-    } else {
-      setSessions(mockSessions);
-    }
+    initializeApp();
   }, []);
 
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem("tula_user", JSON.stringify(userData));
+  // Fetch functions
+  const fetchStudents = async () => {
+    try {
+      const data = await api.students.getAll();
+      setStudents(data);
+    } catch (error) {
+      console.error("Error fetching students:", error);
+    }
+  };
+
+  const fetchVolunteers = async () => {
+    try {
+      const data = await api.volunteers.getAll();
+      setVolunteers(data);
+    } catch (error) {
+      console.error("Error fetching volunteers:", error);
+    }
+  };
+
+  const fetchMaterials = async () => {
+    try {
+      const data = await api.materials.getAll();
+      setMaterials(data);
+    } catch (error) {
+      console.error("Error fetching materials:", error);
+    }
+  };
+
+  const fetchSessions = async () => {
+    try {
+      const data = await api.sessions.getAll();
+      setSessions(data);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+    }
+  };
+
+  // Auth functions
+  const login = async (credentials) => {
+    try {
+      const data = await api.auth.login(credentials);
+      setUser(data);
+      localStorage.setItem("tula_user", JSON.stringify(data));
+
+      // Fetch data after login
+      await Promise.all([
+        fetchStudents(),
+        fetchVolunteers(),
+        fetchMaterials(),
+        fetchSessions(),
+      ]);
+
+      return data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
   const logout = () => {
     setUser(null);
+    setStudents([]);
+    setVolunteers([]);
+    setMaterials([]);
+    setSessions([]);
     localStorage.removeItem("tula_user");
   };
 
-  const registerStudent = (studentData) => {
-    const newStudent = {
-      id: Date.now(),
-      ...studentData,
-      registeredAt: new Date().toISOString(),
-    };
-    const updatedStudents = [...students, newStudent];
-    setStudents(updatedStudents);
-    localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
-    return newStudent;
+  // Student functions
+  const registerStudent = async (studentData) => {
+    try {
+      // Backend handles both user and profile creation
+      const registrationData = {
+        name: `${studentData.firstName} ${studentData.middleName || ""} ${studentData.lastName}`.trim(),
+        email: studentData.email,
+        password: studentData.password,
+        school: studentData.schoolName,
+        gradeLevel: studentData.level,
+        grade: studentData.grade,
+        guardianName: studentData.guardianName,
+        phone: studentData.phone,
+        subjectInterests: studentData.subjectInterests || [],
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/students/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registrationData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      // Update local state
+      await fetchStudents();
+
+      return data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const registerVolunteer = (volunteerData) => {
-    // Create user account with volunteer role
-    const newUser = {
-      _id: Date.now().toString(),
-      name: `${volunteerData.firstName} ${volunteerData.middleName || ""} ${volunteerData.lastName}`.trim(),
-      email: volunteerData.email,
-      password: volunteerData.password, // In production, this should be hashed
-      role: "volunteer",
-      createdAt: new Date().toISOString(),
-    };
-
-    // Create volunteer profile linked to user
-    const newVolunteer = {
-      id: Date.now(),
-      userId: newUser._id,
-      firstName: volunteerData.firstName,
-      middleName: volunteerData.middleName,
-      lastName: volunteerData.lastName,
-      phone: volunteerData.phone,
-      gender: volunteerData.gender,
-      university: volunteerData.university,
-      department: volunteerData.department,
-      subjects: volunteerData.subjects,
-      availability: volunteerData.availability,
-      preferredLevel: volunteerData.preferredLevel,
-      registeredAt: new Date().toISOString(),
-    };
-
-    // Save volunteer profile
-    const updatedVolunteers = [...volunteers, newVolunteer];
-    setVolunteers(updatedVolunteers);
-    localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
-
-    // Save user account (in production, this would be handled by backend)
-    const existingUsers = JSON.parse(
-      localStorage.getItem("tula_users") || "[]",
-    );
-    const updatedUsers = [...existingUsers, newUser];
-    localStorage.setItem("tula_users", JSON.stringify(updatedUsers));
-
-    // Auto-login the new volunteer
-    login(newUser);
-
-    return { user: newUser, volunteer: newVolunteer };
+  const updateStudent = async (studentId, updatedData) => {
+    try {
+      const updated = await api.students.update(studentId, updatedData);
+      setStudents(
+        students.map((student) =>
+          student._id === studentId ? updated : student,
+        ),
+      );
+      return updated;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const addMaterial = (materialData) => {
-    const newMaterial = {
-      id: Date.now(),
-      ...materialData,
-      uploadedAt: new Date().toISOString(),
-    };
-    const updatedMaterials = [...materials, newMaterial];
-    setMaterials(updatedMaterials);
-    localStorage.setItem("tula_materials", JSON.stringify(updatedMaterials));
-    return newMaterial;
+  const deleteStudent = async (studentId) => {
+    try {
+      await api.students.delete(studentId);
+      setStudents(students.filter((student) => student._id !== studentId));
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const addSession = (sessionData) => {
-    const newSession = {
-      id: Date.now(),
-      ...sessionData,
-      createdAt: new Date().toISOString(),
-    };
-    const updatedSessions = [...sessions, newSession];
-    setSessions(updatedSessions);
-    localStorage.setItem("tula_sessions", JSON.stringify(updatedSessions));
-    return newSession;
+  // Volunteer functions
+  const registerVolunteer = async (volunteerData) => {
+    try {
+      // Backend handles both user and profile creation
+      const registrationData = {
+        name: `${volunteerData.firstName} ${volunteerData.middleName || ""} ${volunteerData.lastName}`.trim(),
+        email: volunteerData.email,
+        password: volunteerData.password,
+        university: volunteerData.university,
+        department: volunteerData.department,
+        subjects: volunteerData.subjects || [],
+        availability: volunteerData.availability,
+        preferredLevel: volunteerData.preferredLevel,
+        phone: volunteerData.phone,
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL || "http://localhost:5000/api"}/volunteers/register`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(registrationData),
+        },
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || "Registration failed");
+      }
+
+      // Auto-login the new volunteer
+      if (data.user && data.user.token) {
+        setUser(data.user);
+        localStorage.setItem("tula_user", JSON.stringify(data.user));
+      }
+
+      // Update local state
+      await fetchVolunteers();
+
+      return data;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const updateStudent = (studentId, updatedData) => {
-    const updatedStudents = students.map((student) =>
-      student._id === studentId || student.id === studentId
-        ? { ...student, ...updatedData }
-        : student,
-    );
-    setStudents(updatedStudents);
-    localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
+  const updateVolunteer = async (volunteerId, updatedData) => {
+    try {
+      const updated = await api.volunteers.update(volunteerId, updatedData);
+      setVolunteers(
+        volunteers.map((volunteer) =>
+          volunteer._id === volunteerId ? updated : volunteer,
+        ),
+      );
+      return updated;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const deleteStudent = (studentId) => {
-    const updatedStudents = students.filter(
-      (student) => student._id !== studentId && student.id !== studentId,
-    );
-    setStudents(updatedStudents);
-    localStorage.setItem("tula_students", JSON.stringify(updatedStudents));
+  const deleteVolunteer = async (volunteerId) => {
+    try {
+      await api.volunteers.delete(volunteerId);
+      setVolunteers(
+        volunteers.filter((volunteer) => volunteer._id !== volunteerId),
+      );
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const updateVolunteer = (volunteerId, updatedData) => {
-    const updatedVolunteers = volunteers.map((volunteer) =>
-      volunteer._id === volunteerId || volunteer.id === volunteerId
-        ? { ...volunteer, ...updatedData }
-        : volunteer,
-    );
-    setVolunteers(updatedVolunteers);
-    localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
+  // Material functions
+  const addMaterial = async (materialData) => {
+    try {
+      const material = await api.materials.create(materialData);
+      setMaterials([...materials, material]);
+      return material;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const deleteVolunteer = (volunteerId) => {
-    const updatedVolunteers = volunteers.filter(
-      (volunteer) =>
-        volunteer._id !== volunteerId && volunteer.id !== volunteerId,
-    );
-    setVolunteers(updatedVolunteers);
-    localStorage.setItem("tula_volunteers", JSON.stringify(updatedVolunteers));
+  const updateMaterial = async (materialId, updatedData) => {
+    try {
+      const updated = await api.materials.update(materialId, updatedData);
+      setMaterials(
+        materials.map((material) =>
+          material._id === materialId ? updated : material,
+        ),
+      );
+      return updated;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const updateMaterial = (materialId, updatedData) => {
-    const updatedMaterials = materials.map((material) =>
-      material.id === materialId ? { ...material, ...updatedData } : material,
-    );
-    setMaterials(updatedMaterials);
-    localStorage.setItem("tula_materials", JSON.stringify(updatedMaterials));
+  const deleteMaterial = async (materialId) => {
+    try {
+      await api.materials.delete(materialId);
+      setMaterials(materials.filter((material) => material._id !== materialId));
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const deleteMaterial = (materialId) => {
-    const updatedMaterials = materials.filter(
-      (material) => material.id !== materialId,
-    );
-    setMaterials(updatedMaterials);
-    localStorage.setItem("tula_materials", JSON.stringify(updatedMaterials));
+  // Session functions
+  const addSession = async (sessionData) => {
+    try {
+      const session = await api.sessions.create(sessionData);
+      setSessions([...sessions, session]);
+      return session;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const updateSession = (sessionId, updatedData) => {
-    const updatedSessions = sessions.map((session) =>
-      session.id === sessionId ? { ...session, ...updatedData } : session,
-    );
-    setSessions(updatedSessions);
-    localStorage.setItem("tula_sessions", JSON.stringify(updatedSessions));
+  const updateSession = async (sessionId, updatedData) => {
+    try {
+      const updated = await api.sessions.update(sessionId, updatedData);
+      setSessions(
+        sessions.map((session) =>
+          session._id === sessionId ? updated : session,
+        ),
+      );
+      return updated;
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
-  const deleteSession = (sessionId) => {
-    const updatedSessions = sessions.filter(
-      (session) => session.id !== sessionId,
-    );
-    setSessions(updatedSessions);
-    localStorage.setItem("tula_sessions", JSON.stringify(updatedSessions));
+  const deleteSession = async (sessionId) => {
+    try {
+      await api.sessions.delete(sessionId);
+      setSessions(sessions.filter((session) => session._id !== sessionId));
+    } catch (error) {
+      setError(error.message);
+      throw error;
+    }
   };
 
   const value = {
@@ -241,181 +355,10 @@ export const AppProvider = ({ children }) => {
     addSession,
     updateSession,
     deleteSession,
+    loading,
+    error,
+    setError,
   };
 
   return <AppContext.Provider value={value}>{children}</AppContext.Provider>;
 };
-
-const mockSessions = [
-  {
-    id: 1,
-    name: "Summer 2024",
-    year: 2024,
-    startDate: "2024-06-01",
-    endDate: "2024-08-31",
-    active: true,
-  },
-  {
-    id: 2,
-    name: "Summer 2023",
-    year: 2023,
-    startDate: "2023-06-01",
-    endDate: "2023-08-31",
-    active: false,
-  },
-  {
-    id: 3,
-    name: "Summer 2022",
-    year: 2022,
-    startDate: "2022-06-01",
-    endDate: "2022-08-31",
-    active: false,
-  },
-];
-
-const mockMaterials = [
-  {
-    id: 1,
-    title: "Mathematics Grade 8 - Algebra Basics",
-    subject: "Mathematics",
-    level: "Secondary",
-    grade: "8",
-    fileType: "PDF",
-    uploadedBy: "Ahmed Hassan",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Introduction to algebraic expressions and equations",
-  },
-  {
-    id: 2,
-    title: "English Grammar - Tenses",
-    subject: "English",
-    level: "Elementary",
-    grade: "6",
-    fileType: "PDF",
-    uploadedBy: "Fatima Ali",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Complete guide to English tenses with exercises",
-  },
-  {
-    id: 3,
-    title: "Afaan Oromoo - Basic Grammar",
-    subject: "Afaan Oromoo",
-    level: "Elementary",
-    grade: "5",
-    fileType: "PDF",
-    uploadedBy: "Chaltu Bekele",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Introduction to Afaan Oromoo grammar and vocabulary",
-  },
-  {
-    id: 4,
-    title: "Physics - Motion and Forces",
-    subject: "Physics",
-    level: "Preparatory",
-    grade: "11",
-    fileType: "PPT",
-    uploadedBy: "Mohammed Ibrahim",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Understanding Newton's laws and motion",
-  },
-  {
-    id: 5,
-    title: "Chemistry - Periodic Table",
-    subject: "Chemistry",
-    level: "Secondary",
-    grade: "9",
-    fileType: "PDF",
-    uploadedBy: "Sara Ahmed",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Elements, groups, and periodic trends",
-  },
-  {
-    id: 6,
-    title: "Biology - Cell Structure",
-    subject: "Biology",
-    level: "Secondary",
-    grade: "8",
-    fileType: "DOC",
-    uploadedBy: "Omar Khalil",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Plant and animal cell structures",
-  },
-  {
-    id: 7,
-    title: "History - Ancient Civilizations",
-    subject: "History",
-    level: "Secondary",
-    grade: "7",
-    fileType: "PDF",
-    uploadedBy: "Yusuf Ahmed",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Study of ancient civilizations and their contributions",
-  },
-  {
-    id: 8,
-    title: "Geography - Climate and Weather",
-    subject: "Geography",
-    level: "Elementary",
-    grade: "6",
-    fileType: "PPT",
-    uploadedBy: "Amina Hassan",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Understanding climate zones and weather patterns",
-  },
-  {
-    id: 9,
-    title: "Economics - Supply and Demand",
-    subject: "Economics",
-    level: "Preparatory",
-    grade: "11",
-    fileType: "PDF",
-    uploadedBy: "Ibrahim Ali",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Basic economic principles and market dynamics",
-  },
-  {
-    id: 10,
-    title: "Agriculture - Crop Production",
-    subject: "Agriculture",
-    level: "Secondary",
-    grade: "9",
-    fileType: "PDF",
-    uploadedBy: "Abdi Mohammed",
-    session: "Summer 2024",
-    sessionId: 1,
-    description: "Modern farming techniques and crop management",
-  },
-  {
-    id: 11,
-    title: "Mathematics Grade 10 - Geometry",
-    subject: "Mathematics",
-    level: "Secondary",
-    grade: "10",
-    fileType: "PDF",
-    uploadedBy: "Ahmed Hassan",
-    session: "Summer 2023",
-    sessionId: 2,
-    description: "Triangles, circles, and geometric proofs",
-  },
-  {
-    id: 12,
-    title: "English Literature - Short Stories",
-    subject: "English",
-    level: "Preparatory",
-    grade: "12",
-    fileType: "DOC",
-    uploadedBy: "Fatima Ali",
-    session: "Summer 2023",
-    sessionId: 2,
-    description: "Analysis of classic and contemporary short stories",
-  },
-];
