@@ -108,14 +108,25 @@ function StudentProfile() {
   ];
 
   return (
-    <div className="min-h-screen bg-[#0a1419] pt-20 pb-12">
-      <div className="container max-w-6xl mx-auto px-4">
+    <div className="min-h-screen bg-gradient-to-br from-[#0a1419] via-[#0d1b24] to-[#0a1419] pt-20 pb-12 relative overflow-hidden">
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div
+          className="absolute bottom-20 right-10 w-96 h-96 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse-slow"
+          style={{ animationDelay: "1s" }}></div>
+        <div
+          className="absolute top-1/2 left-1/2 w-64 h-64 bg-whatsapp-green/3 rounded-full blur-3xl animate-pulse-slow"
+          style={{ animationDelay: "2s" }}></div>
+      </div>
+
+      <div className="container max-w-6xl mx-auto px-4 relative z-10">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl md:text-5xl font-black text-whatsapp-green mb-2">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-whatsapp-green via-[#00E676] to-whatsapp-green bg-clip-text text-transparent mb-2 animate-gradient">
             Welcome Back
           </h1>
-          <p className="text-secondary text-lg">Your Profile Dashboard</p>
+          <p className="text-gray-400 text-lg">Your Profile Dashboard</p>
         </div>
 
         {/* Success Message */}
@@ -126,28 +137,35 @@ function StudentProfile() {
         )}
 
         {/* Main Profile Card */}
-        <div className="bg-[#1a2730] rounded-2xl p-8 mb-6 shadow-2xl">
+        <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 mb-6 shadow-2xl border border-gray-700/50 backdrop-blur-sm animate-scale-in hover:shadow-whatsapp-green/10 transition-all duration-500">
           {/* User Header */}
-          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700">
-            <div className="w-32 h-32 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-6xl text-white font-bold shadow-xl ring-4 ring-whatsapp-green/30">
-              {user?.name?.charAt(0).toUpperCase() || "?"}
+          <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700/50">
+            <div className="relative group">
+              <div className="absolute inset-0 bg-gradient-to-br from-whatsapp-green to-[#00A884] rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-slow"></div>
+              <div className="relative w-32 h-32 rounded-full bg-gradient-to-br from-whatsapp-green via-[#00E676] to-[#00A884] flex items-center justify-center text-6xl text-white font-bold shadow-2xl ring-4 ring-whatsapp-green/30 group-hover:ring-whatsapp-green/50 transition-all duration-300 group-hover:scale-105">
+                {profile?.firstName?.charAt(0).toUpperCase() ||
+                  user?.name?.charAt(0).toUpperCase() ||
+                  "?"}
+              </div>
             </div>
             <div className="flex-1 text-center md:text-left">
-              <h2 className="text-3xl font-bold text-white mb-2">
-                {user?.name || "Student"}
+              <h2 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
+                {profile?.firstName && profile?.middleName
+                  ? `${profile.firstName} ${profile.middleName}`
+                  : profile?.firstName || user?.name || "Student"}
               </h2>
-              <p className="text-whatsapp-green text-lg mb-3">
+              <p className="text-whatsapp-green text-lg mb-3 font-medium">
                 {user?.email || ""}
               </p>
-              <span className="inline-block px-4 py-2 bg-whatsapp-green/20 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50">
+              <span className="inline-block px-5 py-2 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50 shadow-lg shadow-whatsapp-green/20">
                 👨‍🎓 Student
               </span>
             </div>
             {!isEditing && (
               <button
                 onClick={() => setIsEditing(true)}
-                className="flex items-center gap-2 px-6 py-3 bg-whatsapp-green hover:bg-[#00A884] text-white rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-whatsapp-green/50">
-                <FiEdit2 />
+                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 transform">
+                <FiEdit2 className="text-lg" />
                 Edit Profile
               </button>
             )}
@@ -328,55 +346,17 @@ function StudentProfile() {
             </form>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {/* First Name */}
-              {profile.firstName && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiUser className="text-whatsapp-green text-xl" />
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
-                        First Name
-                      </p>
-                      <p className="text-white text-lg font-bold">
-                        {profile.firstName}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Middle Name */}
-              {profile.middleName && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiUser className="text-whatsapp-green text-xl" />
-                    </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
-                        Middle Name
-                      </p>
-                      <p className="text-white text-lg font-bold">
-                        {profile.middleName}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* School */}
-              <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                    <FiBook className="text-whatsapp-green text-xl" />
+              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                    <FiBook className="text-whatsapp-green text-2xl" />
                   </div>
-                  <div>
-                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                  <div className="flex-1">
+                    <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                       School
                     </p>
-                    <p className="text-white text-lg font-bold">
+                    <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                       {profile.school}
                     </p>
                   </div>
@@ -384,16 +364,16 @@ function StudentProfile() {
               </div>
 
               {/* Grade Level */}
-              <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                <div className="flex items-center gap-4 mb-3">
-                  <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                    <FiAward className="text-whatsapp-green text-xl" />
+              <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                    <FiAward className="text-whatsapp-green text-2xl" />
                   </div>
-                  <div>
-                    <p className="text-gray-400 text-xs uppercase tracking-wide">
+                  <div className="flex-1">
+                    <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                       Grade Level
                     </p>
-                    <p className="text-white text-lg font-bold">
+                    <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                       {profile.gradeLevel}
                     </p>
                   </div>
@@ -402,16 +382,16 @@ function StudentProfile() {
 
               {/* Grade */}
               {profile.grade && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiAward className="text-whatsapp-green text-xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                      <FiAward className="text-whatsapp-green text-2xl" />
                     </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                    <div className="flex-1">
+                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                         Current Grade
                       </p>
-                      <p className="text-white text-lg font-bold">
+                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                         {profile.grade}
                       </p>
                     </div>
@@ -421,16 +401,16 @@ function StudentProfile() {
 
               {/* Guardian */}
               {profile.guardianName && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiUser className="text-whatsapp-green text-xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                      <FiUser className="text-whatsapp-green text-2xl" />
                     </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                    <div className="flex-1">
+                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                         Guardian
                       </p>
-                      <p className="text-white text-lg font-bold">
+                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                         {profile.guardianName}
                       </p>
                     </div>
@@ -440,16 +420,16 @@ function StudentProfile() {
 
               {/* Phone */}
               {profile.phone && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiPhone className="text-whatsapp-green text-xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                      <FiPhone className="text-whatsapp-green text-2xl" />
                     </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                    <div className="flex-1">
+                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                         Phone
                       </p>
-                      <p className="text-white text-lg font-bold">
+                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                         {profile.phone}
                       </p>
                     </div>
@@ -459,16 +439,16 @@ function StudentProfile() {
 
               {/* Gender */}
               {profile.gender && (
-                <div className="bg-[#0f1b24] rounded-xl p-6 border border-gray-700 hover:border-whatsapp-green transition-colors">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center">
-                      <FiUsers className="text-whatsapp-green text-xl" />
+                <div className="group bg-gradient-to-br from-[#0f1b24] to-[#0a1419] rounded-xl p-6 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/10 hover:-translate-y-1 cursor-pointer">
+                  <div className="flex items-center gap-4">
+                    <div className="w-14 h-14 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/10">
+                      <FiUsers className="text-whatsapp-green text-2xl" />
                     </div>
-                    <div>
-                      <p className="text-gray-400 text-xs uppercase tracking-wide">
+                    <div className="flex-1">
+                      <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
                         Gender
                       </p>
-                      <p className="text-white text-lg font-bold">
+                      <p className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
                         {profile.gender}
                       </p>
                     </div>
@@ -480,15 +460,17 @@ function StudentProfile() {
 
           {/* Subject Interests Display */}
           {!isEditing && (
-            <div className="mt-8 pt-8 border-t border-gray-700">
-              <p className="text-gray-400 text-sm uppercase tracking-wide mb-4">
+            <div className="mt-8 pt-8 border-t border-gray-700/50">
+              <p className="text-whatsapp-green text-sm uppercase tracking-wider font-bold mb-4 flex items-center gap-2">
+                <span className="w-2 h-2 bg-whatsapp-green rounded-full animate-pulse"></span>
                 Subject Interests
               </p>
               <div className="flex flex-wrap gap-3">
-                {(profile.subjectInterests || []).map((subject) => (
+                {(profile.subjectInterests || []).map((subject, index) => (
                   <span
                     key={subject}
-                    className="px-4 py-2 bg-whatsapp-green/20 text-whatsapp-green rounded-lg text-sm font-semibold border border-whatsapp-green/50 hover:bg-whatsapp-green/30 transition-colors">
+                    className="px-5 py-2.5 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-xl text-sm font-bold border border-whatsapp-green/50 hover:bg-whatsapp-green/30 hover:scale-105 transition-all duration-300 shadow-lg shadow-whatsapp-green/10 cursor-pointer animate-fade-in"
+                    style={{ animationDelay: `${index * 0.1}s` }}>
                     {subject}
                   </span>
                 ))}
@@ -497,22 +479,25 @@ function StudentProfile() {
           )}
         </div>
 
-        {/* Quick Action - Minimized */}
+        {/* Quick Action - Enhanced */}
         <button
           onClick={() => navigate("/materials")}
-          className="w-full bg-[#1a2730] hover:bg-[#1f2f3a] rounded-xl p-4 shadow-xl transition-all duration-300 border border-gray-700 hover:border-whatsapp-green group">
+          className="w-full bg-gradient-to-br from-[#1a2730] to-[#15202b] hover:from-[#1f2f3a] hover:to-[#1a2730] rounded-2xl p-6 shadow-2xl transition-all duration-300 border border-gray-700/50 hover:border-whatsapp-green/50 group hover:shadow-whatsapp-green/20 hover:-translate-y-1 transform">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-4">
-              <div className="w-12 h-12 bg-whatsapp-green/20 rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-                <FiBook className="text-whatsapp-green text-2xl" />
+              <div className="w-16 h-16 bg-gradient-to-br from-whatsapp-green/20 to-whatsapp-green/10 rounded-xl flex items-center justify-center group-hover:scale-110 transition-transform duration-300 shadow-lg shadow-whatsapp-green/20">
+                <FiBook className="text-whatsapp-green text-3xl" />
               </div>
               <div className="text-left">
-                <h3 className="text-white text-lg font-bold group-hover:text-whatsapp-green transition-colors">
+                <h3 className="text-white text-xl font-black group-hover:text-whatsapp-green transition-colors">
                   Learning Materials
                 </h3>
+                <p className="text-gray-400 text-sm mt-1">
+                  Access your study resources
+                </p>
               </div>
             </div>
-            <div className="text-whatsapp-green text-2xl group-hover:translate-x-2 transition-transform">
+            <div className="text-whatsapp-green text-3xl group-hover:translate-x-2 transition-transform duration-300 font-bold">
               →
             </div>
           </div>
