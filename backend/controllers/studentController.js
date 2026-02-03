@@ -16,12 +16,16 @@ const registerStudent = async (req, res) => {
       name,
       email,
       password,
+      firstName,
+      middleName,
+      lastName,
+      phone,
+      gender,
       school,
       gradeLevel,
       grade,
       subjectInterests,
       guardianName,
-      phone,
     } = req.body;
 
     // Check if user exists
@@ -41,13 +45,21 @@ const registerStudent = async (req, res) => {
     // Create student profile
     const studentProfile = await StudentProfile.create({
       userId: user._id,
+      firstName,
+      middleName,
+      lastName,
+      phone,
+      gender,
       school,
       gradeLevel,
       grade,
       subjectInterests,
       guardianName,
-      phone,
     });
+
+    // Generate token
+    const generateToken = require("../utils/generateToken");
+    const token = generateToken(user._id);
 
     res.status(201).json({
       user: {
@@ -55,6 +67,7 @@ const registerStudent = async (req, res) => {
         name: user.name,
         email: user.email,
         role: user.role,
+        token,
       },
       profile: studentProfile,
     });
@@ -131,9 +144,29 @@ const updateStudent = async (req, res) => {
   }
 };
 
+// @desc    Get current student's profile
+// @route   GET /api/students/me
+// @access  Private (Student)
+const getMyProfile = async (req, res) => {
+  try {
+    const student = await StudentProfile.findOne({
+      userId: req.user._id,
+    }).populate("userId", "name email");
+
+    if (!student) {
+      return res.status(404).json({ message: "Student profile not found" });
+    }
+
+    res.json(student);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerStudent,
   getStudents,
   getStudent,
   updateStudent,
+  getMyProfile,
 };

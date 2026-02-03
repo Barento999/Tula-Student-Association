@@ -62,6 +62,8 @@ export const studentsAPI = {
 
   getById: (id) => apiCall(`/students/${id}`),
 
+  getMyProfile: () => apiCall("/students/me"),
+
   create: (studentData) =>
     apiCall("/students", {
       method: "POST",
@@ -85,6 +87,8 @@ export const volunteersAPI = {
   getAll: () => apiCall("/volunteers"),
 
   getById: (id) => apiCall(`/volunteers/${id}`),
+
+  getMyProfile: () => apiCall("/volunteers/me"),
 
   create: (volunteerData) =>
     apiCall("/volunteers", {

@@ -30,13 +30,15 @@ export const AppProvider = ({ children }) => {
           const userData = JSON.parse(savedUser);
           setUser(userData);
 
-          // Fetch all data if user is logged in
-          await Promise.all([
-            fetchStudents(),
-            fetchVolunteers(),
-            fetchMaterials(),
-            fetchSessions(),
-          ]);
+          // Only fetch admin-level data if user is admin
+          if (userData.role === "admin") {
+            Promise.all([
+              fetchStudents(),
+              fetchVolunteers(),
+              fetchMaterials(),
+              fetchSessions(),
+            ]).catch((err) => console.error("Error fetching admin data:", err));
+          }
         }
       } catch (error) {
         console.error("Initialization error:", error);
@@ -93,13 +95,15 @@ export const AppProvider = ({ children }) => {
       setUser(data);
       localStorage.setItem("tula_user", JSON.stringify(data));
 
-      // Fetch data after login
-      await Promise.all([
-        fetchStudents(),
-        fetchVolunteers(),
-        fetchMaterials(),
-        fetchSessions(),
-      ]);
+      // Fetch data in background (only for admin) - don't wait for it
+      if (data.role === "admin") {
+        Promise.all([
+          fetchStudents(),
+          fetchVolunteers(),
+          fetchMaterials(),
+          fetchSessions(),
+        ]).catch((err) => console.error("Error fetching admin data:", err));
+      }
 
       return data;
     } catch (error) {
@@ -125,11 +129,15 @@ export const AppProvider = ({ children }) => {
         name: `${studentData.firstName} ${studentData.middleName || ""} ${studentData.lastName}`.trim(),
         email: studentData.email,
         password: studentData.password,
+        firstName: studentData.firstName,
+        middleName: studentData.middleName || "",
+        lastName: studentData.lastName,
+        phone: studentData.phone,
+        gender: studentData.gender,
         school: studentData.schoolName,
         gradeLevel: studentData.level,
         grade: studentData.grade,
         guardianName: studentData.guardianName,
-        phone: studentData.phone,
         subjectInterests: studentData.subjectInterests || [],
       };
 
@@ -193,12 +201,16 @@ export const AppProvider = ({ children }) => {
         name: `${volunteerData.firstName} ${volunteerData.middleName || ""} ${volunteerData.lastName}`.trim(),
         email: volunteerData.email,
         password: volunteerData.password,
+        firstName: volunteerData.firstName,
+        middleName: volunteerData.middleName || "",
+        lastName: volunteerData.lastName,
+        phone: volunteerData.phone,
+        gender: volunteerData.gender,
         university: volunteerData.university,
         department: volunteerData.department,
         subjects: volunteerData.subjects || [],
         availability: volunteerData.availability,
         preferredLevel: volunteerData.preferredLevel,
-        phone: volunteerData.phone,
       };
 
       const response = await fetch(

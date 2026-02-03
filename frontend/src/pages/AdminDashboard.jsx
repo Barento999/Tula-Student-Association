@@ -590,18 +590,21 @@ const AdminDashboard = () => {
                       <div className="relative flex-shrink-0">
                         <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
                         <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
-                          {(student.firstName || student.fullName || "?")
+                          {(student.firstName || student.userId?.name || "?")
                             .charAt(0)
                             .toUpperCase()}
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-white truncate">
-                          {student.fullName ||
-                            `${student.firstName} ${student.middleName || ""} ${student.lastName || ""}`.trim()}
+                        <h3 className="text-lg font-bold text-whatsapp-green truncate">
+                          {student.firstName && student.middleName
+                            ? `${student.firstName} ${student.middleName}`
+                            : student.firstName ||
+                              student.userId?.name ||
+                              "Unknown"}
                         </h3>
-                        <p className="text-sm text-whatsapp-green truncate">
-                          {student.email || "No email"}
+                        <p className="text-sm text-gray-300 truncate">
+                          {student.userId?.email || "No email"}
                         </p>
                       </div>
                     </div>
@@ -736,18 +739,25 @@ const AdminDashboard = () => {
                       <div className="relative flex-shrink-0">
                         <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
                         <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
-                          {(volunteer.firstName || volunteer.fullName || "?")
+                          {(
+                            volunteer.firstName ||
+                            volunteer.userId?.name ||
+                            "?"
+                          )
                             .charAt(0)
                             .toUpperCase()}
                         </div>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-white truncate">
-                          {volunteer.fullName ||
-                            `${volunteer.firstName} ${volunteer.middleName || ""} ${volunteer.lastName || ""}`.trim()}
+                        <h3 className="text-lg font-bold text-whatsapp-green truncate">
+                          {volunteer.firstName && volunteer.middleName
+                            ? `${volunteer.firstName} ${volunteer.middleName}`
+                            : volunteer.firstName ||
+                              volunteer.userId?.name ||
+                              "Unknown"}
                         </h3>
-                        <p className="text-sm text-whatsapp-green truncate">
-                          {volunteer.email || "No email"}
+                        <p className="text-sm text-gray-300 truncate">
+                          {volunteer.userId?.email || "No email"}
                         </p>
                       </div>
                     </div>

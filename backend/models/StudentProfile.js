@@ -7,6 +7,27 @@ const studentProfileSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    middleName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other", ""],
+      default: "",
+    },
     school: {
       type: String,
       required: [true, "Please provide school name"],
@@ -32,10 +53,6 @@ const studentProfileSchema = new mongoose.Schema(
       },
     },
     guardianName: {
-      type: String,
-      trim: true,
-    },
-    phone: {
       type: String,
       trim: true,
     },

@@ -7,6 +7,7 @@ const {
   getVolunteer,
   updateVolunteer,
   approveVolunteer,
+  getMyProfile,
 } = require("../controllers/volunteerController");
 const { protect } = require("../middleware/authMiddleware");
 const { authorize } = require("../middleware/roleMiddleware");
@@ -26,6 +27,7 @@ const volunteerValidation = [
 ];
 
 router.post("/register", volunteerValidation, registerVolunteer);
+router.get("/me", protect, getMyProfile);
 router.get("/", protect, authorize("admin"), getVolunteers);
 router.get("/:id", protect, getVolunteer);
 router.put("/:id", protect, updateVolunteer);

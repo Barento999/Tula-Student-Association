@@ -1,6 +1,7 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import api from "../services/api";
 import {
   FiEdit2,
   FiSave,
@@ -14,39 +15,61 @@ import {
 } from "react-icons/fi";
 
 function VolunteerProfile() {
-  const { user, volunteers, updateVolunteer } = useApp();
+  const { user, updateVolunteer } = useApp();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [formData, setFormData] = useState({
+    firstName: "",
+    middleName: "",
+    lastName: "",
+    phone: "",
+    gender: "",
+    university: "",
+    department: "",
+    subjects: [],
+    availability: "",
+    preferredLevel: "",
+  });
 
   useEffect(() => {
-    if (!user || user.role !== "volunteer") {
-      navigate("/");
-    }
+    const fetchProfile = async () => {
+      if (!user || user.role !== "volunteer") {
+        navigate("/");
+        return;
+      }
+
+      try {
+        setLoading(true);
+        // Fetch current user's profile only
+        const volunteerProfile = await api.volunteers.getMyProfile();
+
+        if (volunteerProfile) {
+          setProfile(volunteerProfile);
+          setFormData({
+            firstName: volunteerProfile.firstName || "",
+            middleName: volunteerProfile.middleName || "",
+            lastName: volunteerProfile.lastName || "",
+            phone: volunteerProfile.phone || "",
+            gender: volunteerProfile.gender || "",
+            university: volunteerProfile.university || "",
+            department: volunteerProfile.department || "",
+            subjects: volunteerProfile.subjects || [],
+            availability: volunteerProfile.availability || "",
+            preferredLevel: volunteerProfile.preferredLevel || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, [user, navigate]);
-
-  const profile = useMemo(() => {
-    if (!user || user.role !== "volunteer") return null;
-    return volunteers.find((v) => v.userId === user._id);
-  }, [user, volunteers]);
-
-  const initialFormData = useMemo(
-    () => ({
-      firstName: profile?.firstName || "",
-      middleName: profile?.middleName || "",
-      lastName: profile?.lastName || "",
-      phone: profile?.phone || "",
-      gender: profile?.gender || "",
-      university: profile?.university || "",
-      department: profile?.department || "",
-      subjects: profile?.subjects || [],
-      availability: profile?.availability || "",
-      preferredLevel: profile?.preferredLevel || "",
-    }),
-    [profile],
-  );
-
-  const [formData, setFormData] = useState(initialFormData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -68,17 +91,27 @@ function VolunteerProfile() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (profile) {
-      updateVolunteer(profile._id, formData);
-      setShowSuccess(true);
-      setIsEditing(false);
-      setTimeout(() => setShowSuccess(false), 3000);
+      try {
+        // Update volunteer in database
+        const updated = await updateVolunteer(profile._id, formData);
+
+        // Update local profile state with the returned data
+        setProfile(updated);
+
+        setShowSuccess(true);
+        setIsEditing(false);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile. Please try again.");
+      }
     }
   };
 
-  if (!profile || !user) {
+  if (loading || !profile || !user) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center bg-[#0a1419]">
         <div className="text-center">

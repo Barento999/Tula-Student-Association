@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
+import api from "../services/api";
 import {
   FiEdit2,
   FiSave,
@@ -14,10 +15,11 @@ import {
 } from "react-icons/fi";
 
 function StudentProfile() {
-  const { user, students, updateStudent } = useApp();
+  const { user, updateStudent } = useApp();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -32,27 +34,40 @@ function StudentProfile() {
   const [showSuccess, setShowSuccess] = useState(false);
 
   useEffect(() => {
-    if (!user || user.role !== "student") {
-      navigate("/student-login");
-      return;
-    }
+    const fetchProfile = async () => {
+      if (!user || user.role !== "student") {
+        navigate("/student-login");
+        return;
+      }
 
-    const studentProfile = students.find((s) => s.userId === user._id);
-    if (studentProfile) {
-      setProfile(studentProfile);
-      setFormData({
-        firstName: studentProfile.firstName || "",
-        middleName: studentProfile.middleName || "",
-        school: studentProfile.school || "",
-        gradeLevel: studentProfile.gradeLevel || "",
-        grade: studentProfile.grade || "",
-        subjectInterests: studentProfile.subjectInterests || [],
-        guardianName: studentProfile.guardianName || "",
-        phone: studentProfile.phone || "",
-        gender: studentProfile.gender || "",
-      });
-    }
-  }, [user, students, navigate]);
+      try {
+        setLoading(true);
+        // Fetch current user's profile only
+        const studentProfile = await api.students.getMyProfile();
+
+        if (studentProfile) {
+          setProfile(studentProfile);
+          setFormData({
+            firstName: studentProfile.firstName || "",
+            middleName: studentProfile.middleName || "",
+            school: studentProfile.school || "",
+            gradeLevel: studentProfile.gradeLevel || "",
+            grade: studentProfile.grade || "",
+            subjectInterests: studentProfile.subjectInterests || [],
+            guardianName: studentProfile.guardianName || "",
+            phone: studentProfile.phone || "",
+            gender: studentProfile.gender || "",
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
+  }, [user, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -74,17 +89,27 @@ function StudentProfile() {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (profile) {
-      updateStudent(profile._id, formData);
-      setShowSuccess(true);
-      setIsEditing(false);
-      setTimeout(() => setShowSuccess(false), 3000);
+      try {
+        // Update student in database
+        const updated = await updateStudent(profile._id, formData);
+
+        // Update local profile state with the returned data
+        setProfile(updated);
+
+        setShowSuccess(true);
+        setIsEditing(false);
+        setTimeout(() => setShowSuccess(false), 3000);
+      } catch (error) {
+        console.error("Error updating profile:", error);
+        alert("Failed to update profile. Please try again.");
+      }
     }
   };
 
-  if (!profile || !user) {
+  if (loading || !profile || !user) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center bg-[#0d1b24]">
         <div className="text-center">

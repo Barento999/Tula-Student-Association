@@ -7,6 +7,27 @@ const volunteerProfileSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    firstName: {
+      type: String,
+      trim: true,
+    },
+    middleName: {
+      type: String,
+      trim: true,
+    },
+    lastName: {
+      type: String,
+      trim: true,
+    },
+    phone: {
+      type: String,
+      trim: true,
+    },
+    gender: {
+      type: String,
+      enum: ["Male", "Female", "Other", ""],
+      default: "",
+    },
     university: {
       type: String,
       required: [true, "Please provide university name"],
@@ -33,8 +54,8 @@ const volunteerProfileSchema = new mongoose.Schema(
     },
     preferredLevel: {
       type: String,
-      enum: ["Elementary", "Secondary", "Preparatory", "Any"],
-      default: "Any",
+      enum: ["Elementary", "Secondary", "Preparatory", "Any", ""],
+      default: "",
     },
     summerSession: {
       type: mongoose.Schema.Types.ObjectId,

@@ -22,23 +22,21 @@ const AdminLogin = () => {
     setError("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
 
-    // Mock authentication - in real app, this would call an API
-    if (
-      credentials.username === "admin" &&
-      credentials.password === "admin123"
-    ) {
-      login({
-        id: "admin-1",
-        username: credentials.username,
-        role: "admin",
-        fullName: "Administrator",
+    try {
+      // Call backend API to login
+      await login({
+        email: credentials.username, // Backend expects email field
+        password: credentials.password,
       });
+
+      // Redirect to admin dashboard on success
       navigate("/admin");
-    } else {
-      setError("Invalid username or password");
+    } catch (err) {
+      setError(err.message || "Invalid credentials. Please try again.");
     }
   };
 
@@ -62,15 +60,15 @@ const AdminLogin = () => {
             )}
 
             <div className="form-group">
-              <label className="form-label">Username</label>
+              <label className="form-label">Email</label>
               <input
-                type="text"
+                type="email"
                 name="username"
                 value={credentials.username}
                 onChange={handleChange}
                 className="form-input"
                 required
-                placeholder="Enter username"
+                placeholder="admin@tula.org"
               />
             </div>
 
@@ -104,10 +102,14 @@ const AdminLogin = () => {
 
             <div className="mt-6 p-4 bg-main border border-border rounded-lg text-center">
               <p className="text-sm text-secondary my-1">
-                <strong className="text-primary">Demo Credentials:</strong>
+                <strong className="text-primary">Create Admin Account:</strong>
               </p>
-              <p className="text-sm text-secondary my-1">Username: admin</p>
-              <p className="text-sm text-secondary my-1">Password: admin123</p>
+              <p className="text-xs text-secondary my-1">
+                See CREATE_ADMIN.md for instructions
+              </p>
+              <p className="text-xs text-whatsapp-green my-1">
+                Default: admin@tula.org / admin123
+              </p>
             </div>
           </form>
         </div>

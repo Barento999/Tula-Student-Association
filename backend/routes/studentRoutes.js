@@ -6,6 +6,7 @@ const {
   getStudents,
   getStudent,
   updateStudent,
+  getMyProfile,
 } = require("../controllers/studentController");
 const { protect } = require("../middleware/authMiddleware");
 const { authorize } = require("../middleware/roleMiddleware");
@@ -27,6 +28,7 @@ const studentValidation = [
 ];
 
 router.post("/register", studentValidation, registerStudent);
+router.get("/me", protect, getMyProfile);
 router.get("/", protect, authorize("admin"), getStudents);
 router.get("/:id", protect, getStudent);
 router.put("/:id", protect, updateStudent);

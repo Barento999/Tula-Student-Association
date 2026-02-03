@@ -38,7 +38,7 @@ const StudentLogin = () => {
     return newErrors;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const newErrors = validate();
 
@@ -47,8 +47,20 @@ const StudentLogin = () => {
       return;
     }
 
-    login({ email: formData.email, role: "student" });
-    navigate("/student-profile");
+    try {
+      // Call backend API to login
+      await login({
+        email: formData.email,
+        password: formData.password,
+      });
+
+      // Redirect to student profile on success
+      navigate("/student-profile");
+    } catch (error) {
+      setErrors({
+        submit: error.message || "Login failed. Please check your credentials.",
+      });
+    }
   };
 
   return (
@@ -125,6 +137,12 @@ const StudentLogin = () => {
                   </div>
                 )}
               </div>
+
+              {errors.submit && (
+                <div className="mb-4 p-4 bg-red-500/20 border border-red-500/50 rounded-xl text-red-400 text-sm animate-fade-in-up">
+                  {errors.submit}
+                </div>
+              )}
 
               <div className="form-group">
                 <label className="form-label flex items-center gap-2">

@@ -16,6 +16,11 @@ const registerVolunteer = async (req, res) => {
       name,
       email,
       password,
+      firstName,
+      middleName,
+      lastName,
+      phone,
+      gender,
       university,
       department,
       subjects,
@@ -41,6 +46,11 @@ const registerVolunteer = async (req, res) => {
     // Create volunteer profile
     const volunteerProfile = await VolunteerProfile.create({
       userId: user._id,
+      firstName,
+      middleName,
+      lastName,
+      phone,
+      gender,
       university,
       department,
       subjects,
@@ -49,12 +59,17 @@ const registerVolunteer = async (req, res) => {
       summerSession,
     });
 
+    // Generate token
+    const generateToken = require("../utils/generateToken");
+    const token = generateToken(user._id);
+
     res.status(201).json({
       user: {
         _id: user._id,
         name: user.name,
         email: user.email,
         role: user.role,
+        token,
       },
       profile: volunteerProfile,
     });
@@ -151,10 +166,30 @@ const approveVolunteer = async (req, res) => {
   }
 };
 
+// @desc    Get current volunteer's profile
+// @route   GET /api/volunteers/me
+// @access  Private (Volunteer)
+const getMyProfile = async (req, res) => {
+  try {
+    const volunteer = await VolunteerProfile.findOne({
+      userId: req.user._id,
+    }).populate("userId", "name email");
+
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer profile not found" });
+    }
+
+    res.json(volunteer);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerVolunteer,
   getVolunteers,
   getVolunteer,
   updateVolunteer,
   approveVolunteer,
+  getMyProfile,
 };
