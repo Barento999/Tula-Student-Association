@@ -114,17 +114,55 @@ export const materialsAPI = {
 
   getById: (id) => apiCall(`/materials/${id}`),
 
-  create: (materialData) =>
-    apiCall("/materials", {
+  create: (materialData) => {
+    // Check if materialData is FormData (for file uploads)
+    if (materialData instanceof FormData) {
+      const token = getAuthToken();
+      return fetch(`${API_URL}/materials/upload`, {
+        method: "POST",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: materialData,
+      }).then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Upload failed");
+        }
+        return data;
+      });
+    }
+    // Regular JSON upload
+    return apiCall("/materials/upload", {
       method: "POST",
       body: JSON.stringify(materialData),
-    }),
+    });
+  },
 
-  update: (id, materialData) =>
-    apiCall(`/materials/${id}`, {
+  update: (id, materialData) => {
+    // Check if materialData is FormData (for file uploads)
+    if (materialData instanceof FormData) {
+      const token = getAuthToken();
+      return fetch(`${API_URL}/materials/${id}`, {
+        method: "PUT",
+        headers: {
+          ...(token && { Authorization: `Bearer ${token}` }),
+        },
+        body: materialData,
+      }).then(async (response) => {
+        const data = await response.json();
+        if (!response.ok) {
+          throw new Error(data.message || "Update failed");
+        }
+        return data;
+      });
+    }
+    // Regular JSON update
+    return apiCall(`/materials/${id}`, {
       method: "PUT",
       body: JSON.stringify(materialData),
-    }),
+    });
+  },
 
   delete: (id) =>
     apiCall(`/materials/${id}`, {

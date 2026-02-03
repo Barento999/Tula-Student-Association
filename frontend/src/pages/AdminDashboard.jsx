@@ -114,41 +114,59 @@ const AdminDashboard = () => {
     }));
   };
 
-  const handleMaterialSubmit = (e) => {
+  const handleMaterialSubmit = async (e) => {
     e.preventDefault();
-    const selectedSession = sessions.find(
-      (s) => s.id === parseInt(materialForm.sessionId),
-    );
 
-    if (editingItem) {
-      // Update existing material
-      updateMaterial(editingItem.id, {
-        ...materialForm,
-        session: selectedSession?.name || "",
-        sessionId: parseInt(materialForm.sessionId),
+    try {
+      const selectedSession = sessions.find(
+        (s) => s.id === parseInt(materialForm.sessionId),
+      );
+
+      // Create FormData for file upload
+      const formData = new FormData();
+      formData.append("title", materialForm.title);
+      formData.append("subject", materialForm.subject);
+      formData.append("level", materialForm.level);
+      formData.append("grade", materialForm.grade);
+      formData.append("fileType", materialForm.fileType);
+      formData.append("description", materialForm.description);
+      formData.append("uploadedBy", materialForm.uploadedBy);
+      formData.append("session", selectedSession?.name || "");
+      formData.append("sessionId", materialForm.sessionId);
+
+      // Add file if selected
+      if (materialForm.file) {
+        formData.append("file", materialForm.file);
+      }
+
+      if (editingItem) {
+        // Update existing material
+        await updateMaterial(editingItem.id, formData);
+      } else {
+        // Add new material
+        await addMaterial(formData);
+      }
+
+      // Reset form
+      setMaterialForm({
+        title: "",
+        subject: "",
+        level: "",
+        grade: "",
+        fileType: "PDF",
+        description: "",
+        uploadedBy: "Admin",
+        session: "",
+        sessionId: "",
+        file: null,
+        fileName: "",
       });
-    } else {
-      // Add new material
-      addMaterial({
-        ...materialForm,
-        session: selectedSession?.name || "",
-        sessionId: parseInt(materialForm.sessionId),
-      });
+      setEditingItem(null);
+      setShowMaterialModal(false);
+    } catch (error) {
+      console.error("Error uploading material:", error);
+      alert("Failed to upload material. Please try again.");
     }
-
-    setMaterialForm({
-      title: "",
-      subject: "",
-      level: "",
-      grade: "",
-      fileType: "PDF",
-      description: "",
-      uploadedBy: "Admin",
-      session: "",
-      sessionId: "",
-    });
-    setEditingItem(null);
-    setShowMaterialModal(false);
   };
 
   const handleSessionSubmit = (e) => {
@@ -1216,20 +1234,34 @@ const AdminDashboard = () => {
 
           {/* Session */}
           <div className="form-group">
-            <label className="form-label text-whatsapp-green">Session *</label>
+            <label className="form-label text-whatsapp-green">
+              Session{" "}
+              {sessions.length > 0
+                ? "*"
+                : "(Optional - Create a session first)"}
+            </label>
             <select
               name="sessionId"
               value={materialForm.sessionId}
               onChange={handleMaterialChange}
               className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
-              required>
-              <option value="">Select Session</option>
+              required={sessions.length > 0}>
+              <option key="empty" value="">
+                {sessions.length > 0
+                  ? "Select Session"
+                  : "No sessions available"}
+              </option>
               {sessions.map((session) => (
                 <option key={session.id} value={session.id}>
                   {session.name}
                 </option>
               ))}
             </select>
+            {sessions.length === 0 && (
+              <p className="text-yellow-400 text-sm mt-2">
+                ⚠️ Create a session first using the "Create Session" button
+              </p>
+            )}
           </div>
 
           {/* Description */}
