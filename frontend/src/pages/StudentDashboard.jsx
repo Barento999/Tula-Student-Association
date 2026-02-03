@@ -5,11 +5,23 @@ import PageHeader from "../components/PageHeader";
 import Card from "../components/Card";
 
 const StudentDashboard = () => {
-  const { user, materials } = useApp();
+  const { user, materials, loading } = useApp();
   const [filters, setFilters] = useState({
     subject: "",
     grade: "",
   });
+
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-main">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-whatsapp-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-primary text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   if (!user || user.role !== "student") {
     return <Navigate to="/student-registration" />;

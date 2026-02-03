@@ -34,6 +34,7 @@ const AdminDashboard = () => {
     deleteSession,
     updateMaterial,
     updateSession,
+    loading,
   } = useApp();
   const [activeTab, setActiveTab] = useState("overview");
   const [showMaterialModal, setShowMaterialModal] = useState(false);
@@ -64,6 +65,8 @@ const AdminDashboard = () => {
     uploadedBy: "Admin",
     session: "",
     sessionId: "",
+    file: null,
+    fileName: "",
   });
 
   const [sessionForm, setSessionForm] = useState({
@@ -74,13 +77,33 @@ const AdminDashboard = () => {
     active: false,
   });
 
+  // Show loading while checking authentication
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-main">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-whatsapp-green border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-primary text-lg">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
   if (!user || user.role !== "admin") {
     return <Navigate to="/admin/login" />;
   }
 
   const handleMaterialChange = (e) => {
-    const { name, value } = e.target;
-    setMaterialForm((prev) => ({ ...prev, [name]: value }));
+    const { name, value, files } = e.target;
+    if (name === "file" && files && files[0]) {
+      setMaterialForm((prev) => ({
+        ...prev,
+        file: files[0],
+        fileName: files[0].name,
+      }));
+    } else {
+      setMaterialForm((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSessionChange = (e) => {
@@ -1072,44 +1095,87 @@ const AdminDashboard = () => {
         onClose={() => {
           setShowMaterialModal(false);
           setEditingItem(null);
+          setMaterialForm({
+            title: "",
+            subject: "",
+            level: "",
+            grade: "",
+            fileType: "PDF",
+            description: "",
+            uploadedBy: "Admin",
+            session: "",
+            sessionId: "",
+            file: null,
+            fileName: "",
+          });
         }}
         title={
           editingItem ? "Edit Learning Material" : "Upload Learning Material"
         }>
-        <form onSubmit={handleMaterialSubmit}>
+        <form onSubmit={handleMaterialSubmit} className="space-y-6">
+          {/* File Upload Section */}
+          <div className="bg-gradient-to-br from-whatsapp-green/5 to-whatsapp-green/10 border-2 border-dashed border-whatsapp-green/30 rounded-xl p-6 hover:border-whatsapp-green/50 transition-all duration-300">
+            <label className="cursor-pointer block">
+              <input
+                type="file"
+                name="file"
+                onChange={handleMaterialChange}
+                className="hidden"
+                accept=".pdf,.doc,.docx,.ppt,.pptx"
+              />
+              <div className="text-center">
+                <div className="w-16 h-16 mx-auto mb-4 bg-whatsapp-green/10 rounded-full flex items-center justify-center">
+                  <FiFileText className="w-8 h-8 text-whatsapp-green" />
+                </div>
+                <p className="text-white font-semibold mb-2">
+                  {materialForm.fileName || "Click to upload file"}
+                </p>
+                <p className="text-gray-400 text-sm">
+                  PDF, DOC, DOCX, PPT, PPTX (Max 10MB)
+                </p>
+              </div>
+            </label>
+          </div>
+
+          {/* Title */}
           <div className="form-group">
-            <label className="form-label">Title *</label>
+            <label className="form-label text-whatsapp-green">Title *</label>
             <input
               type="text"
               name="title"
               value={materialForm.title}
               onChange={handleMaterialChange}
-              className="form-input"
+              className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
+              placeholder="Enter material title"
               required
             />
           </div>
 
+          {/* Subject and Level */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-group">
-              <label className="form-label">Subject *</label>
+              <label className="form-label text-whatsapp-green">
+                Subject *
+              </label>
               <input
                 type="text"
                 name="subject"
                 value={materialForm.subject}
                 onChange={handleMaterialChange}
-                className="form-input"
+                className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
+                placeholder="e.g., Mathematics"
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">Level *</label>
+              <label className="form-label text-whatsapp-green">Level *</label>
               <select
                 name="level"
                 value={materialForm.level}
                 onChange={handleMaterialChange}
-                className="form-input"
+                className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
                 required>
-                <option value="">Select</option>
+                <option value="">Select Level</option>
                 <option value="Elementary">Elementary</option>
                 <option value="Secondary">Secondary</option>
                 <option value="Preparatory">Preparatory</option>
@@ -1117,40 +1183,45 @@ const AdminDashboard = () => {
             </div>
           </div>
 
+          {/* Grade and File Type */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div className="form-group">
-              <label className="form-label">Grade *</label>
+              <label className="form-label text-whatsapp-green">Grade *</label>
               <input
                 type="text"
                 name="grade"
                 value={materialForm.grade}
                 onChange={handleMaterialChange}
-                className="form-input"
+                className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
+                placeholder="e.g., Grade 8"
                 required
               />
             </div>
             <div className="form-group">
-              <label className="form-label">File Type *</label>
+              <label className="form-label text-whatsapp-green">
+                File Type *
+              </label>
               <select
                 name="fileType"
                 value={materialForm.fileType}
                 onChange={handleMaterialChange}
-                className="form-input"
+                className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
                 required>
                 <option value="PDF">PDF</option>
-                <option value="DOC">DOC</option>
-                <option value="PPT">PPT</option>
+                <option value="DOC">DOC/DOCX</option>
+                <option value="PPT">PPT/PPTX</option>
               </select>
             </div>
           </div>
 
+          {/* Session */}
           <div className="form-group">
-            <label className="form-label">Session *</label>
+            <label className="form-label text-whatsapp-green">Session *</label>
             <select
               name="sessionId"
               value={materialForm.sessionId}
               onChange={handleMaterialChange}
-              className="form-input"
+              className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
               required>
               <option value="">Select Session</option>
               {sessions.map((session) => (
@@ -1161,19 +1232,27 @@ const AdminDashboard = () => {
             </select>
           </div>
 
+          {/* Description */}
           <div className="form-group">
-            <label className="form-label">Description</label>
+            <label className="form-label text-whatsapp-green">
+              Description
+            </label>
             <textarea
               name="description"
               value={materialForm.description}
               onChange={handleMaterialChange}
-              className="form-input"
+              className="form-input bg-[#0f1b24] border-gray-700 focus:border-whatsapp-green text-white"
               rows="3"
+              placeholder="Add a brief description..."
             />
           </div>
 
-          <button type="submit" className="btn btn-primary btn-full">
-            Upload Material
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full flex items-center justify-center gap-2 px-6 py-4 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105">
+            <FiFileText className="w-5 h-5" />
+            {editingItem ? "Update Material" : "Upload Material"}
           </button>
         </form>
       </Modal>
