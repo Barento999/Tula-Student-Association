@@ -118,10 +118,6 @@ const AdminDashboard = () => {
     e.preventDefault();
 
     try {
-      const selectedSession = sessions.find(
-        (s) => s.id === parseInt(materialForm.sessionId),
-      );
-
       // Create FormData for file upload
       const formData = new FormData();
       formData.append("title", materialForm.title);
@@ -131,8 +127,8 @@ const AdminDashboard = () => {
       formData.append("fileType", materialForm.fileType);
       formData.append("description", materialForm.description);
       formData.append("uploadedBy", materialForm.uploadedBy);
-      formData.append("session", selectedSession?.name || "");
-      formData.append("sessionId", materialForm.sessionId);
+      // Backend expects 'summerSession' not 'sessionId'
+      formData.append("summerSession", materialForm.sessionId);
 
       // Add file if selected
       if (materialForm.file) {
