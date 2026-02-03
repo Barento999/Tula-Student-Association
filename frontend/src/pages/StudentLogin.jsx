@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useLocation } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import { FiLogIn, FiMail, FiLock, FiUserPlus } from "react-icons/fi";
 
 const StudentLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useApp();
   const [formData, setFormData] = useState({
     email: "",
@@ -54,8 +55,9 @@ const StudentLogin = () => {
         password: formData.password,
       });
 
-      // Redirect to student profile on success
-      navigate("/student-profile");
+      // Redirect to the page they were trying to access, or student profile
+      const from = location.state?.from || "/student-profile";
+      navigate(from, { replace: true });
     } catch (error) {
       setErrors({
         submit: error.message || "Login failed. Please check your credentials.",

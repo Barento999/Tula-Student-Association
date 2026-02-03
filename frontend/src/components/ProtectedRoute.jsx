@@ -1,8 +1,9 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useApp();
+  const location = useLocation();
 
   // Show loading while checking authentication
   if (loading) {
@@ -17,8 +18,14 @@ const ProtectedRoute = ({ children }) => {
   }
 
   if (!user) {
-    // Redirect to student login if not authenticated
-    return <Navigate to="/student-login" replace />;
+    // Save the location they were trying to access
+    return (
+      <Navigate
+        to="/student-login"
+        state={{ from: location.pathname }}
+        replace
+      />
+    );
   }
 
   return children;
