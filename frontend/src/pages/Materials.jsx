@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useApp } from "../context/AppContext";
 import api from "../services/api";
 import {
@@ -12,7 +12,9 @@ import {
 import CustomSelect from "../components/CustomSelect";
 
 const Materials = () => {
-  const { materials, sessions } = useApp();
+  const { materials: contextMaterials, sessions } = useApp();
+  const [materials, setMaterials] = useState(contextMaterials);
+  const [loading, setLoading] = useState(false);
   const [selectedSubject, setSelectedSubject] = useState("All");
   const [selectedLevel, setSelectedLevel] = useState("All");
   const [selectedGrade, setSelectedGrade] = useState("All");
@@ -26,6 +28,30 @@ const Materials = () => {
       duration: 3 + Math.random() * 4,
     })),
   );
+
+  // Fetch materials when component mounts or when contextMaterials changes
+  useEffect(() => {
+    const fetchMaterials = async () => {
+      // If context already has materials, use them
+      if (contextMaterials && contextMaterials.length > 0) {
+        setMaterials(contextMaterials);
+        return;
+      }
+
+      // Otherwise fetch materials
+      setLoading(true);
+      try {
+        const data = await api.materials.getAll();
+        setMaterials(data);
+      } catch (error) {
+        console.error("Error fetching materials:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchMaterials();
+  }, [contextMaterials]);
 
   const handleDownload = async (material) => {
     try {
@@ -194,7 +220,15 @@ const Materials = () => {
 
       <section className="py-12 md:py-24 bg-gradient-to-b from-card to-main relative">
         <div className="container px-4">
-          {filteredMaterials.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="w-16 h-16 border-4 border-whatsapp-green/30 border-t-whatsapp-green rounded-full animate-spin mx-auto mb-4"></div>
+              <h3 className="text-2xl font-bold text-primary mb-2">
+                Loading materials...
+              </h3>
+              <p className="text-secondary">Please wait</p>
+            </div>
+          ) : filteredMaterials.length === 0 ? (
             <div className="text-center py-16">
               <FiBook className="w-12 h-12 text-whatsapp-green/30 mx-auto mb-4" />
               <h3 className="text-2xl font-bold text-primary mb-2">
