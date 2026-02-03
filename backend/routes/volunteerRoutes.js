@@ -8,6 +8,7 @@ const {
   updateVolunteer,
   approveVolunteer,
   getMyProfile,
+  deleteVolunteer,
 } = require("../controllers/volunteerController");
 const { protect } = require("../middleware/authMiddleware");
 const { authorize } = require("../middleware/roleMiddleware");
@@ -32,5 +33,6 @@ router.get("/", protect, authorize("admin"), getVolunteers);
 router.get("/:id", protect, getVolunteer);
 router.put("/:id", protect, updateVolunteer);
 router.put("/:id/approve", protect, authorize("admin"), approveVolunteer);
+router.delete("/:id", protect, authorize("admin"), deleteVolunteer);
 
 module.exports = router;

@@ -163,10 +163,34 @@ const getMyProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete student profile
+// @route   DELETE /api/students/:id
+// @access  Private/Admin
+const deleteStudent = async (req, res) => {
+  try {
+    const student = await StudentProfile.findById(req.params.id);
+
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
+
+    // Delete the student profile
+    await StudentProfile.findByIdAndDelete(req.params.id);
+
+    // Optionally delete the associated user account
+    await User.findByIdAndDelete(student.userId);
+
+    res.json({ message: "Student deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerStudent,
   getStudents,
   getStudent,
   updateStudent,
   getMyProfile,
+  deleteStudent,
 };

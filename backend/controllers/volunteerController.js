@@ -185,6 +185,29 @@ const getMyProfile = async (req, res) => {
   }
 };
 
+// @desc    Delete volunteer profile
+// @route   DELETE /api/volunteers/:id
+// @access  Private/Admin
+const deleteVolunteer = async (req, res) => {
+  try {
+    const volunteer = await VolunteerProfile.findById(req.params.id);
+
+    if (!volunteer) {
+      return res.status(404).json({ message: "Volunteer not found" });
+    }
+
+    // Delete the volunteer profile
+    await VolunteerProfile.findByIdAndDelete(req.params.id);
+
+    // Optionally delete the associated user account
+    await User.findByIdAndDelete(volunteer.userId);
+
+    res.json({ message: "Volunteer deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   registerVolunteer,
   getVolunteers,
@@ -192,4 +215,5 @@ module.exports = {
   updateVolunteer,
   approveVolunteer,
   getMyProfile,
+  deleteVolunteer,
 };

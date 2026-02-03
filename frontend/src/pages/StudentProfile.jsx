@@ -15,11 +15,11 @@ import {
 } from "react-icons/fi";
 
 function StudentProfile() {
-  const { user, updateStudent } = useApp();
+  const { user, updateStudent, loading } = useApp();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -35,13 +35,22 @@ function StudentProfile() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!user || user.role !== "student") {
+      // Wait for AppContext to finish loading
+      if (loading) return;
+
+      // After loading is complete, check if user exists and has correct role
+      if (!user) {
+        navigate("/student-login");
+        return;
+      }
+
+      if (user.role !== "student") {
         navigate("/student-login");
         return;
       }
 
       try {
-        setLoading(true);
+        setLoadingProfile(true);
         // Fetch current user's profile only
         const studentProfile = await api.students.getMyProfile();
 
@@ -62,12 +71,12 @@ function StudentProfile() {
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
-        setLoading(false);
+        setLoadingProfile(false);
       }
     };
 
     fetchProfile();
-  }, [user, navigate]);
+  }, [user, navigate, loading]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -109,7 +118,7 @@ function StudentProfile() {
     }
   };
 
-  if (loading || !profile || !user) {
+  if (loading || loadingProfile || !profile || !user) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center bg-[#0d1b24]">
         <div className="text-center">

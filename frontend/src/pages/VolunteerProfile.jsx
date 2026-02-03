@@ -15,12 +15,12 @@ import {
 } from "react-icons/fi";
 
 function VolunteerProfile() {
-  const { user, updateVolunteer } = useApp();
+  const { user, updateVolunteer, loading } = useApp();
   const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
@@ -36,13 +36,22 @@ function VolunteerProfile() {
 
   useEffect(() => {
     const fetchProfile = async () => {
-      if (!user || user.role !== "volunteer") {
+      // Wait for AppContext to finish loading
+      if (loading) return;
+
+      // After loading is complete, check if user exists and has correct role
+      if (!user) {
+        navigate("/");
+        return;
+      }
+
+      if (user.role !== "volunteer") {
         navigate("/");
         return;
       }
 
       try {
-        setLoading(true);
+        setLoadingProfile(true);
         // Fetch current user's profile only
         const volunteerProfile = await api.volunteers.getMyProfile();
 
@@ -64,12 +73,12 @@ function VolunteerProfile() {
       } catch (error) {
         console.error("Error fetching profile:", error);
       } finally {
-        setLoading(false);
+        setLoadingProfile(false);
       }
     };
 
     fetchProfile();
-  }, [user, navigate]);
+  }, [user, navigate, loading]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -111,7 +120,7 @@ function VolunteerProfile() {
     }
   };
 
-  if (loading || !profile || !user) {
+  if (loading || loadingProfile || !profile || !user) {
     return (
       <div className="min-h-screen pt-20 flex items-center justify-center bg-[#0a1419]">
         <div className="text-center">

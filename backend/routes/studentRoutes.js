@@ -7,6 +7,7 @@ const {
   getStudent,
   updateStudent,
   getMyProfile,
+  deleteStudent,
 } = require("../controllers/studentController");
 const { protect } = require("../middleware/authMiddleware");
 const { authorize } = require("../middleware/roleMiddleware");
@@ -32,5 +33,6 @@ router.get("/me", protect, getMyProfile);
 router.get("/", protect, authorize("admin"), getStudents);
 router.get("/:id", protect, getStudent);
 router.put("/:id", protect, updateStudent);
+router.delete("/:id", protect, authorize("admin"), deleteStudent);
 
 module.exports = router;
