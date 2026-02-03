@@ -99,7 +99,7 @@ const Navbar = () => {
               <>
                 {user.role === "admin" && (
                   <NavLink
-                    to="/admin"
+                    to="/sys-dashboard-mgmt"
                     className={({ isActive }) =>
                       `font-medium transition-colors duration-300 ${
                         isActive
@@ -225,7 +225,7 @@ const Navbar = () => {
             <div className="flex flex-col gap-3">
               {user.role === "admin" && (
                 <Link
-                  to="/admin"
+                  to="/sys-dashboard-mgmt"
                   onClick={closeMenu}
                   className="text-lg text-center font-bold py-3 bg-whatsapp-green text-main rounded-lg hover:bg-unread-badge transition-all duration-300">
                   Admin Dashboard

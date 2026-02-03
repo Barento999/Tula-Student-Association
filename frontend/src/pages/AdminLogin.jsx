@@ -13,7 +13,7 @@ const AdminLogin = () => {
   const [error, setError] = useState("");
 
   if (user && user.role === "admin") {
-    return <Navigate to="/admin" />;
+    return <Navigate to="/sys-dashboard-mgmt" />;
   }
 
   const handleChange = (e) => {
@@ -34,7 +34,7 @@ const AdminLogin = () => {
       });
 
       // Redirect to admin dashboard on success
-      navigate("/admin");
+      navigate("/sys-dashboard-mgmt");
     } catch (err) {
       setError(err.message || "Invalid credentials. Please try again.");
     }

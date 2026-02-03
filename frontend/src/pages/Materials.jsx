@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useApp } from "../context/AppContext";
+import api from "../services/api";
 import {
   FiBook,
   FiDownload,
@@ -26,16 +27,50 @@ const Materials = () => {
     })),
   );
 
+  const handleDownload = async (material) => {
+    try {
+      // Increment download count
+      await api.materials.incrementDownload(material._id || material.id);
+
+      // Download file to computer
+      if (material.fileUrl) {
+        // Fetch the file as a blob
+        const response = await fetch(material.fileUrl);
+        const blob = await response.blob();
+
+        // Create a blob URL
+        const blobUrl = window.URL.createObjectURL(blob);
+
+        // Create a temporary anchor element to trigger download
+        const link = document.createElement("a");
+        link.href = blobUrl;
+        link.download = `${material.title}.${material.fileType.toLowerCase()}`; // Set filename with extension
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        // Clean up the blob URL
+        window.URL.revokeObjectURL(blobUrl);
+      } else {
+        alert("File URL not available");
+      }
+    } catch (error) {
+      console.error("Error downloading material:", error);
+      alert("Failed to download material. Please try again.");
+    }
+  };
+
   const subjects = ["All", ...new Set(materials.map((m) => m.subject))];
   const levels = ["All", ...new Set(materials.map((m) => m.level))];
   const grades = ["All", ...new Set(materials.map((m) => m.grade))];
 
   const filteredMaterials = materials.filter((material) => {
+    const sessionName = material.summerSession?.name || material.session || "";
     return (
       (selectedSubject === "All" || material.subject === selectedSubject) &&
       (selectedLevel === "All" || material.level === selectedLevel) &&
       (selectedGrade === "All" || material.grade === selectedGrade) &&
-      (selectedSession === "All" || material.session === selectedSession)
+      (selectedSession === "All" || sessionName === selectedSession)
     );
   });
 
@@ -173,7 +208,7 @@ const Materials = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
               {filteredMaterials.map((material, index) => (
                 <div
-                  key={material.id}
+                  key={material._id || material.id}
                   className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-6 md:p-8 border border-border/50 hover:border-whatsapp-green transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_30px_80px_rgba(37,211,102,0.3)]"
                   style={{
                     transformStyle: "preserve-3d",
@@ -207,11 +242,19 @@ const Materials = () => {
                       </div>
                       <div className="flex items-center gap-2 text-sm text-secondary">
                         <FiCalendar className="w-4 h-4 text-whatsapp-green" />
-                        <span>{material.session}</span>
+                        <span>
+                          {material.summerSession?.name ||
+                            material.session ||
+                            "N/A"}
+                        </span>
                       </div>
                       <div className="flex items-center gap-2 text-sm text-secondary">
                         <FiUser className="w-4 h-4 text-whatsapp-green" />
-                        <span>{material.uploadedBy}</span>
+                        <span>
+                          {material.uploadedBy?.name ||
+                            material.uploadedBy ||
+                            "N/A"}
+                        </span>
                       </div>
                     </div>
 
@@ -224,7 +267,9 @@ const Materials = () => {
                       </span>
                     </div>
 
-                    <button className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-xl text-whatsapp-green font-semibold transition-all duration-300 hover:bg-whatsapp-green hover:text-main group-hover:scale-105">
+                    <button
+                      onClick={() => handleDownload(material)}
+                      className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-whatsapp-green/10 border border-whatsapp-green/30 rounded-xl text-whatsapp-green font-semibold transition-all duration-300 hover:bg-whatsapp-green hover:text-main group-hover:scale-105">
                       <FiDownload className="w-5 h-5" />
                       <span>Download</span>
                     </button>

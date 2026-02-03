@@ -133,7 +133,7 @@ const Programs = () => {
         <div className="container px-4">
           <div className="text-center mb-12 md:mb-16">
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
-              Summer Programs 2024
+              Summer Programs 2026
             </h2>
             <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
               Choose the program that fits your educational needs

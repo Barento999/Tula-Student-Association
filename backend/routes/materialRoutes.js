@@ -7,6 +7,7 @@ const {
   getMaterial,
   getMaterialsByLevel,
   incrementDownload,
+  updateMaterial,
   deleteMaterial,
 } = require("../controllers/materialController");
 const { protect } = require("../middleware/authMiddleware");
@@ -34,6 +35,13 @@ router.post(
 router.get("/", getMaterials);
 router.get("/level/:level", getMaterialsByLevel);
 router.get("/:id", getMaterial);
+router.put(
+  "/:id",
+  protect,
+  authorize("admin", "volunteer"),
+  upload.single("file"),
+  updateMaterial,
+);
 router.put("/:id/download", incrementDownload);
 router.delete("/:id", protect, authorize("admin"), deleteMaterial);
 

@@ -439,7 +439,7 @@ const About = () => {
 
         <div className="container relative z-10 text-center px-4">
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-primary mb-4 md:mb-6 leading-tight">
-            Summer 2024 <span className="text-whatsapp-green">Program</span>
+            Summer 2026 <span className="text-whatsapp-green">Program</span>
           </h2>
           <p className="text-xl md:text-2xl text-whatsapp-green font-semibold mb-4">
             June - August | Free for All Students

@@ -3,7 +3,7 @@ const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
 
 // Helper function to get auth token
 const getAuthToken = () => {
-  const user = localStorage.getItem("tula_user");
+  const user = sessionStorage.getItem("tula_user");
   if (user) {
     const userData = JSON.parse(user);
     return userData.token;
@@ -53,7 +53,13 @@ export const authAPI = {
       body: JSON.stringify(credentials),
     }),
 
-  getProfile: () => apiCall("/auth/profile"),
+  getProfile: () => apiCall("/auth/me"),
+
+  updateProfile: (userData) =>
+    apiCall("/auth/profile", {
+      method: "PUT",
+      body: JSON.stringify(userData),
+    }),
 };
 
 // Students API
@@ -167,6 +173,11 @@ export const materialsAPI = {
   delete: (id) =>
     apiCall(`/materials/${id}`, {
       method: "DELETE",
+    }),
+
+  incrementDownload: (id) =>
+    apiCall(`/materials/${id}/download`, {
+      method: "PUT",
     }),
 };
 

@@ -73,8 +73,8 @@ function App() {
               <Route path="/student-dashboard" element={<StudentDashboard />} />
               <Route path="/student-profile" element={<StudentProfile />} />
               <Route path="/volunteer-profile" element={<VolunteerProfile />} />
-              <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/sys-auth-portal" element={<AdminLogin />} />
+              <Route path="/sys-dashboard-mgmt" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />

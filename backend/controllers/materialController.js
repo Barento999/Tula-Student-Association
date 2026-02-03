@@ -134,6 +134,61 @@ const incrementDownload = async (req, res) => {
   }
 };
 
+// @desc    Update material
+// @route   PUT /api/materials/:id
+// @access  Private/Admin/Volunteer
+const updateMaterial = async (req, res) => {
+  try {
+    const material = await Material.findById(req.params.id);
+
+    if (!material) {
+      return res.status(404).json({ message: "Material not found" });
+    }
+
+    const {
+      title,
+      subject,
+      level,
+      grade,
+      fileType,
+      description,
+      summerSession,
+    } = req.body;
+
+    // Update fields
+    material.title = title || material.title;
+    material.subject = subject || material.subject;
+    material.level = level || material.level;
+    material.grade = grade || material.grade;
+    material.fileType = fileType || material.fileType;
+    material.description = description || material.description;
+    material.summerSession = summerSession || material.summerSession;
+
+    // If new file is uploaded, delete old one and update
+    if (req.file) {
+      // Delete old file from Cloudinary
+      await cloudinary.uploader.destroy(material.publicId);
+      // Update with new file
+      material.fileUrl = req.file.path;
+      material.publicId = req.file.filename;
+    }
+
+    await material.save();
+
+    const updatedMaterial = await Material.findById(material._id)
+      .populate("uploadedBy", "name email")
+      .populate("summerSession", "name year");
+
+    res.json(updatedMaterial);
+  } catch (error) {
+    // Delete uploaded file if update fails
+    if (req.file) {
+      await cloudinary.uploader.destroy(req.file.filename);
+    }
+    res.status(500).json({ message: error.message });
+  }
+};
+
 // @desc    Delete material
 // @route   DELETE /api/materials/:id
 // @access  Private/Admin
@@ -163,5 +218,6 @@ module.exports = {
   getMaterial,
   getMaterialsByLevel,
   incrementDownload,
+  updateMaterial,
   deleteMaterial,
 };

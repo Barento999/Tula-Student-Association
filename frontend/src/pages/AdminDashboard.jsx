@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Navigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import Modal from "../components/Modal";
+import api from "../services/api";
 import {
   FiEdit2,
   FiSave,
@@ -34,6 +35,7 @@ const AdminDashboard = () => {
     deleteSession,
     updateMaterial,
     updateSession,
+    updateUser,
     loading,
   } = useApp();
   const [activeTab, setActiveTab] = useState("overview");
@@ -46,10 +48,10 @@ const AdminDashboard = () => {
   const [editingItem, setEditingItem] = useState(null);
 
   const [adminProfile, setAdminProfile] = useState({
-    fullName: user?.fullName || "Administrator",
+    fullName: user?.name || "Administrator",
     email: user?.email || "admin@tula.org",
-    username: user?.username || "admin",
-    role: "Admin",
+    username: user?.username || user?.email?.split("@")[0] || "admin",
+    role: user?.role || "Admin",
     joinedDate: "January 2024",
   });
 
@@ -63,7 +65,6 @@ const AdminDashboard = () => {
     fileType: "PDF",
     description: "",
     uploadedBy: "Admin",
-    session: "",
     sessionId: "",
     file: null,
     fileName: "",
@@ -76,6 +77,21 @@ const AdminDashboard = () => {
     endDate: "",
     active: false,
   });
+
+  // Sync adminProfile with user data when user changes
+  useEffect(() => {
+    if (user) {
+      const updatedProfile = {
+        fullName: user.name || "Administrator",
+        email: user.email || "admin@tula.org",
+        username: user.username || user.email?.split("@")[0] || "admin",
+        role: user.role || "Admin",
+        joinedDate: "January 2024",
+      };
+      setAdminProfile(updatedProfile);
+      setProfileForm(updatedProfile);
+    }
+  }, [user]);
 
   // Show loading while checking authentication
   if (loading) {
@@ -136,8 +152,8 @@ const AdminDashboard = () => {
       }
 
       if (editingItem) {
-        // Update existing material
-        await updateMaterial(editingItem.id, formData);
+        // Update existing material - use _id not id
+        await updateMaterial(editingItem._id || editingItem.id, formData);
       } else {
         // Add new material
         await addMaterial(formData);
@@ -152,7 +168,6 @@ const AdminDashboard = () => {
         fileType: "PDF",
         description: "",
         uploadedBy: "Admin",
-        session: "",
         sessionId: "",
         file: null,
         fileName: "",
@@ -169,8 +184,8 @@ const AdminDashboard = () => {
     e.preventDefault();
 
     if (editingItem) {
-      // Update existing session
-      updateSession(editingItem.id, sessionForm);
+      // Update existing session - use _id not id
+      updateSession(editingItem._id || editingItem.id, sessionForm);
     } else {
       // Add new session
       addSession(sessionForm);
@@ -192,12 +207,38 @@ const AdminDashboard = () => {
     setProfileForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleProfileSubmit = (e) => {
+  const handleProfileSubmit = async (e) => {
     e.preventDefault();
-    setAdminProfile(profileForm);
-    setShowSuccess(true);
-    setIsEditingProfile(false);
-    setTimeout(() => setShowSuccess(false), 3000);
+    try {
+      // Update profile in backend
+      const updatedUser = await api.auth.updateProfile({
+        name: profileForm.fullName,
+        email: profileForm.email,
+      });
+
+      // Update local state
+      setAdminProfile({
+        ...profileForm,
+        fullName: updatedUser.name,
+        email: updatedUser.email,
+      });
+
+      // Update user in context and localStorage
+      const newUserData = {
+        ...user,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        token: updatedUser.token,
+      };
+      updateUser(newUserData);
+
+      setShowSuccess(true);
+      setIsEditingProfile(false);
+      setTimeout(() => setShowSuccess(false), 3000);
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      alert("Failed to update profile. Please try again.");
+    }
   };
 
   const handleDelete = (type, id) => {
@@ -236,8 +277,14 @@ const AdminDashboard = () => {
       fileType: material.fileType,
       description: material.description,
       uploadedBy: material.uploadedBy,
-      session: material.session,
-      sessionId: material.sessionId,
+      // Extract the session ID - could be material.summerSession._id or material.summerSession
+      sessionId:
+        material.summerSession?._id ||
+        material.summerSession ||
+        material.sessionId ||
+        "",
+      file: null,
+      fileName: "",
     });
     setShowMaterialModal(true);
   };
@@ -927,7 +974,6 @@ const AdminDashboard = () => {
                     fileType: "PDF",
                     description: "",
                     uploadedBy: "Admin",
-                    session: "",
                     sessionId: "",
                   });
                   setShowMaterialModal(true);
@@ -939,7 +985,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {materials.map((material, index) => (
                 <div
-                  key={material.id}
+                  key={material._id || material.id}
                   className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-1 animate-fade-in-up"
                   style={{ animationDelay: `${index * 0.05}s` }}>
                   {/* Icon & File Type */}
@@ -996,7 +1042,9 @@ const AdminDashboard = () => {
                         Session
                       </p>
                       <p className="text-xs text-gray-300 font-medium truncate">
-                        {material.session}
+                        {material.summerSession?.name ||
+                          material.session ||
+                          "N/A"}
                       </p>
                     </div>
                   </div>
@@ -1011,7 +1059,9 @@ const AdminDashboard = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete("material", material.id)}
+                      onClick={() =>
+                        handleDelete("material", material._id || material.id)
+                      }
                       className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
                       title="Delete">
                       <FiTrash2 className="w-4 h-4" />
@@ -1062,7 +1112,7 @@ const AdminDashboard = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {sessions.map((session) => (
                 <div
-                  key={session.id}
+                  key={session._id || session.id}
                   className="relative bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300">
                   <h3 className="text-xl text-white font-bold mb-3">
                     {session.name}
@@ -1090,7 +1140,9 @@ const AdminDashboard = () => {
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete("session", session.id)}
+                      onClick={() =>
+                        handleDelete("session", session._id || session.id)
+                      }
                       className="flex-1 p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors font-semibold text-sm"
                       title="Delete">
                       <FiTrash2 className="w-4 h-4 inline mr-1" />
@@ -1117,7 +1169,6 @@ const AdminDashboard = () => {
             fileType: "PDF",
             description: "",
             uploadedBy: "Admin",
-            session: "",
             sessionId: "",
             file: null,
             fileName: "",
@@ -1248,7 +1299,9 @@ const AdminDashboard = () => {
                   : "No sessions available"}
               </option>
               {sessions.map((session) => (
-                <option key={session.id} value={session.id}>
+                <option
+                  key={session._id || session.id}
+                  value={session._id || session.id}>
                   {session.name}
                 </option>
               ))}

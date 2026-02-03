@@ -72,6 +72,13 @@ function VolunteerProfile() {
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
+        // If profile not found, show message
+        if (error.message.includes("not found")) {
+          alert(
+            "Your profile was not found. Please contact support or register again.",
+          );
+          navigate("/volunteer");
+        }
       } finally {
         setLoadingProfile(false);
       }

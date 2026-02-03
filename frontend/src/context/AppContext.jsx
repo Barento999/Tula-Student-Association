@@ -20,12 +20,12 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Initialize - Load user from localStorage and fetch data
+  // Initialize - Load user from sessionStorage (tab-specific) and fetch data
   useEffect(() => {
     const initializeApp = async () => {
       try {
-        // Check for saved user
-        const savedUser = localStorage.getItem("tula_user");
+        // Check for saved user in sessionStorage (tab-specific)
+        const savedUser = sessionStorage.getItem("tula_user");
         if (savedUser) {
           const userData = JSON.parse(savedUser);
           setUser(userData);
@@ -93,7 +93,9 @@ export const AppProvider = ({ children }) => {
     try {
       const data = await api.auth.login(credentials);
       setUser(data);
-      localStorage.setItem("tula_user", JSON.stringify(data));
+
+      // Store in sessionStorage (tab-specific, not shared across tabs)
+      sessionStorage.setItem("tula_user", JSON.stringify(data));
 
       // Fetch data in background (only for admin) - don't wait for it
       if (data.role === "admin") {
@@ -118,7 +120,12 @@ export const AppProvider = ({ children }) => {
     setVolunteers([]);
     setMaterials([]);
     setSessions([]);
-    localStorage.removeItem("tula_user");
+    sessionStorage.removeItem("tula_user");
+  };
+
+  const updateUser = (userData) => {
+    setUser(userData);
+    sessionStorage.setItem("tula_user", JSON.stringify(userData));
   };
 
   // Student functions
@@ -233,7 +240,7 @@ export const AppProvider = ({ children }) => {
       // Auto-login the new volunteer
       if (data.user && data.user.token) {
         setUser(data.user);
-        localStorage.setItem("tula_user", JSON.stringify(data.user));
+        sessionStorage.setItem("tula_user", JSON.stringify(data.user));
       }
 
       // Update local state
@@ -351,6 +358,7 @@ export const AppProvider = ({ children }) => {
     user,
     login,
     logout,
+    updateUser,
     students,
     registerStudent,
     updateStudent,

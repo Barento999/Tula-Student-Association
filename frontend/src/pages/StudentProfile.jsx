@@ -23,6 +23,7 @@ function StudentProfile() {
   const [formData, setFormData] = useState({
     firstName: "",
     middleName: "",
+    lastName: "",
     school: "",
     gradeLevel: "",
     grade: "",
@@ -59,6 +60,7 @@ function StudentProfile() {
           setFormData({
             firstName: studentProfile.firstName || "",
             middleName: studentProfile.middleName || "",
+            lastName: studentProfile.lastName || "",
             school: studentProfile.school || "",
             gradeLevel: studentProfile.gradeLevel || "",
             grade: studentProfile.grade || "",
@@ -70,6 +72,13 @@ function StudentProfile() {
         }
       } catch (error) {
         console.error("Error fetching profile:", error);
+        // If profile not found, show message
+        if (error.message.includes("not found")) {
+          alert(
+            "Your profile was not found. Please contact support or register again.",
+          );
+          navigate("/student-registration");
+        }
       } finally {
         setLoadingProfile(false);
       }
@@ -243,6 +252,22 @@ function StudentProfile() {
                       onChange={handleChange}
                       className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
                       placeholder="Enter your middle name"
+                    />
+                  </div>
+
+                  {/* Last Name */}
+                  <div>
+                    <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                      Last Name *
+                    </label>
+                    <input
+                      type="text"
+                      name="lastName"
+                      value={formData.lastName}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                      placeholder="Enter your last name"
                     />
                   </div>
 
