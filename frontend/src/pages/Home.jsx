@@ -205,7 +205,7 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Programs Showcase */}
+      {/* Programs Showcase - Detailed */}
       <section className="py-12 md:py-24 bg-gradient-to-b from-card to-main relative">
         <div className="container px-4">
           <div className="text-center mb-12 md:mb-16">
@@ -217,7 +217,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 max-w-6xl mx-auto">
             {[
               {
                 icon: <FiBookOpen className="w-full h-full" />,
@@ -225,9 +225,10 @@ const Home = () => {
                 grade: "Grades 1-8",
                 desc: "Building strong foundations in Mathematics, Science, English, and Arabic through interactive and engaging lessons.",
                 features: [
-                  "Interactive Learning",
-                  "Basic Skills",
-                  "Fun Activities",
+                  "Interactive learning sessions",
+                  "Basic literacy and numeracy",
+                  "Fun educational activities",
+                  "Homework support",
                 ],
                 color: "from-blue-500/20 to-cyan-500/20",
               },
@@ -237,9 +238,10 @@ const Home = () => {
                 grade: "Grades 9-10",
                 desc: "Advanced subject tutoring with specialized teachers covering the complete secondary curriculum.",
                 features: [
-                  "Subject Experts",
-                  "Advanced Topics",
-                  "Study Skills",
+                  "Subject-specific tutoring",
+                  "Advanced Mathematics and Sciences",
+                  "Study skills training",
+                  "Exam preparation techniques",
                 ],
                 color: "from-green-500/20 to-emerald-500/20",
               },
@@ -248,8 +250,26 @@ const Home = () => {
                 title: "Exam Preparation",
                 grade: "Grades 11-12",
                 desc: "Intensive preparation for university entrance exams with mock tests and proven strategies.",
-                features: ["Mock Exams", "Time Management", "Career Guidance"],
+                features: [
+                  "University entrance exam prep",
+                  "Mock exams and practice tests",
+                  "Time management strategies",
+                  "Career guidance",
+                ],
                 color: "from-purple-500/20 to-pink-500/20",
+              },
+              {
+                icon: <FiHeart className="w-full h-full" />,
+                title: "Community Aid",
+                grade: "All Levels",
+                desc: "Financial support and educational resources for students in need throughout the community.",
+                features: [
+                  "School supplies distribution",
+                  "Book and material donations",
+                  "Financial assistance",
+                  "Scholarship opportunities",
+                ],
+                color: "from-orange-500/20 to-red-500/20",
               },
             ].map((program, index) => (
               <div
@@ -281,7 +301,7 @@ const Home = () => {
                     {program.desc}
                   </p>
 
-                  <div className="space-y-2 mb-6">
+                  <div className="space-y-2">
                     {program.features.map((feature, i) => (
                       <div
                         key={i}
@@ -291,13 +311,309 @@ const Home = () => {
                       </div>
                     ))}
                   </div>
-
-                  <Link
-                    to="/programs"
-                    className="inline-flex items-center gap-2 text-whatsapp-green font-semibold group-hover:gap-4 transition-all duration-300">
-                    Learn More <span>→</span>
-                  </Link>
                 </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Program Schedule */}
+      <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-br from-card via-main to-card">
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(37, 211, 102, 0.3) 1px, transparent 0)",
+              backgroundSize: "40px 40px",
+            }}></div>
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Program Schedule
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+            {[
+              {
+                icon: <FiBookOpen className="w-6 h-6" />,
+                title: "Duration",
+                desc: "June - August",
+              },
+              {
+                icon: <FiTrendingUp className="w-6 h-6" />,
+                title: "Sessions",
+                desc: "Morning only",
+              },
+              {
+                icon: <FiAward className="w-6 h-6" />,
+                title: "Class Size",
+                desc: "Small groups",
+              },
+              {
+                icon: <FiHeart className="w-6 h-6" />,
+                title: "Cost",
+                desc: "Completely FREE",
+              },
+            ].map((item, index) => (
+              <div
+                key={index}
+                className="group bg-gradient-to-br from-[#1a2730] to-card rounded-2xl p-6 border border-border/50 hover:border-whatsapp-green/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)] text-center"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
+                }}>
+                <div
+                  className="text-whatsapp-green mb-3 flex justify-center transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                  style={{
+                    filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
+                  }}>
+                  {item.icon}
+                </div>
+                <h3 className="text-xl font-bold text-primary mb-2">
+                  {item.title}
+                </h3>
+                <p className="text-sm text-secondary">{item.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Statistics Section */}
+      <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
+        <div className="absolute inset-0 opacity-10">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(37, 211, 102, 0.1) 1px, transparent 1px), linear-gradient(90deg, rgba(37, 211, 102, 0.1) 1px, transparent 1px)",
+              backgroundSize: "50px 50px",
+            }}></div>
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Our Impact in <span className="text-whatsapp-green">Numbers</span>
+            </h2>
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
+              Real results from our community-driven education initiative
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                icon: <FiUsers className="w-full h-full" />,
+                number: "500+",
+                label: "Students Taught",
+                desc: "Since 2020",
+              },
+              {
+                icon: <FiAward className="w-full h-full" />,
+                number: "50+",
+                label: "Volunteer Teachers",
+                desc: "Every Summer",
+              },
+              {
+                icon: <FiBookOpen className="w-full h-full" />,
+                number: "1000+",
+                label: "Learning Materials",
+                desc: "Distributed",
+              },
+              {
+                icon: <FiTrendingUp className="w-full h-full" />,
+                number: "95%",
+                label: "Success Rate",
+                desc: "Grade Improvement",
+              },
+            ].map((stat, index) => (
+              <div
+                key={index}
+                className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-6 md:p-8 border border-border/50 hover:border-whatsapp-green transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_30px_80px_rgba(37,211,102,0.3)] text-center"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
+                }}>
+                <div className="absolute inset-0 bg-whatsapp-green/5 opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-700"></div>
+
+                <div className="relative z-10">
+                  <div
+                    className="w-12 h-12 md:w-16 md:h-16 mx-auto mb-4 text-whatsapp-green transform transition-all duration-700 group-hover:scale-125 group-hover:rotate-12"
+                    style={{
+                      filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
+                    }}>
+                    {stat.icon}
+                  </div>
+                  <div className="text-3xl md:text-5xl font-black text-whatsapp-green mb-2">
+                    {stat.number}
+                  </div>
+                  <h3 className="text-lg md:text-xl font-bold text-primary mb-1">
+                    {stat.label}
+                  </h3>
+                  <p className="text-sm text-secondary">{stat.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="py-12 md:py-24 bg-gradient-to-b from-card to-main relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-2 h-2 bg-whatsapp-green/20 rounded-full animate-float"
+              style={{
+                left: `${10 + i * 12}%`,
+                top: `${20 + (i % 3) * 30}%`,
+                animationDelay: `${i * 0.5}s`,
+                animationDuration: `${4 + (i % 3)}s`,
+              }}></div>
+          ))}
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Stories from Our{" "}
+              <span className="text-whatsapp-green">Community</span>
+            </h2>
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
+              Hear from students and volunteers who've experienced the impact
+              firsthand
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                name: "Amira Hassan",
+                role: "Student, Grade 10",
+                quote:
+                  "The summer program helped me improve my math grades from 60% to 85%. The volunteer teachers are patient and make learning fun!",
+                avatar: "👧",
+              },
+              {
+                name: "Omar Ahmed",
+                role: "Volunteer Teacher",
+                quote:
+                  "Teaching in my home village is the most rewarding experience. Seeing students' eyes light up when they understand a concept is priceless.",
+                avatar: "👨‍🏫",
+              },
+              {
+                name: "Fatima Ali",
+                role: "Parent",
+                quote:
+                  "This program is a blessing for our community. My children look forward to summer classes and their confidence has grown tremendously.",
+                avatar: "👩",
+              },
+            ].map((testimonial, index) => (
+              <div
+                key={index}
+                className="group relative bg-gradient-to-br from-card to-[#1a2730] rounded-3xl p-8 border border-border/50 hover:border-whatsapp-green transition-all duration-700 hover:-translate-y-4 hover:shadow-[0_30px_80px_rgba(37,211,102,0.3)]"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.2}s both`,
+                }}>
+                <div className="absolute inset-0 bg-whatsapp-green/5 opacity-0 group-hover:opacity-100 rounded-3xl transition-opacity duration-700"></div>
+
+                <div className="relative z-10">
+                  <div className="text-6xl mb-4">{testimonial.avatar}</div>
+                  <p className="text-secondary mb-6 leading-relaxed italic">
+                    "{testimonial.quote}"
+                  </p>
+                  <div className="border-t border-border/50 pt-4">
+                    <h4 className="text-lg font-bold text-primary">
+                      {testimonial.name}
+                    </h4>
+                    <p className="text-sm text-whatsapp-green">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Why Choose Us Section */}
+      <section className="py-12 md:py-24 relative overflow-hidden bg-gradient-to-br from-card via-main to-card">
+        <div className="absolute inset-0 opacity-5">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "radial-gradient(circle at 2px 2px, rgba(37, 211, 102, 0.3) 1px, transparent 0)",
+              backgroundSize: "40px 40px",
+            }}></div>
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Why <span className="text-whatsapp-green">Tula Students</span>{" "}
+              Association?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
+            {[
+              {
+                icon: <FiHeart className="w-full h-full" />,
+                title: "Community-Driven",
+                desc: "Built by locals, for locals. Our volunteers are from Tula Village and understand the unique needs of our community.",
+              },
+              {
+                icon: <FiStar className="w-full h-full" />,
+                title: "Completely Free",
+                desc: "No tuition fees, no hidden costs. Quality education should be accessible to everyone, regardless of economic status.",
+              },
+              {
+                icon: <FiBookOpen className="w-full h-full" />,
+                title: "Comprehensive Support",
+                desc: "Beyond teaching, we provide learning materials, school supplies, and financial assistance for students in need.",
+              },
+              {
+                icon: <FiUsers className="w-full h-full" />,
+                title: "Small Class Sizes",
+                desc: "Personalized attention with small student-to-teacher ratios ensures every child gets the support they need.",
+              },
+              {
+                icon: <FiTrendingUp className="w-full h-full" />,
+                title: "Proven Results",
+                desc: "95% of our students show significant grade improvement and increased confidence in their academic abilities.",
+              },
+              {
+                icon: <FiAward className="w-full h-full" />,
+                title: "University Mentors",
+                desc: "Learn from university students who bring modern teaching methods and real-world academic experience.",
+              },
+            ].map((feature, index) => (
+              <div
+                key={index}
+                className="group bg-gradient-to-br from-[#1a2730] to-card rounded-2xl p-6 md:p-8 border border-border/50 hover:border-whatsapp-green/50 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.1}s both`,
+                }}>
+                <div
+                  className="w-10 h-10 md:w-12 md:h-12 mb-3 md:mb-4 text-whatsapp-green transform transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6"
+                  style={{
+                    filter: "drop-shadow(0 4px 12px rgba(37, 211, 102, 0.4))",
+                  }}>
+                  {feature.icon}
+                </div>
+                <h3 className="text-xl md:text-2xl font-bold text-primary mb-2 md:mb-3">
+                  {feature.title}
+                </h3>
+                <p className="text-sm md:text-base text-secondary leading-relaxed">
+                  {feature.desc}
+                </p>
               </div>
             ))}
           </div>

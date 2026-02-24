@@ -12,7 +12,6 @@ import ScrollToTopButton from "./components/ScrollToTopButton";
 import ProtectedRoute from "./components/ProtectedRoute";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Programs from "./pages/Programs";
 import StudentRegistration from "./pages/StudentRegistration";
 import StudentLogin from "./pages/StudentLogin";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -50,7 +49,6 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
-              <Route path="/programs" element={<Programs />} />
               <Route
                 path="/student-registration"
                 element={<StudentRegistration />}
