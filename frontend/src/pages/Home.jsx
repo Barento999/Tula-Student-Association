@@ -620,6 +620,198 @@ const Home = () => {
         </div>
       </section>
 
+      {/* How It Works Section */}
+      <section className="py-12 md:py-24 bg-gradient-to-b from-main to-card relative overflow-hidden">
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse"></div>
+          <div
+            className="absolute bottom-20 right-10 w-96 h-96 bg-unread-badge/5 rounded-full blur-3xl animate-pulse"
+            style={{ animationDelay: "1s" }}></div>
+        </div>
+
+        <div className="container relative z-10 px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              How It <span className="text-whatsapp-green">Works</span>
+            </h2>
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
+              Simple steps to join our educational community
+            </p>
+          </div>
+
+          <div className="max-w-5xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+              {/* For Students */}
+              <div className="space-y-6">
+                <div className="text-center md:text-left mb-8">
+                  <h3 className="text-2xl md:text-3xl font-bold text-whatsapp-green mb-2">
+                    For Students
+                  </h3>
+                  <p className="text-secondary">
+                    Join our summer learning program
+                  </p>
+                </div>
+
+                {[
+                  {
+                    step: "1",
+                    title: "Register Online",
+                    desc: "Fill out the simple registration form with your details and grade level.",
+                  },
+                  {
+                    step: "2",
+                    title: "Get Confirmation",
+                    desc: "Receive your class schedule and program details via email or phone.",
+                  },
+                  {
+                    step: "3",
+                    title: "Attend Classes",
+                    desc: "Join morning sessions throughout the summer and access learning materials.",
+                  },
+                  {
+                    step: "4",
+                    title: "Track Progress",
+                    desc: "Monitor your improvement and receive ongoing support from teachers.",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="group flex gap-4 bg-gradient-to-br from-card to-[#1a2730] rounded-2xl p-6 border border-border/50 hover:border-whatsapp-green transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                    style={{
+                      animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
+                    }}>
+                    <div className="flex-shrink-0 w-12 h-12 bg-whatsapp-green/20 border-2 border-whatsapp-green rounded-full flex items-center justify-center text-whatsapp-green font-bold text-xl group-hover:scale-110 transition-transform duration-500">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-primary mb-2">
+                        {item.title}
+                      </h4>
+                      <p className="text-sm text-secondary">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* For Volunteers */}
+              <div className="space-y-6">
+                <div className="text-center md:text-left mb-8">
+                  <h3 className="text-2xl md:text-3xl font-bold text-whatsapp-green mb-2">
+                    For Volunteers
+                  </h3>
+                  <p className="text-secondary">Become a teacher this summer</p>
+                </div>
+
+                {[
+                  {
+                    step: "1",
+                    title: "Apply Online",
+                    desc: "Submit your volunteer application with your university details and subjects.",
+                  },
+                  {
+                    step: "2",
+                    title: "Interview & Training",
+                    desc: "Brief orientation session to prepare you for teaching and classroom management.",
+                  },
+                  {
+                    step: "3",
+                    title: "Start Teaching",
+                    desc: "Lead classes in your subject area and inspire the next generation.",
+                  },
+                  {
+                    step: "4",
+                    title: "Make Impact",
+                    desc: "See the difference you make and build lasting connections with students.",
+                  },
+                ].map((item, index) => (
+                  <div
+                    key={index}
+                    className="group flex gap-4 bg-gradient-to-br from-card to-[#1a2730] rounded-2xl p-6 border border-border/50 hover:border-whatsapp-green transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                    style={{
+                      animation: `fadeInUp 0.8s ease-out ${index * 0.15}s both`,
+                    }}>
+                    <div className="flex-shrink-0 w-12 h-12 bg-whatsapp-green/20 border-2 border-whatsapp-green rounded-full flex items-center justify-center text-whatsapp-green font-bold text-xl group-hover:scale-110 transition-transform duration-500">
+                      {item.step}
+                    </div>
+                    <div>
+                      <h4 className="text-lg font-bold text-primary mb-2">
+                        {item.title}
+                      </h4>
+                      <p className="text-sm text-secondary">{item.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-12 md:py-24 bg-gradient-to-b from-main to-card relative">
+        <div className="container px-4">
+          <div className="text-center mb-12 md:mb-16">
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-primary mb-3 md:mb-4 px-4">
+              Frequently Asked{" "}
+              <span className="text-whatsapp-green">Questions</span>
+            </h2>
+            <p className="text-base md:text-xl text-secondary max-w-2xl mx-auto px-4">
+              Everything you need to know about our programs
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+            {[
+              {
+                q: "Is the program really free?",
+                a: "Yes! All our programs are completely free. We believe quality education should be accessible to everyone.",
+              },
+              {
+                q: "What grades do you teach?",
+                a: "We offer programs for grades 1-12, with specialized support for each level including university entrance exam preparation.",
+              },
+              {
+                q: "When does the program run?",
+                a: "Our summer program runs from June through August, with morning sessions to accommodate students' schedules.",
+              },
+              {
+                q: "Do I need to be from Tula to join?",
+                a: "While our focus is on Tula Village students, we welcome learners from nearby communities who can attend regularly.",
+              },
+              {
+                q: "What subjects are covered?",
+                a: "We teach Mathematics, Science, English, Arabic, and provide exam preparation for all secondary school subjects.",
+              },
+              {
+                q: "Can I volunteer if I'm still in university?",
+                a: "Absolutely! We welcome university students from Tula Village who want to give back during their summer break.",
+              },
+              {
+                q: "How do I get learning materials?",
+                a: "All registered students receive free learning materials, books, and supplies distributed at the start of the program.",
+              },
+              {
+                q: "Is there financial aid available?",
+                a: "Yes, we provide financial assistance for school supplies, uniforms, and other educational needs for students in need.",
+              },
+            ].map((faq, index) => (
+              <div
+                key={index}
+                className="group bg-gradient-to-br from-card to-[#1a2730] rounded-2xl p-6 border border-border/50 hover:border-whatsapp-green transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                style={{
+                  animation: `fadeInUp 0.8s ease-out ${index * 0.1}s both`,
+                }}>
+                <h3 className="text-lg font-bold text-whatsapp-green mb-3 flex items-start gap-2">
+                  <span className="text-2xl">Q:</span>
+                  <span>{faq.q}</span>
+                </h3>
+                <p className="text-secondary leading-relaxed pl-8">{faq.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Final CTA with 3D Effect */}
       <section className="py-16 md:py-32 relative overflow-hidden bg-gradient-to-br from-main via-card to-main">
         {/* Animated Background */}
