@@ -15,6 +15,8 @@ const storage = new CloudinaryStorage({
     folder: "tula-students-materials",
     allowed_formats: ["pdf", "doc", "docx", "ppt", "pptx", "jpg", "png"],
     resource_type: "auto",
+    type: "upload", // Explicitly set as public upload
+    access_mode: "public", // Make files publicly accessible
   },
 });
 

@@ -34,6 +34,7 @@ const uploadMaterial = async (req, res) => {
       fileUrl: req.file.path,
       publicId: req.file.filename,
       fileType,
+      fileSize: req.file.size, // Store file size in bytes
       description,
       uploadedBy: req.user._id,
       summerSession,
@@ -171,6 +172,7 @@ const updateMaterial = async (req, res) => {
       // Update with new file
       material.fileUrl = req.file.path;
       material.publicId = req.file.filename;
+      material.fileSize = req.file.size; // Update file size
     }
 
     await material.save();

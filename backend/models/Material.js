@@ -33,6 +33,9 @@ const materialSchema = new mongoose.Schema(
       type: String,
       enum: ["PDF", "DOC", "PPT", "Image"],
     },
+    fileSize: {
+      type: Number, // Size in bytes
+    },
     description: {
       type: String,
       trim: true,
