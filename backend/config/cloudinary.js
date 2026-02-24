@@ -13,9 +13,8 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "tula-students-materials",
-    resource_type: "raw", // Use raw for all files (PDFs, docs, etc.)
-    type: "upload",
-    access_mode: "public",
+    resource_type: "auto",
+    allowed_formats: ["pdf", "doc", "docx", "ppt", "pptx", "jpg", "png"],
   },
 });
 
