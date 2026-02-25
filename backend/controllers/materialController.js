@@ -214,6 +214,36 @@ const deleteMaterial = async (req, res) => {
   }
 };
 
+// @desc    Get signed URL for secure download
+// @route   GET /api/materials/:id/signed-url
+// @access  Public
+const getSignedUrl = async (req, res) => {
+  try {
+    const material = await Material.findById(req.params.id);
+
+    if (!material) {
+      return res.status(404).json({ message: "Material not found" });
+    }
+
+    // Generate signed URL that expires in 1 hour
+    const signedUrl = cloudinary.url(material.publicId, {
+      resource_type: "raw",
+      type: "upload",
+      sign_url: true,
+      secure: true,
+      expires_at: Math.floor(Date.now() / 1000) + 3600, // 1 hour from now
+    });
+
+    res.json({
+      signedUrl,
+      fileName: material.title,
+      fileType: material.fileType,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
   uploadMaterial,
   getMaterials,
@@ -222,4 +252,5 @@ module.exports = {
   incrementDownload,
   updateMaterial,
   deleteMaterial,
+  getSignedUrl,
 };

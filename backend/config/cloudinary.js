@@ -6,6 +6,7 @@ cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
   api_secret: process.env.CLOUDINARY_API_SECRET,
+  secure: true, // Use HTTPS
 });
 
 // Configure Cloudinary storage for Multer
@@ -13,8 +14,11 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "tula-students-materials",
-    resource_type: "auto",
+    resource_type: "auto", // Automatically detect file type
     allowed_formats: ["pdf", "doc", "docx", "ppt", "pptx", "jpg", "png"],
+    // Use public delivery type for easier access
+    // If your Cloudinary account has strict security, signed URLs will be generated on-demand
+    type: "upload",
   },
 });
 

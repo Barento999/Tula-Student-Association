@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Navigate } from "react-router-dom";
 import { useApp } from "../context/AppContext";
 import Modal from "../components/Modal";
@@ -18,6 +18,7 @@ import {
   FiSun,
   FiFileText,
   FiPlus,
+  FiLogOut,
 } from "react-icons/fi";
 
 const AdminDashboard = () => {
@@ -36,6 +37,7 @@ const AdminDashboard = () => {
     updateMaterial,
     updateSession,
     updateUser,
+    logout,
     loading,
   } = useApp();
   const [activeTab, setActiveTab] = useState("overview");
@@ -47,15 +49,19 @@ const AdminDashboard = () => {
   const [showViewModal, setShowViewModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
-  const [adminProfile, setAdminProfile] = useState({
+  // Initialize admin profile from user data
+  const [adminProfile, setAdminProfile] = useState(() => ({
     fullName: user?.name || "Administrator",
     email: user?.email || "admin@tula.org",
     username: user?.username || user?.email?.split("@")[0] || "admin",
     role: user?.role || "Admin",
     joinedDate: "January 2024",
-  });
+  }));
 
   const [profileForm, setProfileForm] = useState(adminProfile);
+
+  // Use ref to track if profile has been initialized
+  const profileInitialized = useRef(false);
 
   const [materialForm, setMaterialForm] = useState({
     title: "",
@@ -78,18 +84,20 @@ const AdminDashboard = () => {
     active: false,
   });
 
-  // Sync adminProfile with user data when user changes
+  // Sync adminProfile with user data when user changes (only once on mount)
   useEffect(() => {
-    if (user) {
+    if (user && user.name && user.email && !profileInitialized.current) {
       const updatedProfile = {
-        fullName: user.name || "Administrator",
-        email: user.email || "admin@tula.org",
-        username: user.username || user.email?.split("@")[0] || "admin",
+        fullName: user.name,
+        email: user.email,
+        username: user.username || user.email.split("@")[0],
         role: user.role || "Admin",
         joinedDate: "January 2024",
       };
+
       setAdminProfile(updatedProfile);
       setProfileForm(updatedProfile);
+      profileInitialized.current = true;
     }
   }, [user]);
 
@@ -301,861 +309,942 @@ const AdminDashboard = () => {
     setShowSessionModal(true);
   };
 
+  const handleLogout = () => {
+    if (window.confirm("Are you sure you want to logout?")) {
+      logout();
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#0a1419] via-[#0d1b24] to-[#0a1419] pt-20 pb-20 relative overflow-hidden">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-20 left-10 w-72 h-72 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div
-          className="absolute bottom-20 right-10 w-96 h-96 bg-whatsapp-green/5 rounded-full blur-3xl animate-pulse-slow"
-          style={{ animationDelay: "1s" }}></div>
-        <div
-          className="absolute top-1/2 left-1/2 w-64 h-64 bg-whatsapp-green/3 rounded-full blur-3xl animate-pulse-slow"
-          style={{ animationDelay: "2s" }}></div>
-      </div>
-
-      <div className="container relative z-10 max-w-7xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-8 animate-fade-in">
-          <h1 className="text-4xl md:text-5xl font-black bg-gradient-to-r from-whatsapp-green via-[#00E676] to-whatsapp-green bg-clip-text text-transparent mb-2 animate-gradient">
-            Admin Dashboard
-          </h1>
-          <p className="text-gray-400 text-lg">
-            Manage students, volunteers, and materials
-          </p>
-        </div>
-        {/* Tabs */}
-        <div className="flex gap-2 mb-8 flex-wrap bg-gradient-to-br from-[#1a2730] to-[#15202b] p-2 rounded-2xl border border-gray-700/50 shadow-2xl max-md:flex-col">
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "overview"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("overview")}>
-            Overview
-          </button>
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "profile"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("profile")}>
-            Profile
-          </button>
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "students"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("students")}>
-            Students ({students.length})
-          </button>
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "volunteers"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("volunteers")}>
-            Volunteers ({volunteers.length})
-          </button>
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "materials"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("materials")}>
-            Materials ({materials.length})
-          </button>
-          <button
-            className={`px-6 py-3 rounded-xl text-base font-bold transition-all duration-300 ${
-              activeTab === "sessions"
-                ? "bg-gradient-to-r from-whatsapp-green to-[#00A884] text-white shadow-lg shadow-whatsapp-green/30"
-                : "bg-transparent text-gray-400 hover:bg-[#0f1b24] hover:text-white"
-            }`}
-            onClick={() => setActiveTab("sessions")}>
-            Sessions ({sessions.length})
-          </button>
-        </div>
-
-        {activeTab === "overview" && (
-          <div className="flex flex-col gap-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiUser className="w-8 h-8 text-whatsapp-green" />
-                  </div>
-                </div>
-                <div className="text-5xl font-bold text-whatsapp-green mb-2">
-                  {students.length}
-                </div>
-                <div className="text-base text-gray-400">
-                  Registered Students
-                </div>
+    <div className="min-h-screen bg-[#0a0a0a]">
+      {/* Clean Professional Header - Taller Version */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#111111]/80 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-[1400px] mx-auto px-8 py-6">
+          <div className="flex items-center justify-between">
+            {/* Logo & Title */}
+            <div className="flex items-center gap-5">
+              <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
+                <FiShield className="w-7 h-7 text-white" />
               </div>
-              <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiUsers className="w-8 h-8 text-whatsapp-green" />
-                  </div>
-                </div>
-                <div className="text-5xl font-bold text-whatsapp-green mb-2">
-                  {volunteers.length}
-                </div>
-                <div className="text-base text-gray-400">Active Volunteers</div>
-              </div>
-              <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiBook className="w-8 h-8 text-whatsapp-green" />
-                  </div>
-                </div>
-                <div className="text-5xl font-bold text-whatsapp-green mb-2">
-                  {materials.length}
-                </div>
-                <div className="text-base text-gray-400">
-                  Learning Materials
-                </div>
-              </div>
-              <div className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 border border-gray-700/50 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-2 text-center">
-                <div className="flex items-center justify-center mb-4">
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiSun className="w-8 h-8 text-whatsapp-green" />
-                  </div>
-                </div>
-                <div className="text-5xl font-bold text-whatsapp-green mb-2">
-                  {sessions.length}
-                </div>
-                <div className="text-base text-gray-400">Summer Sessions</div>
+              <div>
+                <h1 className="text-2xl font-semibold text-white mb-1">
+                  Admin Dashboard
+                </h1>
+                <p className="text-sm text-gray-500">
+                  Tula Student Association Management
+                </p>
               </div>
             </div>
 
-            <div>
-              <h2 className="text-3xl font-bold text-white mb-6">
-                Quick Actions
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* User & Logout */}
+            <div className="flex items-center gap-4">
+              <div className="hidden md:flex items-center gap-4 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base font-semibold text-white shadow-md">
+                  {(user?.name || "A").charAt(0).toUpperCase()}
+                </div>
+                <div>
+                  <p className="text-base font-medium text-white">
+                    {user?.name || "Administrator"}
+                  </p>
+                  <p className="text-sm text-gray-500 mt-0.5">
+                    {user?.email || "admin@tula.org"}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium">
+                <FiLogOut className="w-5 h-5" />
+                <span className="hidden sm:inline">Logout</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="pt-32 pb-12 pl-6 pr-6">
+        {/* Sidebar Navigation */}
+        <aside className="fixed left-0 top-32 bottom-0 w-64 bg-[#111111]/80 backdrop-blur-xl border-r border-white/5 overflow-y-auto">
+          <nav className="p-4 space-y-2">
+            {[
+              { id: "overview", label: "Overview", icon: FiBook },
+              { id: "profile", label: "Profile", icon: FiUser },
+              {
+                id: "students",
+                label: "Students",
+                count: students.length,
+                icon: FiUsers,
+              },
+              {
+                id: "volunteers",
+                label: "Volunteers",
+                count: volunteers.length,
+                icon: FiUsers,
+              },
+              {
+                id: "materials",
+                label: "Materials",
+                count: materials.length,
+                icon: FiFileText,
+              },
+              {
+                id: "sessions",
+                label: "Sessions",
+                count: sessions.length,
+                icon: FiSun,
+              },
+            ].map((tab) => {
+              const Icon = tab.icon;
+              return (
                 <button
-                  className="group flex flex-col items-center gap-3 p-8 bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl text-white text-base font-bold transition-all duration-300 hover:border-whatsapp-green/50 hover:transform hover:-translate-y-2 hover:shadow-lg hover:shadow-whatsapp-green/20"
-                  onClick={() => setShowMaterialModal(true)}>
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiFileText className="w-8 h-8 text-whatsapp-green" />
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                    activeTab === tab.id
+                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
+                      : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
+                  }`}>
+                  <div className="flex items-center gap-3">
+                    <Icon className="w-5 h-5" />
+                    <span>{tab.label}</span>
                   </div>
+                  {tab.count !== undefined && (
+                    <span
+                      className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                        activeTab === tab.id
+                          ? "bg-emerald-500/20 text-emerald-300"
+                          : "bg-white/10 text-gray-400"
+                      }`}>
+                      {tab.count}
+                    </span>
+                  )}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* Main Content Area */}
+        <div className="ml-64 max-w-[1400px]">
+          {activeTab === "overview" && (
+            <div className="space-y-8">
+              {/* Clean Stat Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                {/* Students Card */}
+                <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 transition-all hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-3xl font-bold text-white">
+                        {students.length}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">Students</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                      <FiUsers className="w-5 h-5 text-emerald-400" />
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600">Total enrolled</div>
+                </div>
+
+                {/* Volunteers Card */}
+                <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-teal-500/30 transition-all hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-3xl font-bold text-white">
+                        {volunteers.length}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">Volunteers</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                      <FiUsers className="w-5 h-5 text-teal-400" />
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Active contributors
+                  </div>
+                </div>
+
+                {/* Materials Card */}
+                <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-blue-500/30 transition-all hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-3xl font-bold text-white">
+                        {materials.length}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">Materials</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center">
+                      <FiBook className="w-5 h-5 text-blue-400" />
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600">
+                    Learning resources
+                  </div>
+                </div>
+
+                {/* Sessions Card */}
+                <div className="p-6 rounded-xl bg-white/5 border border-white/10 hover:border-amber-500/30 transition-all hover:-translate-y-1">
+                  <div className="flex items-start justify-between mb-4">
+                    <div>
+                      <p className="text-3xl font-bold text-white">
+                        {sessions.length}
+                      </p>
+                      <p className="text-sm text-gray-500 mt-1">Sessions</p>
+                    </div>
+                    <div className="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                      <FiSun className="w-5 h-5 text-amber-400" />
+                    </div>
+                  </div>
+                  <div className="text-xs text-gray-600">Active programs</div>
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div>
+                <h2 className="text-lg font-semibold text-white mb-4">
+                  Quick Actions
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <button
+                    onClick={() => setShowMaterialModal(true)}
+                    className="flex items-center gap-4 p-6 rounded-xl bg-white/5 border border-white/10 hover:border-emerald-500/30 hover:bg-white/10 transition-all text-left group">
+                    <div className="w-12 h-12 rounded-lg bg-emerald-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <FiFileText className="w-6 h-6 text-emerald-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Upload Material</p>
+                      <p className="text-sm text-gray-500">
+                        Add new learning resources
+                      </p>
+                    </div>
+                  </button>
+
+                  <button
+                    onClick={() => setShowSessionModal(true)}
+                    className="flex items-center gap-4 p-6 rounded-xl bg-white/5 border border-white/10 hover:border-teal-500/30 hover:bg-white/10 transition-all text-left group">
+                    <div className="w-12 h-12 rounded-lg bg-teal-500/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <FiPlus className="w-6 h-6 text-teal-400" />
+                    </div>
+                    <div>
+                      <p className="text-white font-medium">Create Session</p>
+                      <p className="text-sm text-gray-500">
+                        Start a new program
+                      </p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "profile" && (
+            <div className="max-w-4xl mx-auto">
+              {/* Success Message */}
+              {showSuccess && (
+                <div className="mb-6 p-4 bg-whatsapp-green/20 border border-whatsapp-green rounded-xl text-whatsapp-green text-center font-semibold animate-fade-in">
+                  ✓ Profile updated successfully!
+                </div>
+              )}
+
+              {/* Profile Card */}
+              <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
+                {/* Profile Header */}
+                <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700/50">
+                  <div className="relative group">
+                    <div className="absolute inset-0 bg-gradient-to-br from-whatsapp-green to-[#00A884] rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-slow"></div>
+                    <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-whatsapp-green via-[#00E676] to-[#00A884] flex items-center justify-center text-5xl md:text-6xl text-white font-bold shadow-2xl ring-4 ring-whatsapp-green/30 group-hover:ring-whatsapp-green/50 transition-all duration-300 group-hover:scale-105">
+                      {adminProfile.fullName.charAt(0).toUpperCase()}
+                    </div>
+                  </div>
+                  <div className="flex-1 text-center md:text-left">
+                    <h2 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
+                      {adminProfile.fullName}
+                    </h2>
+                    <p className="text-whatsapp-green text-lg mb-3 font-medium">
+                      {adminProfile.email}
+                    </p>
+                    <span className="inline-block px-5 py-2 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50 shadow-lg shadow-whatsapp-green/20">
+                      🛡️ {adminProfile.role}
+                    </span>
+                  </div>
+                  {!isEditingProfile && (
+                    <button
+                      onClick={() => setIsEditingProfile(true)}
+                      className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 transform">
+                      <FiEdit2 />
+                      Edit Profile
+                    </button>
+                  )}
+                </div>
+
+                {isEditingProfile ? (
+                  <form onSubmit={handleProfileSubmit} className="space-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                          Full Name *
+                        </label>
+                        <input
+                          type="text"
+                          name="fullName"
+                          value={profileForm.fullName}
+                          onChange={handleProfileChange}
+                          required
+                          className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                          placeholder="Enter your full name"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                          Email *
+                        </label>
+                        <input
+                          type="email"
+                          name="email"
+                          value={profileForm.email}
+                          onChange={handleProfileChange}
+                          required
+                          className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                          placeholder="Enter your email"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                          Username
+                        </label>
+                        <input
+                          type="text"
+                          name="username"
+                          value={profileForm.username}
+                          onChange={handleProfileChange}
+                          className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                          placeholder="Enter username"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
+                          Joined Date
+                        </label>
+                        <input
+                          type="text"
+                          name="joinedDate"
+                          value={profileForm.joinedDate}
+                          onChange={handleProfileChange}
+                          className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
+                          placeholder="e.g., January 2024"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="flex gap-4 pt-6">
+                      <button
+                        type="submit"
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-whatsapp-green hover:bg-[#00A884] text-white rounded-lg font-bold transition-all duration-300 shadow-lg">
+                        <FiSave />
+                        Save Changes
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsEditingProfile(false);
+                          setProfileForm(adminProfile);
+                        }}
+                        className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all duration-300">
+                        <FiX />
+                        Cancel
+                      </button>
+                    </div>
+                  </form>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Username */}
+                    <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FiUser className="text-whatsapp-green text-xl" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                            Username
+                          </p>
+                          <p className="text-white text-lg font-bold truncate">
+                            {adminProfile.username}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Email */}
+                    <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FiMail className="text-whatsapp-green text-xl" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                            Email
+                          </p>
+                          <p className="text-white text-lg font-bold truncate">
+                            {adminProfile.email}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Role */}
+                    <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FiShield className="text-whatsapp-green text-xl" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                            Role
+                          </p>
+                          <p className="text-white text-lg font-bold truncate">
+                            {adminProfile.role}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Joined Date */}
+                    <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <FiCalendar className="text-whatsapp-green text-xl" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
+                            Joined
+                          </p>
+                          <p className="text-white text-lg font-bold truncate">
+                            {adminProfile.joinedDate}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "students" && (
+            <div className="mt-6">
+              <h2 className="text-3xl font-bold text-white mb-6">
+                Registered Students
+              </h2>
+              <div className="grid grid-cols-1 gap-4">
+                {students.map((student, index) => (
+                  <div
+                    key={student.id}
+                    className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      {/* Avatar & Name Section */}
+                      <div className="flex items-center gap-4 lg:w-1/4">
+                        <div className="relative flex-shrink-0">
+                          <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
+                          <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
+                            {(student.firstName || student.userId?.name || "?")
+                              .charAt(0)
+                              .toUpperCase()}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-whatsapp-green truncate">
+                            {student.firstName && student.middleName
+                              ? `${student.firstName} ${student.middleName}`
+                              : student.firstName ||
+                                student.userId?.name ||
+                                "Unknown"}
+                          </h3>
+                          <p className="text-sm text-gray-300 truncate">
+                            {student.userId?.email || "No email"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Info Grid */}
+                      <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Phone
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {student.phone || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Gender
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium">
+                            {student.gender || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            School
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {student.schoolName || student.school || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Level
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium">
+                            {student.level || student.gradeLevel || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Grade
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium">
+                            {student.grade || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Guardian
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {student.guardianName || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
+                            Subjects
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {(
+                              student.subjects ||
+                              student.subjectInterests ||
+                              []
+                            )
+                              .slice(0, 3)
+                              .map((subject, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
+                                  {subject}
+                                </span>
+                              ))}
+                            {(
+                              student.subjects ||
+                              student.subjectInterests ||
+                              []
+                            ).length > 3 && (
+                              <span className="px-2 py-0.5 text-gray-400 text-xs">
+                                +
+                                {(
+                                  student.subjects ||
+                                  student.subjectInterests ||
+                                  []
+                                ).length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex lg:flex-col gap-2 lg:w-auto">
+                        <button
+                          onClick={() => handleView(student, "student")}
+                          className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                          title="View Details">
+                          <FiEye className="w-4 h-4" />
+                          <span className="lg:hidden">View</span>
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDelete("student", student._id || student.id)
+                          }
+                          className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                          title="Delete">
+                          <FiTrash2 className="w-4 h-4" />
+                          <span className="lg:hidden">Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {students.length === 0 && (
+                  <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                    <div className="text-6xl mb-4 opacity-20">📚</div>
+                    <p className="text-gray-400 text-lg">
+                      No students registered yet.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "volunteers" && (
+            <div className="mt-6">
+              <h2 className="text-3xl font-bold text-white mb-6">
+                Registered Volunteers
+              </h2>
+              <div className="grid grid-cols-1 gap-4">
+                {volunteers.map((volunteer, index) => (
+                  <div
+                    key={volunteer.id}
+                    className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.05}s` }}>
+                    <div className="flex flex-col lg:flex-row gap-6">
+                      {/* Avatar & Name Section */}
+                      <div className="flex items-center gap-4 lg:w-1/4">
+                        <div className="relative flex-shrink-0">
+                          <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
+                          <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
+                            {(
+                              volunteer.firstName ||
+                              volunteer.userId?.name ||
+                              "?"
+                            )
+                              .charAt(0)
+                              .toUpperCase()}
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg font-bold text-whatsapp-green truncate">
+                            {volunteer.firstName && volunteer.middleName
+                              ? `${volunteer.firstName} ${volunteer.middleName}`
+                              : volunteer.firstName ||
+                                volunteer.userId?.name ||
+                                "Unknown"}
+                          </h3>
+                          <p className="text-sm text-gray-300 truncate">
+                            {volunteer.userId?.email || "No email"}
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Info Grid */}
+                      <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Phone
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {volunteer.phone || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Gender
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium">
+                            {volunteer.gender || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            University
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {volunteer.university || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Department
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {volunteer.department || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Level
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium">
+                            {volunteer.preferredLevel || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2 md:col-span-1">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
+                            Availability
+                          </p>
+                          <p className="text-sm text-gray-300 font-medium truncate">
+                            {volunteer.availability || "N/A"}
+                          </p>
+                        </div>
+                        <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
+                          <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
+                            Teaching Subjects
+                          </p>
+                          <div className="flex flex-wrap gap-1">
+                            {(volunteer.subjects || [])
+                              .slice(0, 3)
+                              .map((subject, idx) => (
+                                <span
+                                  key={idx}
+                                  className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
+                                  {subject}
+                                </span>
+                              ))}
+                            {(volunteer.subjects || []).length > 3 && (
+                              <span className="px-2 py-0.5 text-gray-400 text-xs">
+                                +{(volunteer.subjects || []).length - 3}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Actions */}
+                      <div className="flex lg:flex-col gap-2 lg:w-auto">
+                        <button
+                          onClick={() => handleView(volunteer, "volunteer")}
+                          className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                          title="View Details">
+                          <FiEye className="w-4 h-4" />
+                          <span className="lg:hidden">View</span>
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleDelete(
+                              "volunteer",
+                              volunteer._id || volunteer.id,
+                            )
+                          }
+                          className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                          title="Delete">
+                          <FiTrash2 className="w-4 h-4" />
+                          <span className="lg:hidden">Delete</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {volunteers.length === 0 && (
+                  <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                    <div className="text-6xl mb-4 opacity-20">🤝</div>
+                    <p className="text-gray-400 text-lg">
+                      No volunteers registered yet.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "materials" && (
+            <div className="mt-6">
+              <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
+                <h2 className="text-3xl font-bold text-white">
+                  Learning Materials
+                </h2>
+                <button
+                  className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setMaterialForm({
+                      title: "",
+                      subject: "",
+                      level: "",
+                      grade: "",
+                      fileType: "PDF",
+                      description: "",
+                      uploadedBy: "Admin",
+                      sessionId: "",
+                    });
+                    setShowMaterialModal(true);
+                  }}>
+                  <FiPlus className="w-5 h-5" />
                   Upload Material
                 </button>
-                <button
-                  className="group flex flex-col items-center gap-3 p-8 bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl text-white text-base font-bold transition-all duration-300 hover:border-whatsapp-green/50 hover:transform hover:-translate-y-2 hover:shadow-lg hover:shadow-whatsapp-green/20"
-                  onClick={() => setShowSessionModal(true)}>
-                  <div className="w-16 h-16 bg-whatsapp-green/10 rounded-full flex items-center justify-center transform group-hover:scale-110 transition-transform duration-300">
-                    <FiPlus className="w-8 h-8 text-whatsapp-green" />
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {materials.map((material, index) => (
+                  <div
+                    key={material._id || material.id}
+                    className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-1 animate-fade-in-up"
+                    style={{ animationDelay: `${index * 0.05}s` }}>
+                    {/* Icon & File Type */}
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="relative">
+                        <div className="absolute inset-0 bg-whatsapp-green/20 rounded-lg blur-md"></div>
+                        <div className="relative w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center border border-whatsapp-green/30">
+                          <FiFileText className="w-6 h-6 text-whatsapp-green" />
+                        </div>
+                      </div>
+                      <span className="px-3 py-1 bg-[#0f1b24] border border-whatsapp-green/30 rounded-lg text-xs text-whatsapp-green font-bold">
+                        {material.fileType}
+                      </span>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="text-lg text-white font-bold mb-2 line-clamp-2 min-h-[3.5rem]">
+                      {material.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="text-sm text-gray-400 mb-4 line-clamp-2 min-h-[2.5rem]">
+                      {material.description || "No description available"}
+                    </p>
+
+                    {/* Info Grid */}
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                          Subject
+                        </p>
+                        <p className="text-xs text-gray-300 font-medium truncate">
+                          {material.subject}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                          Level
+                        </p>
+                        <p className="text-xs text-gray-300 font-medium truncate">
+                          {material.level}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                          Grade
+                        </p>
+                        <p className="text-xs text-gray-300 font-medium">
+                          {material.grade}
+                        </p>
+                      </div>
+                      <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
+                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
+                          Session
+                        </p>
+                        <p className="text-xs text-gray-300 font-medium truncate">
+                          {material.summerSession?.name ||
+                            material.session ||
+                            "N/A"}
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex gap-2 pt-4 border-t border-gray-700/30">
+                      <button
+                        onClick={() => handleEditMaterial(material)}
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
+                        title="Edit">
+                        <FiEdit2 className="w-4 h-4" />
+                        Edit
+                      </button>
+                      <button
+                        onClick={() =>
+                          handleDelete("material", material._id || material.id)
+                        }
+                        className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                        title="Delete">
+                        <FiTrash2 className="w-4 h-4" />
+                        Delete
+                      </button>
+                    </div>
                   </div>
+                ))}
+                {materials.length === 0 && (
+                  <div className="col-span-full bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
+                    <div className="flex items-center justify-center mb-4">
+                      <div className="w-20 h-20 bg-whatsapp-green/10 rounded-full flex items-center justify-center">
+                        <FiBook className="w-10 h-10 text-whatsapp-green/50" />
+                      </div>
+                    </div>
+                    <p className="text-gray-400 text-lg">
+                      No materials uploaded yet.
+                    </p>
+                    <p className="text-gray-500 text-sm mt-2">
+                      Click "Upload Material" to add your first learning
+                      resource.
+                    </p>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {activeTab === "sessions" && (
+            <div className="mt-6">
+              <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
+                <h2 className="text-3xl font-bold text-white">
+                  Summer Sessions
+                </h2>
+                <button
+                  className="px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
+                  onClick={() => {
+                    setEditingItem(null);
+                    setSessionForm({
+                      name: "",
+                      year: new Date().getFullYear(),
+                      startDate: "",
+                      endDate: "",
+                      active: false,
+                    });
+                    setShowSessionModal(true);
+                  }}>
                   Create Session
                 </button>
               </div>
-            </div>
-          </div>
-        )}
-
-        {activeTab === "profile" && (
-          <div className="max-w-4xl mx-auto">
-            {/* Success Message */}
-            {showSuccess && (
-              <div className="mb-6 p-4 bg-whatsapp-green/20 border border-whatsapp-green rounded-xl text-whatsapp-green text-center font-semibold animate-fade-in">
-                ✓ Profile updated successfully!
-              </div>
-            )}
-
-            {/* Profile Card */}
-            <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] rounded-2xl p-8 shadow-2xl border border-gray-700/50 backdrop-blur-sm">
-              {/* Profile Header */}
-              <div className="flex flex-col md:flex-row items-center md:items-start gap-6 mb-8 pb-8 border-b border-gray-700/50">
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-whatsapp-green to-[#00A884] rounded-full blur-xl opacity-50 group-hover:opacity-75 transition-opacity duration-300 animate-pulse-slow"></div>
-                  <div className="relative w-28 h-28 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-whatsapp-green via-[#00E676] to-[#00A884] flex items-center justify-center text-5xl md:text-6xl text-white font-bold shadow-2xl ring-4 ring-whatsapp-green/30 group-hover:ring-whatsapp-green/50 transition-all duration-300 group-hover:scale-105">
-                    {adminProfile.fullName.charAt(0).toUpperCase()}
-                  </div>
-                </div>
-                <div className="flex-1 text-center md:text-left">
-                  <h2 className="text-3xl md:text-4xl font-black bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent mb-2">
-                    {adminProfile.fullName}
-                  </h2>
-                  <p className="text-whatsapp-green text-lg mb-3 font-medium">
-                    {adminProfile.email}
-                  </p>
-                  <span className="inline-block px-5 py-2 bg-gradient-to-r from-whatsapp-green/20 to-whatsapp-green/10 text-whatsapp-green rounded-full text-sm font-bold border border-whatsapp-green/50 shadow-lg shadow-whatsapp-green/20">
-                    🛡️ {adminProfile.role}
-                  </span>
-                </div>
-                {!isEditingProfile && (
-                  <button
-                    onClick={() => setIsEditingProfile(true)}
-                    className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 transform">
-                    <FiEdit2 />
-                    Edit Profile
-                  </button>
-                )}
-              </div>
-
-              {isEditingProfile ? (
-                <form onSubmit={handleProfileSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
-                        Full Name *
-                      </label>
-                      <input
-                        type="text"
-                        name="fullName"
-                        value={profileForm.fullName}
-                        onChange={handleProfileChange}
-                        required
-                        className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
-                        placeholder="Enter your full name"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
-                        Email *
-                      </label>
-                      <input
-                        type="email"
-                        name="email"
-                        value={profileForm.email}
-                        onChange={handleProfileChange}
-                        required
-                        className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
-                        placeholder="Enter your email"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
-                        Username
-                      </label>
-                      <input
-                        type="text"
-                        name="username"
-                        value={profileForm.username}
-                        onChange={handleProfileChange}
-                        className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
-                        placeholder="Enter username"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-gray-400 text-sm uppercase tracking-wide mb-2">
-                        Joined Date
-                      </label>
-                      <input
-                        type="text"
-                        name="joinedDate"
-                        value={profileForm.joinedDate}
-                        onChange={handleProfileChange}
-                        className="w-full px-4 py-3 bg-[#0f1b24] border border-gray-700 rounded-lg text-white focus:border-whatsapp-green focus:outline-none transition-colors"
-                        placeholder="e.g., January 2024"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="flex gap-4 pt-6">
-                    <button
-                      type="submit"
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-whatsapp-green hover:bg-[#00A884] text-white rounded-lg font-bold transition-all duration-300 shadow-lg">
-                      <FiSave />
-                      Save Changes
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsEditingProfile(false);
-                        setProfileForm(adminProfile);
-                      }}
-                      className="flex-1 flex items-center justify-center gap-2 px-6 py-4 bg-gray-700 hover:bg-gray-600 text-white rounded-lg font-bold transition-all duration-300">
-                      <FiX />
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  {/* Username */}
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiUser className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          Username
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {adminProfile.username}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Email */}
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiMail className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          Email
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {adminProfile.email}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Role */}
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiShield className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          Role
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {adminProfile.role}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Joined Date */}
-                  <div className="bg-[#0f1b24] rounded-xl p-5 border border-gray-700/50 hover:border-whatsapp-green/50 transition-colors">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <FiCalendar className="text-whatsapp-green text-xl" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="text-whatsapp-green text-xs uppercase tracking-wider font-semibold mb-1">
-                          Joined
-                        </p>
-                        <p className="text-white text-lg font-bold truncate">
-                          {adminProfile.joinedDate}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "students" && (
-          <div className="mt-6">
-            <h2 className="text-3xl font-bold text-white mb-6">
-              Registered Students
-            </h2>
-            <div className="grid grid-cols-1 gap-4">
-              {students.map((student, index) => (
-                <div
-                  key={student.id}
-                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}>
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Avatar & Name Section */}
-                    <div className="flex items-center gap-4 lg:w-1/4">
-                      <div className="relative flex-shrink-0">
-                        <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
-                          {(student.firstName || student.userId?.name || "?")
-                            .charAt(0)
-                            .toUpperCase()}
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-whatsapp-green truncate">
-                          {student.firstName && student.middleName
-                            ? `${student.firstName} ${student.middleName}`
-                            : student.firstName ||
-                              student.userId?.name ||
-                              "Unknown"}
-                        </h3>
-                        <p className="text-sm text-gray-300 truncate">
-                          {student.userId?.email || "No email"}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Info Grid */}
-                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Phone
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {student.phone || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Gender
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium">
-                          {student.gender || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          School
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {student.schoolName || student.school || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Level
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium">
-                          {student.level || student.gradeLevel || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Grade
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium">
-                          {student.grade || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Guardian
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {student.guardianName || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
-                          Subjects
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {(student.subjects || student.subjectInterests || [])
-                            .slice(0, 3)
-                            .map((subject, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
-                                {subject}
-                              </span>
-                            ))}
-                          {(student.subjects || student.subjectInterests || [])
-                            .length > 3 && (
-                            <span className="px-2 py-0.5 text-gray-400 text-xs">
-                              +
-                              {(
-                                student.subjects ||
-                                student.subjectInterests ||
-                                []
-                              ).length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex lg:flex-col gap-2 lg:w-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {sessions.map((session) => (
+                  <div
+                    key={session._id || session.id}
+                    className="relative bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300">
+                    <h3 className="text-xl text-white font-bold mb-3">
+                      {session.name}
+                    </h3>
+                    <p className="text-sm text-gray-400 mb-2">
+                      Year: {session.year}
+                    </p>
+                    <p className="text-sm text-gray-400 mb-2">
+                      Start: {session.startDate}
+                    </p>
+                    <p className="text-sm text-gray-400 mb-4">
+                      End: {session.endDate}
+                    </p>
+                    {session.active && (
+                      <span className="absolute top-6 right-6 px-3 py-1 bg-whatsapp-green text-white rounded-xl text-xs font-semibold shadow-lg shadow-whatsapp-green/30">
+                        Active
+                      </span>
+                    )}
+                    <div className="flex gap-2 mt-4">
                       <button
-                        onClick={() => handleView(student, "student")}
-                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
-                        title="View Details">
-                        <FiEye className="w-4 h-4" />
-                        <span className="lg:hidden">View</span>
+                        onClick={() => handleEditSession(session)}
+                        className="flex-1 p-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors font-semibold text-sm"
+                        title="Edit">
+                        <FiEdit2 className="w-4 h-4 inline mr-1" />
+                        Edit
                       </button>
                       <button
                         onClick={() =>
-                          handleDelete("student", student._id || student.id)
+                          handleDelete("session", session._id || session.id)
                         }
-                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
+                        className="flex-1 p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors font-semibold text-sm"
                         title="Delete">
-                        <FiTrash2 className="w-4 h-4" />
-                        <span className="lg:hidden">Delete</span>
+                        <FiTrash2 className="w-4 h-4 inline mr-1" />
+                        Delete
                       </button>
                     </div>
                   </div>
-                </div>
-              ))}
-              {students.length === 0 && (
-                <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
-                  <div className="text-6xl mb-4 opacity-20">📚</div>
-                  <p className="text-gray-400 text-lg">
-                    No students registered yet.
-                  </p>
-                </div>
-              )}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-
-        {activeTab === "volunteers" && (
-          <div className="mt-6">
-            <h2 className="text-3xl font-bold text-white mb-6">
-              Registered Volunteers
-            </h2>
-            <div className="grid grid-cols-1 gap-4">
-              {volunteers.map((volunteer, index) => (
-                <div
-                  key={volunteer.id}
-                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}>
-                  <div className="flex flex-col lg:flex-row gap-6">
-                    {/* Avatar & Name Section */}
-                    <div className="flex items-center gap-4 lg:w-1/4">
-                      <div className="relative flex-shrink-0">
-                        <div className="absolute inset-0 bg-whatsapp-green/20 rounded-full blur-md"></div>
-                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-whatsapp-green to-[#00A884] flex items-center justify-center text-2xl text-white font-bold shadow-lg ring-2 ring-whatsapp-green/30">
-                          {(
-                            volunteer.firstName ||
-                            volunteer.userId?.name ||
-                            "?"
-                          )
-                            .charAt(0)
-                            .toUpperCase()}
-                        </div>
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <h3 className="text-lg font-bold text-whatsapp-green truncate">
-                          {volunteer.firstName && volunteer.middleName
-                            ? `${volunteer.firstName} ${volunteer.middleName}`
-                            : volunteer.firstName ||
-                              volunteer.userId?.name ||
-                              "Unknown"}
-                        </h3>
-                        <p className="text-sm text-gray-300 truncate">
-                          {volunteer.userId?.email || "No email"}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Info Grid */}
-                    <div className="flex-1 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Phone
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {volunteer.phone || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Gender
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium">
-                          {volunteer.gender || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          University
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {volunteer.university || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Department
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {volunteer.department || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Level
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium">
-                          {volunteer.preferredLevel || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2 md:col-span-1">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-1 font-semibold">
-                          Availability
-                        </p>
-                        <p className="text-sm text-gray-300 font-medium truncate">
-                          {volunteer.availability || "N/A"}
-                        </p>
-                      </div>
-                      <div className="bg-[#0f1b24] rounded-lg p-3 border border-gray-700/30 col-span-2">
-                        <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-2 font-semibold">
-                          Teaching Subjects
-                        </p>
-                        <div className="flex flex-wrap gap-1">
-                          {(volunteer.subjects || [])
-                            .slice(0, 3)
-                            .map((subject, idx) => (
-                              <span
-                                key={idx}
-                                className="px-2 py-0.5 bg-whatsapp-green/20 text-whatsapp-green rounded text-xs font-medium border border-whatsapp-green/30">
-                                {subject}
-                              </span>
-                            ))}
-                          {(volunteer.subjects || []).length > 3 && (
-                            <span className="px-2 py-0.5 text-gray-400 text-xs">
-                              +{(volunteer.subjects || []).length - 3}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex lg:flex-col gap-2 lg:w-auto">
-                      <button
-                        onClick={() => handleView(volunteer, "volunteer")}
-                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
-                        title="View Details">
-                        <FiEye className="w-4 h-4" />
-                        <span className="lg:hidden">View</span>
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleDelete(
-                            "volunteer",
-                            volunteer._id || volunteer.id,
-                          )
-                        }
-                        className="flex-1 lg:flex-none flex items-center justify-center gap-2 px-4 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
-                        title="Delete">
-                        <FiTrash2 className="w-4 h-4" />
-                        <span className="lg:hidden">Delete</span>
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-              {volunteers.length === 0 && (
-                <div className="bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
-                  <div className="text-6xl mb-4 opacity-20">🤝</div>
-                  <p className="text-gray-400 text-lg">
-                    No volunteers registered yet.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "materials" && (
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
-              <h2 className="text-3xl font-bold text-white">
-                Learning Materials
-              </h2>
-              <button
-                className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
-                onClick={() => {
-                  setEditingItem(null);
-                  setMaterialForm({
-                    title: "",
-                    subject: "",
-                    level: "",
-                    grade: "",
-                    fileType: "PDF",
-                    description: "",
-                    uploadedBy: "Admin",
-                    sessionId: "",
-                  });
-                  setShowMaterialModal(true);
-                }}>
-                <FiPlus className="w-5 h-5" />
-                Upload Material
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {materials.map((material, index) => (
-                <div
-                  key={material._id || material.id}
-                  className="group bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300 hover:shadow-lg hover:shadow-whatsapp-green/20 hover:-translate-y-1 animate-fade-in-up"
-                  style={{ animationDelay: `${index * 0.05}s` }}>
-                  {/* Icon & File Type */}
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-whatsapp-green/20 rounded-lg blur-md"></div>
-                      <div className="relative w-12 h-12 bg-whatsapp-green/10 rounded-lg flex items-center justify-center border border-whatsapp-green/30">
-                        <FiFileText className="w-6 h-6 text-whatsapp-green" />
-                      </div>
-                    </div>
-                    <span className="px-3 py-1 bg-[#0f1b24] border border-whatsapp-green/30 rounded-lg text-xs text-whatsapp-green font-bold">
-                      {material.fileType}
-                    </span>
-                  </div>
-
-                  {/* Title */}
-                  <h3 className="text-lg text-white font-bold mb-2 line-clamp-2 min-h-[3.5rem]">
-                    {material.title}
-                  </h3>
-
-                  {/* Description */}
-                  <p className="text-sm text-gray-400 mb-4 line-clamp-2 min-h-[2.5rem]">
-                    {material.description || "No description available"}
-                  </p>
-
-                  {/* Info Grid */}
-                  <div className="grid grid-cols-2 gap-2 mb-4">
-                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
-                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
-                        Subject
-                      </p>
-                      <p className="text-xs text-gray-300 font-medium truncate">
-                        {material.subject}
-                      </p>
-                    </div>
-                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
-                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
-                        Level
-                      </p>
-                      <p className="text-xs text-gray-300 font-medium truncate">
-                        {material.level}
-                      </p>
-                    </div>
-                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
-                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
-                        Grade
-                      </p>
-                      <p className="text-xs text-gray-300 font-medium">
-                        {material.grade}
-                      </p>
-                    </div>
-                    <div className="bg-[#0f1b24] rounded-lg p-2 border border-gray-700/30">
-                      <p className="text-xs text-whatsapp-green uppercase tracking-wide mb-0.5 font-semibold">
-                        Session
-                      </p>
-                      <p className="text-xs text-gray-300 font-medium truncate">
-                        {material.summerSession?.name ||
-                          material.session ||
-                          "N/A"}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Actions */}
-                  <div className="flex gap-2 pt-4 border-t border-gray-700/30">
-                    <button
-                      onClick={() => handleEditMaterial(material)}
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-blue-500/30"
-                      title="Edit">
-                      <FiEdit2 className="w-4 h-4" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleDelete("material", material._id || material.id)
-                      }
-                      className="flex-1 flex items-center justify-center gap-2 px-3 py-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-all duration-300 hover:scale-105 font-medium text-sm border border-red-500/30"
-                      title="Delete">
-                      <FiTrash2 className="w-4 h-4" />
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-              {materials.length === 0 && (
-                <div className="col-span-full bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl py-16 px-5 text-center">
-                  <div className="flex items-center justify-center mb-4">
-                    <div className="w-20 h-20 bg-whatsapp-green/10 rounded-full flex items-center justify-center">
-                      <FiBook className="w-10 h-10 text-whatsapp-green/50" />
-                    </div>
-                  </div>
-                  <p className="text-gray-400 text-lg">
-                    No materials uploaded yet.
-                  </p>
-                  <p className="text-gray-500 text-sm mt-2">
-                    Click "Upload Material" to add your first learning resource.
-                  </p>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {activeTab === "sessions" && (
-          <div className="mt-6">
-            <div className="flex justify-between items-center mb-6 max-md:flex-col max-md:items-start max-md:gap-4">
-              <h2 className="text-3xl font-bold text-white">Summer Sessions</h2>
-              <button
-                className="px-6 py-3 bg-gradient-to-r from-whatsapp-green to-[#00A884] hover:from-[#00A884] hover:to-whatsapp-green text-white rounded-xl font-bold transition-all duration-300 shadow-lg shadow-whatsapp-green/30 hover:shadow-whatsapp-green/50 hover:scale-105 max-md:w-full"
-                onClick={() => {
-                  setEditingItem(null);
-                  setSessionForm({
-                    name: "",
-                    year: new Date().getFullYear(),
-                    startDate: "",
-                    endDate: "",
-                    active: false,
-                  });
-                  setShowSessionModal(true);
-                }}>
-                Create Session
-              </button>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {sessions.map((session) => (
-                <div
-                  key={session._id || session.id}
-                  className="relative bg-gradient-to-br from-[#1a2730] to-[#15202b] border border-gray-700/50 rounded-2xl p-6 hover:border-whatsapp-green/50 transition-all duration-300">
-                  <h3 className="text-xl text-white font-bold mb-3">
-                    {session.name}
-                  </h3>
-                  <p className="text-sm text-gray-400 mb-2">
-                    Year: {session.year}
-                  </p>
-                  <p className="text-sm text-gray-400 mb-2">
-                    Start: {session.startDate}
-                  </p>
-                  <p className="text-sm text-gray-400 mb-4">
-                    End: {session.endDate}
-                  </p>
-                  {session.active && (
-                    <span className="absolute top-6 right-6 px-3 py-1 bg-whatsapp-green text-white rounded-xl text-xs font-semibold shadow-lg shadow-whatsapp-green/30">
-                      Active
-                    </span>
-                  )}
-                  <div className="flex gap-2 mt-4">
-                    <button
-                      onClick={() => handleEditSession(session)}
-                      className="flex-1 p-2 bg-blue-500/20 hover:bg-blue-500/30 text-blue-400 rounded-lg transition-colors font-semibold text-sm"
-                      title="Edit">
-                      <FiEdit2 className="w-4 h-4 inline mr-1" />
-                      Edit
-                    </button>
-                    <button
-                      onClick={() =>
-                        handleDelete("session", session._id || session.id)
-                      }
-                      className="flex-1 p-2 bg-red-500/20 hover:bg-red-500/30 text-red-400 rounded-lg transition-colors font-semibold text-sm"
-                      title="Delete">
-                      <FiTrash2 className="w-4 h-4 inline mr-1" />
-                      Delete
-                    </button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
 
+      {/* Modals */}
       <Modal
         isOpen={showMaterialModal}
         onClose={() => {

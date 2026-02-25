@@ -180,6 +180,8 @@ export const materialsAPI = {
     apiCall(`/materials/${id}/download`, {
       method: "PUT",
     }),
+
+  getSignedUrl: (id) => apiCall(`/materials/${id}/signed-url`),
 };
 
 // Sessions API

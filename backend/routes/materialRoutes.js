@@ -9,6 +9,7 @@ const {
   incrementDownload,
   updateMaterial,
   deleteMaterial,
+  getSignedUrl,
 } = require("../controllers/materialController");
 const { protect } = require("../middleware/authMiddleware");
 const { authorize } = require("../middleware/roleMiddleware");
@@ -35,6 +36,7 @@ router.post(
 router.get("/", getMaterials);
 router.get("/level/:level", getMaterialsByLevel);
 router.get("/:id", getMaterial);
+router.get("/:id/signed-url", getSignedUrl); // Get signed URL for secure download
 router.put(
   "/:id",
   protect,

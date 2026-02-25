@@ -58,10 +58,32 @@ const Materials = () => {
       // Increment download count
       await api.materials.incrementDownload(material._id || material.id);
 
-      // Download file to computer
-      if (material.fileUrl) {
+      let downloadUrl = material.fileUrl;
+
+      // Try to get signed URL first (for secure Cloudinary accounts)
+      try {
+        const signedData = await api.materials.getSignedUrl(
+          material._id || material.id,
+        );
+        if (signedData.signedUrl) {
+          downloadUrl = signedData.signedUrl;
+        }
+      } catch (signedUrlError) {
+        console.log(
+          "Signed URL not available, using direct URL:",
+          signedUrlError,
+        );
+        // Continue with direct URL
+      }
+
+      if (downloadUrl) {
         // Fetch the file as a blob
-        const response = await fetch(material.fileUrl);
+        const response = await fetch(downloadUrl);
+
+        if (!response.ok) {
+          throw new Error(`Failed to download: ${response.statusText}`);
+        }
+
         const blob = await response.blob();
 
         // Create a blob URL
@@ -82,7 +104,9 @@ const Materials = () => {
       }
     } catch (error) {
       console.error("Error downloading material:", error);
-      alert("Failed to download material. Please try again.");
+      alert(
+        `Failed to download material: ${error.message}. Please contact the administrator if the problem persists.`,
+      );
     }
   };
 

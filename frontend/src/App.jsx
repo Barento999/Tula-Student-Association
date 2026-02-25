@@ -38,46 +38,58 @@ function ScrollToTop() {
   return null;
 }
 
+// Layout wrapper to conditionally show Navbar/Footer
+function Layout() {
+  const location = useLocation();
+  const isAdminRoute =
+    location.pathname === "/sys-auth-portal" ||
+    location.pathname === "/sys-dashboard-mgmt";
+
+  return (
+    <div className="app">
+      {!isAdminRoute && <Navbar />}
+      <main>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route
+            path="/student-registration"
+            element={<StudentRegistration />}
+          />
+          <Route path="/student-login" element={<StudentLogin />} />
+          <Route path="/forgot-password" element={<ForgotPassword />} />
+          <Route
+            path="/materials"
+            element={
+              <ProtectedRoute>
+                <Materials />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="/volunteer" element={<Volunteer />} />
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/donation" element={<Donation />} />
+          <Route path="/student-dashboard" element={<StudentDashboard />} />
+          <Route path="/student-profile" element={<StudentProfile />} />
+          <Route path="/volunteer-profile" element={<VolunteerProfile />} />
+          <Route path="/sys-auth-portal" element={<AdminLogin />} />
+          <Route path="/sys-dashboard-mgmt" element={<AdminDashboard />} />
+        </Routes>
+      </main>
+      {!isAdminRoute && <Footer />}
+      {!isAdminRoute && <ScrollToTopButton />}
+    </div>
+  );
+}
+
 function App() {
   return (
     <AppProvider>
       <Router>
         <ScrollToTop />
-        <div className="app">
-          <Navbar />
-          <main>
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route
-                path="/student-registration"
-                element={<StudentRegistration />}
-              />
-              <Route path="/student-login" element={<StudentLogin />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
-              <Route
-                path="/materials"
-                element={
-                  <ProtectedRoute>
-                    <Materials />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/volunteer" element={<Volunteer />} />
-              <Route path="/activities" element={<Activities />} />
-              <Route path="/gallery" element={<Gallery />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/donation" element={<Donation />} />
-              <Route path="/student-dashboard" element={<StudentDashboard />} />
-              <Route path="/student-profile" element={<StudentProfile />} />
-              <Route path="/volunteer-profile" element={<VolunteerProfile />} />
-              <Route path="/sys-auth-portal" element={<AdminLogin />} />
-              <Route path="/sys-dashboard-mgmt" element={<AdminDashboard />} />
-            </Routes>
-          </main>
-          <Footer />
-          <ScrollToTopButton />
-        </div>
+        <Layout />
       </Router>
     </AppProvider>
   );
