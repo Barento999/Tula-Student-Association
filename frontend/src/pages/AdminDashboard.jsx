@@ -422,6 +422,34 @@ const AdminDashboard = () => {
 
         {/* Main Content Area */}
         <div className="ml-64 max-w-[1400px]">
+          {/* Welcome Banner */}
+          <div className="mb-8 p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
+            <div className="flex items-center justify-between">
+              <div>
+                <h2 className="text-2xl font-semibold text-white mb-1">
+                  Welcome back, {user?.name?.split(" ")[0] || "Administrator"}!
+                  👋
+                </h2>
+                <p className="text-gray-400">
+                  Here's what's happening with your platform today.
+                </p>
+              </div>
+              <div className="hidden md:block">
+                <div className="text-right">
+                  <p className="text-sm text-gray-500">Current Date</p>
+                  <p className="text-lg font-medium text-white">
+                    {new Date().toLocaleDateString("en-US", {
+                      weekday: "short",
+                      year: "numeric",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
           {activeTab === "overview" && (
             <div className="space-y-8">
               {/* Clean Stat Cards */}
