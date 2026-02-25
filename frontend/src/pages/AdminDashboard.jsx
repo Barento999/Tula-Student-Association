@@ -319,59 +319,79 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a]">
-      {/* Clean Professional Header - Responsive */}
-      <header className="fixed top-0 left-0 right-0 z-50 bg-[#111111]/80 backdrop-blur-xl border-b border-white/5">
-        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-4 md:py-6">
-          <div className="flex items-center justify-between">
-            {/* Mobile Menu Button */}
+      {/* Clean Professional Header - Mobile Optimized */}
+      <header className="fixed top-0 left-0 right-0 z-50 bg-[#111111]/95 backdrop-blur-xl border-b border-white/5">
+        <div className="max-w-[1400px] mx-auto px-4 md:px-8 py-3 md:py-6">
+          <div className="flex items-center justify-between gap-3">
+            {/* Mobile Menu Button - Enhanced */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="lg:hidden w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-white hover:bg-white/10 transition-colors">
+              className="lg:hidden w-11 h-11 rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 hover:bg-emerald-500/20 transition-all active:scale-95">
               <FiMenu className="w-6 h-6" />
             </button>
 
-            {/* Logo & Title */}
-            <div className="flex items-center gap-3 md:gap-5">
+            {/* Logo & Title - Mobile Optimized */}
+            <div className="flex items-center gap-2 md:gap-5 flex-1 lg:flex-initial">
               <div className="w-10 h-10 md:w-14 md:h-14 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-lg shadow-emerald-500/20">
                 <FiShield className="w-5 h-5 md:w-7 md:h-7 text-white" />
               </div>
-              <div className="hidden sm:block">
-                <h1 className="text-lg md:text-2xl font-semibold text-white mb-0 md:mb-1">
+              <div>
+                <h1 className="text-base md:text-2xl font-semibold text-white leading-tight">
                   Admin Dashboard
                 </h1>
-                <p className="hidden md:block text-sm text-gray-500">
-                  Tula Student Association Management
+                <p className="hidden md:block text-sm text-gray-500 mt-0.5">
+                  Tula Student Association
                 </p>
               </div>
             </div>
 
-            {/* Profile Icon - Clickable */}
+            {/* Profile Icon - Mobile Optimized */}
             <button
               onClick={() => {
                 setActiveTab("profile");
                 setIsMobileMenuOpen(false);
               }}
-              className="w-10 h-10 md:w-11 md:h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-sm md:text-base font-semibold text-white shadow-md hover:scale-105 transition-transform cursor-pointer"
+              className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base md:text-lg font-bold text-white shadow-lg shadow-emerald-500/30 hover:scale-105 active:scale-95 transition-transform cursor-pointer"
               title={`${user?.name || "Administrator"} - Click to view profile`}>
               {(user?.name || "A").charAt(0).toUpperCase()}
             </button>
           </div>
         </div>
       </header>
-      {/* Mobile Menu Overlay */}
+      {/* Mobile Menu Overlay - Enhanced */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden animate-fade-in"
           onClick={() => setIsMobileMenuOpen(false)}></div>
       )}{" "}
       {/* Main Content */}
-      <div className="pt-20 md:pt-32 pb-12 px-4 md:px-6">
-        {/* Sidebar Navigation - Responsive */}
+      <div className="pt-16 md:pt-24 lg:pt-32 pb-6 md:pb-12 px-3 md:px-6">
+        {/* Sidebar Navigation - Mobile Enhanced */}
         <aside
-          className={`fixed left-0 top-16 md:top-32 bottom-0 w-64 bg-[#111111]/95 backdrop-blur-xl border-r border-white/5 overflow-y-auto flex flex-col z-40 transition-transform duration-300 lg:translate-x-0 ${
+          className={`fixed left-0 top-14 md:top-24 lg:top-32 bottom-0 w-72 md:w-64 bg-[#111111]/98 backdrop-blur-xl border-r border-white/10 overflow-y-auto flex flex-col z-50 transition-all duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none ${
             isMobileMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}>
-          <nav className="p-4 space-y-2 flex-1">
+          {/* Mobile Sidebar Header */}
+          <div className="lg:hidden p-4 border-b border-white/10 bg-gradient-to-r from-emerald-500/10 to-teal-500/10">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center">
+                  <FiShield className="w-5 h-5 text-white" />
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-white">Menu</p>
+                  <p className="text-xs text-gray-500">Navigation</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="w-9 h-9 rounded-lg bg-white/5 hover:bg-white/10 flex items-center justify-center text-gray-400 hover:text-white transition-colors">
+                <FiX className="w-5 h-5" />
+              </button>
+            </div>
+          </div>
+
+          <nav className="p-3 md:p-4 space-y-1.5 md:space-y-2 flex-1">
             {[
               { id: "overview", label: "Overview", icon: FiBook },
               {
@@ -408,18 +428,18 @@ const AdminDashboard = () => {
                     setActiveTab(tab.id);
                     setIsMobileMenuOpen(false);
                   }}
-                  className={`w-full flex items-center justify-between px-4 py-3 rounded-lg text-sm font-medium transition-all ${
+                  className={`w-full flex items-center justify-between px-4 py-3.5 md:py-3 rounded-xl text-sm md:text-sm font-medium transition-all active:scale-95 ${
                     activeTab === tab.id
-                      ? "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"
-                      : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
+                      ? "bg-gradient-to-r from-emerald-500/15 to-teal-500/15 text-emerald-400 border border-emerald-500/30 shadow-lg shadow-emerald-500/10"
+                      : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent active:bg-white/10"
                   }`}>
                   <div className="flex items-center gap-3">
-                    <Icon className="w-5 h-5" />
+                    <Icon className="w-5 h-5 flex-shrink-0" />
                     <span>{tab.label}</span>
                   </div>
                   {tab.count !== undefined && (
                     <span
-                      className={`px-2.5 py-1 rounded-full text-xs font-semibold ${
+                      className={`px-2.5 py-1 rounded-full text-xs font-bold ${
                         activeTab === tab.id
                           ? "bg-emerald-500/20 text-emerald-300"
                           : "bg-white/10 text-gray-400"
@@ -432,55 +452,57 @@ const AdminDashboard = () => {
             })}
           </nav>
 
-          {/* Logout Button at Bottom */}
-          <div className="p-4 border-t border-white/5">
+          {/* Logout Button at Bottom - Mobile Enhanced */}
+          <div className="p-3 md:p-4 border-t border-white/10 bg-gradient-to-t from-black/20 to-transparent">
             <button
               onClick={handleLogout}
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium">
+              className="w-full flex items-center gap-3 px-4 py-3.5 md:py-3 rounded-xl bg-gradient-to-r from-red-500/10 to-red-600/10 hover:from-red-500/20 hover:to-red-600/20 text-red-400 border border-red-500/30 hover:border-red-500/50 transition-all text-sm font-medium active:scale-95 shadow-lg shadow-red-500/10">
               <FiLogOut className="w-5 h-5" />
               <span>Logout</span>
             </button>
           </div>
         </aside>
 
-        {/* Main Content Area - Responsive */}
+        {/* Main Content Area - Mobile Optimized */}
         <div className="lg:ml-64 max-w-[1400px]">
-          {/* Welcome Banner - Enhanced & Responsive */}
-          <div className="mb-6 md:mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 backdrop-blur-sm">
+          {/* Welcome Banner - Mobile Enhanced */}
+          <div className="mb-4 md:mb-6 lg:mb-8 relative overflow-hidden rounded-xl md:rounded-2xl bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 backdrop-blur-sm">
             {/* Animated Background Elements */}
-            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+            <div className="absolute top-0 right-0 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
             <div
-              className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-teal-500/10 to-transparent rounded-full blur-3xl animate-pulse"
+              className="absolute bottom-0 left-0 w-48 h-48 md:w-72 md:h-72 bg-gradient-to-tr from-teal-500/10 to-transparent rounded-full blur-3xl animate-pulse"
               style={{ animationDelay: "1s" }}></div>
 
-            <div className="relative p-4 md:p-8">
+            <div className="relative p-4 md:p-6 lg:p-8">
               <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4 md:gap-6">
-                {/* Left Section - Greeting */}
-                <div className="flex-1">
+                {/* Left Section - Greeting - Mobile Optimized */}
+                <div className="flex-1 w-full">
                   <div className="flex items-start gap-3 md:gap-4 mb-3 md:mb-4">
-                    <div className="relative">
-                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl blur-lg opacity-50"></div>
-                      <div className="relative w-12 h-12 md:w-16 md:h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl">
-                        <span className="text-2xl md:text-3xl">👋</span>
+                    <div className="relative flex-shrink-0">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-xl md:rounded-2xl blur-lg opacity-50"></div>
+                      <div className="relative w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-xl md:rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl">
+                        <span className="text-2xl md:text-2xl lg:text-3xl">
+                          👋
+                        </span>
                       </div>
                     </div>
-                    <div>
-                      <h2 className="text-xl md:text-3xl lg:text-4xl font-bold text-white mb-1 md:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                    <div className="flex-1 min-w-0">
+                      <h2 className="text-lg md:text-2xl lg:text-4xl font-bold text-white mb-1 md:mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                         Welcome back,{" "}
-                        {user?.name?.split(" ")[0] || "Administrator"}!
-                      </h2>
-                      <p className="text-sm md:text-base text-emerald-400 font-medium flex items-center gap-2">
-                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
-                        <span className="hidden sm:inline">
-                          Admin Dashboard •{" "}
+                        <span className="block sm:inline">
+                          {user?.name?.split(" ")[0] || "Administrator"}!
                         </span>
-                        Tula Student Association
+                      </h2>
+                      <p className="text-xs md:text-sm lg:text-base text-emerald-400 font-medium flex items-center gap-2 flex-wrap">
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse flex-shrink-0"></span>
+                        <span className="truncate">
+                          Admin • Tula Student Association
+                        </span>
                       </p>
                     </div>
                   </div>
-                  <p className="text-sm md:text-base text-gray-400 ml-0 md:ml-20">
-                    Manage your platform efficiently. Here's your overview for
-                    today.
+                  <p className="text-xs md:text-sm lg:text-base text-gray-400">
+                    Manage your platform efficiently
                   </p>
                 </div>
 
@@ -1628,6 +1650,7 @@ const AdminDashboard = () => {
                   {selectedItem.phone || "N/A"}
                 </p>
               </div>
+              tj{" "}
               <div>
                 <p className="text-gray-400 text-sm mb-1">Gender</p>
                 <p className="text-white font-semibold">
