@@ -25,6 +25,15 @@ frontend/.env
 !frontend/README.md
 !backend/README.md
 
+# Donation and Activity files (not implemented)
+backend/routes/donationRoutes.js
+backend/routes/activityRoutes.js
+backend/controllers/donationController.js
+backend/controllers/activityController.js
+backend/models/Donation.js
+backend/models/Activity.js
+frontend/src/pages/Donation.jsx
+
 # IDE and Editor files
 .vscode/
 .idea/
