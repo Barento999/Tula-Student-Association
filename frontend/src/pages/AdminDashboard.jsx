@@ -336,27 +336,19 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* User & Logout */}
-            <div className="flex items-center gap-4">
-              <div className="hidden md:flex items-center gap-4 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
-                <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base font-semibold text-white shadow-md">
-                  {(user?.name || "A").charAt(0).toUpperCase()}
-                </div>
-                <div>
-                  <p className="text-base font-medium text-white">
-                    {user?.name || "Administrator"}
-                  </p>
-                  <p className="text-sm text-gray-500 mt-0.5">
-                    {user?.email || "admin@tula.org"}
-                  </p>
-                </div>
+            {/* User Info */}
+            <div className="hidden md:flex items-center gap-4 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
+              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base font-semibold text-white shadow-md">
+                {(user?.name || "A").charAt(0).toUpperCase()}
               </div>
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-2 px-5 py-3 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium">
-                <FiLogOut className="w-5 h-5" />
-                <span className="hidden sm:inline">Logout</span>
-              </button>
+              <div>
+                <p className="text-base font-medium text-white">
+                  {user?.name || "Administrator"}
+                </p>
+                <p className="text-sm text-gray-500 mt-0.5">
+                  {user?.email || "admin@tula.org"}
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -365,8 +357,8 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="pt-32 pb-12 pl-6 pr-6">
         {/* Sidebar Navigation */}
-        <aside className="fixed left-0 top-32 bottom-0 w-64 bg-[#111111]/80 backdrop-blur-xl border-r border-white/5 overflow-y-auto">
-          <nav className="p-4 space-y-2">
+        <aside className="fixed left-0 top-32 bottom-0 w-64 bg-[#111111]/80 backdrop-blur-xl border-r border-white/5 overflow-y-auto flex flex-col">
+          <nav className="p-4 space-y-2 flex-1">
             {[
               { id: "overview", label: "Overview", icon: FiBook },
               { id: "profile", label: "Profile", icon: FiUser },
@@ -423,6 +415,16 @@ const AdminDashboard = () => {
               );
             })}
           </nav>
+
+          {/* Logout Button at Bottom */}
+          <div className="p-4 border-t border-white/5">
+            <button
+              onClick={handleLogout}
+              className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/20 hover:border-red-500/30 transition-all text-sm font-medium">
+              <FiLogOut className="w-5 h-5" />
+              <span>Logout</span>
+            </button>
+          </div>
         </aside>
 
         {/* Main Content Area */}
