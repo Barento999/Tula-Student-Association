@@ -365,7 +365,7 @@ const AdminDashboard = () => {
           onClick={() => setIsMobileMenuOpen(false)}></div>
       )}{" "}
       {/* Main Content */}
-      <div className="pt-16 md:pt-24 lg:pt-32 pb-6 md:pb-12 px-3 md:px-6">
+      <div className="pt-20 md:pt-24 lg:pt-32 pb-6 md:pb-12 px-3 md:px-6">
         {/* Sidebar Navigation - Mobile Enhanced */}
         <aside
           className={`fixed left-0 top-14 md:top-24 lg:top-32 bottom-0 w-72 md:w-64 bg-[#111111]/98 backdrop-blur-xl border-r border-white/10 overflow-y-auto flex flex-col z-50 transition-all duration-300 ease-out lg:translate-x-0 shadow-2xl lg:shadow-none ${
