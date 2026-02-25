@@ -422,29 +422,81 @@ const AdminDashboard = () => {
 
         {/* Main Content Area */}
         <div className="ml-64 max-w-[1400px]">
-          {/* Welcome Banner */}
-          <div className="mb-8 p-6 rounded-xl bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20">
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-2xl font-semibold text-white mb-1">
-                  Welcome back, {user?.name?.split(" ")[0] || "Administrator"}!
-                  👋
-                </h2>
-                <p className="text-gray-400">
-                  Here's what's happening with your platform today.
-                </p>
-              </div>
-              <div className="hidden md:block">
-                <div className="text-right">
-                  <p className="text-sm text-gray-500">Current Date</p>
-                  <p className="text-lg font-medium text-white">
-                    {new Date().toLocaleDateString("en-US", {
-                      weekday: "short",
-                      year: "numeric",
-                      month: "short",
-                      day: "numeric",
-                    })}
+          {/* Welcome Banner - Enhanced */}
+          <div className="mb-8 relative overflow-hidden rounded-2xl bg-gradient-to-br from-emerald-500/15 via-teal-500/10 to-cyan-500/15 border border-emerald-500/30 backdrop-blur-sm">
+            {/* Animated Background Elements */}
+            <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-br from-emerald-500/10 to-transparent rounded-full blur-3xl animate-pulse"></div>
+            <div
+              className="absolute bottom-0 left-0 w-72 h-72 bg-gradient-to-tr from-teal-500/10 to-transparent rounded-full blur-3xl animate-pulse"
+              style={{ animationDelay: "1s" }}></div>
+
+            <div className="relative p-8">
+              <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                {/* Left Section - Greeting */}
+                <div className="flex-1">
+                  <div className="flex items-start gap-4 mb-4">
+                    <div className="relative">
+                      <div className="absolute inset-0 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl blur-lg opacity-50"></div>
+                      <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center shadow-xl">
+                        <span className="text-3xl">👋</span>
+                      </div>
+                    </div>
+                    <div>
+                      <h2 className="text-3xl lg:text-4xl font-bold text-white mb-2 bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+                        Welcome back,{" "}
+                        {user?.name?.split(" ")[0] || "Administrator"}!
+                      </h2>
+                      <p className="text-emerald-400 font-medium flex items-center gap-2">
+                        <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                        Admin Dashboard • Tula Student Association
+                      </p>
+                    </div>
+                  </div>
+                  <p className="text-gray-400 text-base ml-20">
+                    Manage your platform efficiently. Here's your overview for
+                    today.
                   </p>
+                </div>
+
+                {/* Right Section - Stats & Info */}
+                <div className="flex flex-wrap lg:flex-nowrap gap-4">
+                  {/* Date Card */}
+                  <div className="flex-1 lg:flex-none px-6 py-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center">
+                        <FiCalendar className="w-5 h-5 text-emerald-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">
+                          Today
+                        </p>
+                        <p className="text-base font-semibold text-white">
+                          {new Date().toLocaleDateString("en-US", {
+                            month: "short",
+                            day: "numeric",
+                            year: "numeric",
+                          })}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="flex-1 lg:flex-none px-6 py-4 rounded-xl bg-white/5 border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-all">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-lg bg-teal-500/10 flex items-center justify-center">
+                        <FiUsers className="w-5 h-5 text-teal-400" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-gray-500 uppercase tracking-wider mb-0.5">
+                          Total Users
+                        </p>
+                        <p className="text-base font-semibold text-white">
+                          {students.length + volunteers.length}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
