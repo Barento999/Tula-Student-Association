@@ -354,7 +354,6 @@ const AdminDashboard = () => {
           <nav className="p-4 space-y-2 flex-1">
             {[
               { id: "overview", label: "Overview", icon: FiBook },
-              { id: "profile", label: "Profile", icon: FiUser },
               {
                 id: "students",
                 label: "Students",
@@ -379,6 +378,7 @@ const AdminDashboard = () => {
                 count: sessions.length,
                 icon: FiSun,
               },
+              { id: "profile", label: "Profile", icon: FiUser },
             ].map((tab) => {
               const Icon = tab.icon;
               return (
