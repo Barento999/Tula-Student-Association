@@ -15,6 +15,7 @@ import {
 
 const Home = () => {
   const [scrollY, setScrollY] = useState(0);
+  const [expandedFaq, setExpandedFaq] = useState(null);
   const [particles] = useState(() =>
     [...Array(20)].map(() => ({
       left: Math.random() * 100,
@@ -760,7 +761,7 @@ const Home = () => {
             </p>
           </div>
 
-          <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="max-w-4xl mx-auto space-y-4">
             {[
               {
                 q: "Is the program really free?",
@@ -797,15 +798,44 @@ const Home = () => {
             ].map((faq, index) => (
               <div
                 key={index}
-                className="group bg-gradient-to-br from-card to-[#1a2730] rounded-2xl p-6 border border-border/50 hover:border-whatsapp-green transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(37,211,102,0.2)]"
+                className="group bg-gradient-to-br from-card to-[#1a2730] rounded-2xl border border-border/50 hover:border-whatsapp-green transition-all duration-300 overflow-hidden"
                 style={{
                   animation: `fadeInUp 0.8s ease-out ${index * 0.1}s both`,
                 }}>
-                <h3 className="text-lg font-bold text-whatsapp-green mb-3 flex items-start gap-2">
-                  <span className="text-2xl">Q:</span>
-                  <span>{faq.q}</span>
-                </h3>
-                <p className="text-secondary leading-relaxed pl-8">{faq.a}</p>
+                <button
+                  onClick={() =>
+                    setExpandedFaq(expandedFaq === index ? null : index)
+                  }
+                  className="w-full text-left p-6 flex items-center justify-between gap-4 hover:bg-whatsapp-green/5 transition-colors">
+                  <h3 className="text-lg font-bold text-whatsapp-green flex items-start gap-2 flex-1">
+                    <span className="text-2xl">Q:</span>
+                    <span>{faq.q}</span>
+                  </h3>
+                  <svg
+                    className={`w-6 h-6 text-whatsapp-green flex-shrink-0 transition-transform duration-300 ${
+                      expandedFaq === index ? "rotate-180" : ""
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M19 9l-7 7-7-7"
+                    />
+                  </svg>
+                </button>
+                <div
+                  className={`transition-all duration-300 ease-in-out ${
+                    expandedFaq === index
+                      ? "max-h-96 opacity-100"
+                      : "max-h-0 opacity-0"
+                  } overflow-hidden`}>
+                  <p className="text-secondary leading-relaxed px-6 pb-6 pl-14">
+                    {faq.a}
+                  </p>
+                </div>
               </div>
             ))}
           </div>
