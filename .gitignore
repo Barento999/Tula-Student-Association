@@ -19,6 +19,12 @@ backend/build/
 backend/.env
 frontend/.env
 
+# Documentation files (keep only README files)
+*.md
+!README.md
+!frontend/README.md
+!backend/README.md
+
 # IDE and Editor files
 .vscode/
 .idea/
