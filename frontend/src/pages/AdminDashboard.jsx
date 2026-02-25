@@ -336,20 +336,13 @@ const AdminDashboard = () => {
               </div>
             </div>
 
-            {/* User Info */}
-            <div className="hidden md:flex items-center gap-4 px-5 py-3 rounded-xl bg-white/5 border border-white/10">
-              <div className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base font-semibold text-white shadow-md">
-                {(user?.name || "A").charAt(0).toUpperCase()}
-              </div>
-              <div>
-                <p className="text-base font-medium text-white">
-                  {user?.name || "Administrator"}
-                </p>
-                <p className="text-sm text-gray-500 mt-0.5">
-                  {user?.email || "admin@tula.org"}
-                </p>
-              </div>
-            </div>
+            {/* Profile Icon - Clickable */}
+            <button
+              onClick={() => setActiveTab("profile")}
+              className="w-11 h-11 rounded-full bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-base font-semibold text-white shadow-md hover:scale-105 transition-transform cursor-pointer"
+              title={`${user?.name || "Administrator"} - Click to view profile`}>
+              {(user?.name || "A").charAt(0).toUpperCase()}
+            </button>
           </div>
         </div>
       </header>
