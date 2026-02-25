@@ -58,55 +58,58 @@ const Materials = () => {
       // Increment download count
       await api.materials.incrementDownload(material._id || material.id);
 
-      let downloadUrl = material.fileUrl;
+      const downloadUrl = material.fileUrl;
 
-      // Try to get signed URL first (for secure Cloudinary accounts)
-      try {
-        const signedData = await api.materials.getSignedUrl(
-          material._id || material.id,
-        );
-        if (signedData.signedUrl) {
-          downloadUrl = signedData.signedUrl;
-        }
-      } catch (signedUrlError) {
-        console.log(
-          "Signed URL not available, using direct URL:",
-          signedUrlError,
-        );
-        // Continue with direct URL
+      if (!downloadUrl) {
+        alert("File URL not available. Please contact the administrator.");
+        return;
       }
 
-      if (downloadUrl) {
-        // Fetch the file as a blob
-        const response = await fetch(downloadUrl);
+      // Fetch the file as a blob to force download
+      const response = await fetch(downloadUrl, {
+        mode: "cors",
+      });
 
-        if (!response.ok) {
-          throw new Error(`Failed to download: ${response.statusText}`);
-        }
+      if (!response.ok) {
+        throw new Error("Failed to fetch file");
+      }
 
-        const blob = await response.blob();
+      const blob = await response.blob();
 
-        // Create a blob URL
-        const blobUrl = window.URL.createObjectURL(blob);
+      // Create a blob URL
+      const blobUrl = window.URL.createObjectURL(blob);
 
-        // Create a temporary anchor element to trigger download
+      // Create a temporary anchor element to trigger download
+      const link = document.createElement("a");
+      link.href = blobUrl;
+      link.download = `${material.title}.${material.fileType.toLowerCase()}`;
+      document.body.appendChild(link);
+      link.click();
+
+      // Clean up
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+
+      // Show success message
+      console.log("Download started successfully");
+    } catch (error) {
+      console.error("Error downloading material:", error);
+
+      // Fallback: try opening in new tab with download attribute
+      try {
         const link = document.createElement("a");
-        link.href = blobUrl;
-        link.download = `${material.title}.${material.fileType.toLowerCase()}`; // Set filename with extension
+        link.href = material.fileUrl;
+        link.download = `${material.title}.${material.fileType.toLowerCase()}`;
+        link.target = "_blank";
+        link.rel = "noopener noreferrer";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-
-        // Clean up the blob URL
-        window.URL.revokeObjectURL(blobUrl);
-      } else {
-        alert("File URL not available");
+      } catch (fallbackError) {
+        alert(
+          `Failed to download material. Please try again or contact the administrator.`,
+        );
       }
-    } catch (error) {
-      console.error("Error downloading material:", error);
-      alert(
-        `Failed to download material: ${error.message}. Please contact the administrator if the problem persists.`,
-      );
     }
   };
 
