@@ -51,7 +51,7 @@ const Volunteer = () => {
     "Economics",
     "Agriculture",
   ];
-  const levels = ["Elementary", "Secondary", "Preparatory", "Any Level"];
+  const levels = ["Elementary", "Secondary", "Preparatory", "Any"];
 
   const handleChange = (e) => {
     const { name, value } = e.target;
