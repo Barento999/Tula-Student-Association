@@ -53,8 +53,8 @@
 - ✅ User registration & login
 - ✅ Student & volunteer management
 - ✅ Summer session tracking
-- ✅ Activity management
-- ✅ Donation tracking
+- ✅ Material management
+- ✅ User authentication
 
 </td>
 </tr>
@@ -232,17 +232,6 @@ CLIENT_URL=http://localhost:5173
 | `GET`  | `/api/students/:id`      | Get single student | ✅            |
 | `PUT`  | `/api/students/:id`      | Update student     | ✅            |
 
-### 📖 Activities
-
-| Method   | Endpoint                      | Description         | Auth Required      |
-| -------- | ----------------------------- | ------------------- | ------------------ |
-| `POST`   | `/api/activities`             | Create activity     | ✅ Admin/Volunteer |
-| `GET`    | `/api/activities`             | Get all activities  | ❌                 |
-| `GET`    | `/api/activities/:id`         | Get single activity | ❌                 |
-| `GET`    | `/api/activities/session/:id` | Get by session      | ❌                 |
-| `PUT`    | `/api/activities/:id`         | Update activity     | ✅ Admin           |
-| `DELETE` | `/api/activities/:id`         | Delete activity     | ✅ Admin           |
-
 ### 📚 Materials
 
 | Method   | Endpoint                      | Description         | Auth Required      |
@@ -253,18 +242,6 @@ CLIENT_URL=http://localhost:5173
 | `GET`    | `/api/materials/level/:level` | Get by level        | ❌                 |
 | `PUT`    | `/api/materials/:id/download` | Track download      | ❌                 |
 | `DELETE` | `/api/materials/:id`          | Delete material     | ✅ Admin           |
-
-### 💰 Donations
-
-| Method   | Endpoint                     | Description         | Auth Required |
-| -------- | ---------------------------- | ------------------- | ------------- |
-| `POST`   | `/api/donations`             | Create donation     | ✅            |
-| `GET`    | `/api/donations`             | Get all donations   | ✅ Admin      |
-| `GET`    | `/api/donations/:id`         | Get single donation | ✅ Admin      |
-| `GET`    | `/api/donations/session/:id` | Get by session      | ✅ Admin      |
-| `GET`    | `/api/donations/stats`       | Get statistics      | ✅ Admin      |
-| `PUT`    | `/api/donations/:id`         | Update donation     | ✅ Admin      |
-| `DELETE` | `/api/donations/:id`         | Delete donation     | ✅ Admin      |
 
 ---
 
@@ -361,25 +338,19 @@ backend/
 │   ├── SummerSession.js         # Session model
 │   ├── VolunteerProfile.js      # Volunteer model
 │   ├── StudentProfile.js        # Student model
-│   ├── Activity.js              # Activity model
-│   ├── Material.js              # Material model
-│   └── Donation.js              # Donation model
+│   └── Material.js              # Material model
 ├── 📂 controllers/
 │   ├── authController.js        # Auth logic
 │   ├── sessionController.js     # Session logic
 │   ├── volunteerController.js   # Volunteer logic
 │   ├── studentController.js     # Student logic
-│   ├── activityController.js    # Activity logic
-│   ├── materialController.js    # Material logic
-│   └── donationController.js    # Donation logic
+│   └── materialController.js    # Material logic
 ├── 📂 routes/
 │   ├── authRoutes.js            # Auth endpoints
 │   ├── sessionRoutes.js         # Session endpoints
 │   ├── volunteerRoutes.js       # Volunteer endpoints
 │   ├── studentRoutes.js         # Student endpoints
-│   ├── activityRoutes.js        # Activity endpoints
-│   ├── materialRoutes.js        # Material endpoints
-│   └── donationRoutes.js        # Donation endpoints
+│   └── materialRoutes.js        # Material endpoints
 ├── 📂 middleware/
 │   ├── authMiddleware.js        # JWT verification
 │   ├── roleMiddleware.js        # Role checking

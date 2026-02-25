@@ -31,7 +31,7 @@ The **Tula Students Association** is a seasonal community initiative where unive
 - 📚 **Quality Education** - Connecting volunteer teachers with eager learners
 - 💡 **Knowledge Sharing** - Providing free learning materials for all levels
 - 🤝 **Community Building** - Strengthening bonds through education
-- 💰 **Resource Management** - Coordinating donations and support
+- 🎯 **Resource Management** - Organizing learning materials and sessions
 
 </td>
 <td width="50%">
@@ -42,7 +42,7 @@ The **Tula Students Association** is a seasonal community initiative where unive
 - **50+** Volunteer teachers
 - **200+** Learning materials
 - **3** Summer sessions completed
-- **$10K+** Community donations
+- **1000+** Material downloads
 
 </td>
 </tr>
@@ -78,12 +78,12 @@ The **Tula Students Association** is a seasonal community initiative where unive
 </td>
 <td width="33%">
 
-**💰 Donations**
+**📞 Contact**
 
-- Secure payment integration
-- Donation tracking
-- Transparency reports
-- Thank you messages
+- Contact form
+- Social media links
+- Location information
+- Support channels
 
 </td>
 </tr>
@@ -105,9 +105,9 @@ The **Tula Students Association** is a seasonal community initiative where unive
 | ------------------------- | ----------------------------- |
 | 🤝 **Application**        | Simple volunteer registration |
 | 📤 **Upload Materials**   | Share teaching resources      |
-| 📅 **Activity Tracking**  | Log teaching sessions         |
 | 👥 **Student Management** | View registered students      |
-| 📈 **Impact Dashboard**   | See your contribution         |
+| 📊 **Profile Management** | Update personal information   |
+| 📈 **Dashboard**          | View teaching overview        |
 
 ### 🛡️ Admin Dashboard
 
@@ -121,7 +121,7 @@ The **Tula Students Association** is a seasonal community initiative where unive
 - Volunteer coordination
 - Material uploads & organization
 - Session planning & tracking
-- Donation monitoring
+- User role management
 
 </td>
 <td width="50%">
@@ -131,8 +131,8 @@ The **Tula Students Association** is a seasonal community initiative where unive
 - Real-time statistics
 - User growth metrics
 - Material download tracking
-- Donation reports
-- Activity logs
+- Session reports
+- System overview
 
 </td>
 </tr>
@@ -389,14 +389,6 @@ VITE_API_URL=http://localhost:5000/api
 | `PUT`    | `/api/sessions/:id` | Update session     | ✅ Admin      |
 | `DELETE` | `/api/sessions/:id` | Delete session     | ✅ Admin      |
 
-### 💰 Donation Endpoints
-
-| Method | Endpoint               | Description       | Auth Required |
-| ------ | ---------------------- | ----------------- | ------------- |
-| `POST` | `/api/donations`       | Create donation   | ✅            |
-| `GET`  | `/api/donations`       | Get all donations | ✅ Admin      |
-| `GET`  | `/api/donations/stats` | Get statistics    | ✅ Admin      |
-
 ---
 
 ## 👥 User Roles & Permissions
@@ -414,7 +406,7 @@ VITE_API_URL=http://localhost:5000/api
 - ✅ Upload materials
 - ✅ Create sessions
 - ✅ View analytics
-- ✅ Manage donations
+- ✅ System settings
 
 </td>
 <td width="33%">
@@ -424,10 +416,10 @@ VITE_API_URL=http://localhost:5000/api
 **Teaching Access**
 
 - ✅ Upload materials
-- ✅ Create activities
 - ✅ View students
 - ✅ Track sessions
 - ✅ Update profile
+- ✅ Manage content
 - ❌ Admin functions
 
 </td>
@@ -440,7 +432,7 @@ VITE_API_URL=http://localhost:5000/api
 - ✅ View materials
 - ✅ Download resources
 - ✅ Update profile
-- ✅ View activities
+- ✅ Browse sessions
 - ❌ Upload content
 - ❌ Admin functions
 
