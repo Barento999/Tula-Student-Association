@@ -224,7 +224,7 @@ const Home = () => {
                 icon: <FiBookOpen className="w-full h-full" />,
                 title: "Elementary Program",
                 grade: "Grades 1-8",
-                desc: "Building strong foundations in Mathematics, Science, English, and Arabic through interactive and engaging lessons.",
+                desc: "Building strong foundations in Mathematics, Science, and English through interactive and engaging lessons.",
                 features: [
                   "Interactive learning sessions",
                   "Basic literacy and numeracy",
@@ -769,7 +769,7 @@ const Home = () => {
               },
               {
                 q: "What grades do you teach?",
-                a: "We offer programs for grades 1-12, with specialized support for each level including university entrance exam preparation.",
+                a: "We offer programs for grades 5-12, with specialized support for each level including university entrance exam preparation.",
               },
               {
                 q: "When does the program run?",
@@ -781,7 +781,7 @@ const Home = () => {
               },
               {
                 q: "What subjects are covered?",
-                a: "We teach Mathematics, Science, English, Arabic, and provide exam preparation for all secondary school subjects.",
+                a: "We teach Mathematics, Science, English, and provide exam preparation for all secondary school subjects.",
               },
               {
                 q: "Can I volunteer if I'm still in university?",
